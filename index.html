@@ -8,74 +8,102 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #414042; background: #fff; overflow-x: hidden; }
-  .ae-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: #fff; border-bottom: 0.5px solid #e8e8e8; display: flex; align-items: center; justify-content: space-between; padding: 16px 48px; height: 68px; }
-  .ae-nav img { height: 40px; width: auto; }
-  .ae-nav-links { display: flex; gap: 32px; }
-  .ae-nav-links a { font-size: 13px; color: #414042; text-decoration: none; }
+
+  .ae-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: #fff; border-bottom: 0.5px solid #e8e8e8;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 60px; height: 72px;
+  }
+  .ae-nav img { height: 52px; width: auto; }
+  .ae-nav-links { display: flex; gap: 36px; }
+  .ae-nav-links a { font-size: 14px; color: #414042; text-decoration: none; }
   .ae-nav-links a:hover { color: #c12033; }
-  .ae-nav-cta { background: #c12033; color: #fff !important; font-size: 13px; padding: 9px 20px; border-radius: 4px; text-decoration: none; }
-  .ae-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 48px 60px; border-bottom: 0.5px solid #f0f0f0; }
-  .ae-inner { width: 100%; max-width: 860px; }
-  .ae-label { font-size: 11px; letter-spacing: 2.5px; color: #c12033; text-transform: uppercase; margin-bottom: 12px; display: block; }
-  .ae-h1 { font-size: 52px; font-weight: 500; line-height: 1.15; color: #414042; margin-bottom: 20px; }
+  .ae-nav-cta { background: #c12033; color: #fff !important; font-size: 14px; padding: 10px 24px; border-radius: 4px; text-decoration: none; }
+
+  .ae-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 60px 60px; border-bottom: 0.5px solid #f0f0f0; }
+  .ae-inner { width: 100%; max-width: 1100px; }
+
+  .ae-label { font-size: 11px; letter-spacing: 2.5px; color: #c12033; text-transform: uppercase; margin-bottom: 16px; display: block; }
+  .ae-h1 { font-size: 68px; font-weight: 500; line-height: 1.1; color: #414042; margin-bottom: 24px; }
   .ae-h1 em { font-style: normal; color: #c12033; }
-  .ae-h2 { font-size: 32px; font-weight: 500; color: #414042; margin-bottom: 12px; line-height: 1.25; }
-  .ae-lead { font-size: 16px; color: #6b6b6b; line-height: 1.75; max-width: 520px; margin-bottom: 36px; }
+  .ae-h2 { font-size: 38px; font-weight: 500; color: #414042; margin-bottom: 16px; line-height: 1.2; }
+  .ae-lead { font-size: 18px; color: #6b6b6b; line-height: 1.75; max-width: 600px; margin-bottom: 40px; }
+
   #ae-hero { text-align: center; }
   #ae-hero .ae-inner { display: flex; flex-direction: column; align-items: center; }
   #ae-hero .ae-lead { text-align: center; }
-  .ae-btns { display: flex; gap: 14px; justify-content: center; }
-  .ae-btn-primary { background: #c12033; color: #fff; padding: 13px 28px; border-radius: 4px; font-size: 14px; text-decoration: none; }
-  .ae-btn-outline { border: 1px solid #414042; color: #414042; padding: 13px 28px; border-radius: 4px; font-size: 14px; text-decoration: none; }
+  .ae-btns { display: flex; gap: 16px; justify-content: center; }
+  .ae-btn-primary { background: #c12033; color: #fff; padding: 15px 32px; border-radius: 4px; font-size: 15px; text-decoration: none; }
+  .ae-btn-outline { border: 1px solid #414042; color: #414042; padding: 15px 32px; border-radius: 4px; font-size: 15px; text-decoration: none; }
+  .ae-btn-outline:hover { border-color: #c12033; color: #c12033; }
+
   .ae-values { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
-  .ae-val { background: #f7f7f6; border-radius: 6px; padding: 22px 24px; }
-  .ae-val h3 { font-size: 14px; font-weight: 500; color: #414042; margin-bottom: 7px; }
-  .ae-val p { font-size: 13px; color: #6b6b6b; line-height: 1.65; }
-  .ae-quote { border-left: 3px solid #c12033; padding: 18px 24px; background: #faf9f9; border-radius: 0 6px 6px 0; }
-  .ae-quote p { font-size: 14px; color: #414042; line-height: 1.75; font-style: italic; }
-  .ae-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 36px; }
+  .ae-val { background: #f7f7f6; border-radius: 6px; padding: 24px 28px; }
+  .ae-val h3 { font-size: 15px; font-weight: 500; color: #414042; margin-bottom: 8px; }
+  .ae-val p { font-size: 14px; color: #6b6b6b; line-height: 1.65; }
+  .ae-quote { border-left: 3px solid #c12033; padding: 20px 28px; background: #faf9f9; border-radius: 0 6px 6px 0; }
+  .ae-quote p { font-size: 15px; color: #414042; line-height: 1.75; font-style: italic; }
+
+  .ae-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
   .ae-stat { text-align: center; }
-  .ae-stat-num { font-size: 28px; font-weight: 500; color: #c12033; margin-bottom: 6px; }
-  .ae-stat-label { font-size: 11px; color: #a7a9ab; line-height: 1.5; }
+  .ae-stat-num { font-size: 30px; font-weight: 500; color: #c12033; margin-bottom: 8px; }
+  .ae-stat-label { font-size: 12px; color: #a7a9ab; line-height: 1.5; }
+  .ae-stat img { height: 48px; width: auto; margin-bottom: 8px; }
+
+  .ae-referans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+  .ae-ref-card { border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 24px 28px; }
+  .ae-ref-card h3 { font-size: 15px; font-weight: 500; color: #414042; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e8e8e8; }
+  .ae-ref-card ul { list-style: none; }
+  .ae-ref-card ul li { font-size: 13px; color: #6b6b6b; line-height: 1.85; padding-left: 16px; position: relative; }
+  .ae-ref-card ul li::before { content: '—'; position: absolute; left: 0; color: #c12033; font-size: 11px; }
+
   .ae-services { display: flex; flex-direction: column; gap: 16px; }
-  .ae-svc { display: flex; gap: 24px; align-items: flex-start; border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 22px 24px; }
+  .ae-svc { display: flex; gap: 24px; align-items: flex-start; border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 24px 28px; }
   .ae-svc-num { font-size: 32px; font-weight: 500; color: #ececec; flex-shrink: 0; width: 40px; }
-  .ae-svc h3 { font-size: 15px; font-weight: 500; color: #414042; margin-bottom: 10px; }
+  .ae-svc h3 { font-size: 16px; font-weight: 500; color: #414042; margin-bottom: 12px; }
   .ae-svc ul { list-style: none; }
-  .ae-svc ul li { font-size: 13px; color: #6b6b6b; line-height: 1.85; padding-left: 16px; position: relative; }
+  .ae-svc ul li { font-size: 14px; color: #6b6b6b; line-height: 1.85; padding-left: 16px; position: relative; }
   .ae-svc ul li::before { content: '—'; position: absolute; left: 0; color: #c12033; font-size: 11px; }
+
   .ae-why { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-  .ae-why-card { border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 22px 24px; }
-  .ae-why-card h3 { font-size: 14px; font-weight: 500; color: #414042; margin-bottom: 7px; }
-  .ae-why-card p { font-size: 13px; color: #6b6b6b; line-height: 1.65; }
-  .ae-claim { background: #414042; color: #fff; border-radius: 8px; padding: 36px; text-align: center; }
-  .ae-claim p { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.75; }
+  .ae-why-card { border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 24px 28px; }
+  .ae-why-card h3 { font-size: 15px; font-weight: 500; color: #414042; margin-bottom: 8px; }
+  .ae-why-card p { font-size: 14px; color: #6b6b6b; line-height: 1.65; }
+
+  .ae-claim { background: #f5f5f4; border-radius: 8px; padding: 40px; text-align: center; }
+  .ae-claim p { font-size: 18px; color: #414042; line-height: 1.75; }
   .ae-claim strong { color: #c12033; }
+
   #ae-iletisim { background: #faf9f9; }
-  .ae-contact { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
-  .ae-contact-info p { font-size: 14px; color: #6b6b6b; line-height: 1.75; margin-bottom: 28px; }
-  .ae-contact-detail { display: flex; flex-direction: column; gap: 12px; font-size: 13px; color: #6b6b6b; }
+  .ae-contact { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .ae-contact-info p { font-size: 15px; color: #6b6b6b; line-height: 1.75; margin-bottom: 28px; }
+  .ae-contact-detail { display: flex; flex-direction: column; gap: 14px; font-size: 14px; color: #6b6b6b; }
   .ae-contact-detail a { color: #c12033; text-decoration: none; }
-  .ae-fg { margin-bottom: 12px; }
-  .ae-fg input, .ae-fg textarea { width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px; padding: 12px 14px; font-size: 14px; color: #414042; font-family: inherit; outline: none; background: #fff; }
+  .ae-fg { margin-bottom: 14px; }
+  .ae-fg input, .ae-fg textarea { width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px; padding: 14px 16px; font-size: 15px; color: #414042; font-family: inherit; outline: none; background: #fff; }
   .ae-fg input:focus, .ae-fg textarea:focus { border-color: #c12033; }
-  .ae-fg textarea { height: 110px; resize: vertical; }
-  .ae-submit { background: #c12033; color: #fff; border: none; padding: 13px 28px; border-radius: 4px; font-size: 14px; cursor: pointer; width: 100%; font-family: inherit; }
-  .ae-footer { padding: 24px 48px; border-top: 0.5px solid #e8e8e8; display: flex; justify-content: space-between; align-items: center; }
-  .ae-footer-copy { font-size: 12px; color: #a7a9ab; }
-  .ae-footer-links { display: flex; gap: 20px; }
-  .ae-footer-links a { font-size: 12px; color: #a7a9ab; text-decoration: none; }
+  .ae-fg textarea { height: 120px; resize: vertical; }
+  .ae-submit { background: #c12033; color: #fff; border: none; padding: 14px 28px; border-radius: 4px; font-size: 15px; cursor: pointer; width: 100%; font-family: inherit; }
+  .ae-submit:hover { background: #a81c2b; }
+
+  .ae-footer { padding: 28px 60px; border-top: 0.5px solid #e8e8e8; display: flex; justify-content: space-between; align-items: center; }
+  .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+  .ae-footer-links { display: flex; gap: 24px; }
+  .ae-footer-links a { font-size: 13px; color: #a7a9ab; text-decoration: none; }
   .ae-footer-links a:hover { color: #c12033; }
-  .ae-sticky { position: fixed; bottom: 24px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
-  .ae-sticky a { display: flex; align-items: center; gap: 8px; background: #c12033; color: #fff; font-size: 13px; padding: 11px 18px; border-radius: 40px; text-decoration: none; }
-  .ae-sticky .ae-up { background: #414042; padding: 11px 15px; border-radius: 50%; font-size: 16px; }
-  @media (max-width: 680px) {
+
+  .ae-sticky { position: fixed; bottom: 28px; right: 28px; z-index: 2000; display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+  .ae-sticky-cta { display: flex; align-items: center; gap: 8px; background: #c12033; color: #fff; font-size: 14px; padding: 13px 22px; border-radius: 40px; text-decoration: none; }
+  .ae-sticky-up { background: #414042; color: #fff; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; text-decoration: none; }
+
+  @media (max-width: 768px) {
     .ae-nav { padding: 14px 20px; }
     .ae-nav-links { display: none; }
     .ae-section { padding: 90px 20px 40px; }
-    .ae-h1 { font-size: 34px; }
-    .ae-h2 { font-size: 24px; }
-    .ae-values, .ae-why, .ae-contact { grid-template-columns: 1fr; }
+    .ae-h1 { font-size: 40px; }
+    .ae-h2 { font-size: 28px; }
+    .ae-values, .ae-why, .ae-contact, .ae-referans-grid { grid-template-columns: 1fr; }
     .ae-stats { grid-template-columns: repeat(2, 1fr); }
     .ae-footer { flex-direction: column; gap: 12px; text-align: center; }
   }
@@ -129,11 +157,61 @@
     <span class="ae-label">Gerçekleştirdiklerimiz</span>
     <h2 class="ae-h2">8+ yıl kurumsal uygulama</h2>
     <p class="ae-lead">Türkiye'nin en hızlı büyüyen mühendislik teknoloji şirketlerinden birinin insan altyapısını sıfırdan kurduk, işlettik ve ölçeklendirdik.</p>
+
+    <div class="ae-referans-grid">
+      <div class="ae-ref-card">
+        <h3>Organizasyon Yapılanması</h3>
+        <ul>
+          <li>Görev tanımları &amp; sorumluluk alanları</li>
+          <li>Unvan yapısı &amp; kariyer seviyeleri</li>
+          <li>Kariyer yolu &amp; geçiş kriterleri</li>
+          <li>Organizasyon şeması &amp; kapasite planlama</li>
+        </ul>
+      </div>
+      <div class="ae-ref-card">
+        <h3>Performans ve Geri Bildirim</h3>
+        <ul>
+          <li>Yetkinlik çerçevesi &amp; OKR yapısı</li>
+          <li>Geri bildirim kültürü &amp; yönetici eğitimleri</li>
+          <li>Terfi yetkinlik envanteri süreçleri</li>
+        </ul>
+      </div>
+      <div class="ae-ref-card">
+        <h3>İşe Alım ve Yetenek Yönetimi</h3>
+        <ul>
+          <li>İşe alım sistemleri &amp; değerlendirme merkezi</li>
+          <li>Kişilik envanterleri &amp; yetkinlik mülakatları</li>
+        </ul>
+      </div>
+      <div class="ae-ref-card">
+        <h3>Çalışan Deneyimi ve Kültür</h3>
+        <ul>
+          <li>Çalışan deneyimi &amp; yan hak yapıları</li>
+          <li>Great Place to Work® sertifikasyonu</li>
+          <li>Değer elçisi programı &amp; iç iletişim</li>
+          <li>HR Playbook &amp; Çalışan El Kitabı</li>
+          <li>Employer Branding &amp; EVP çalışmaları</li>
+        </ul>
+      </div>
+    </div>
+
     <div class="ae-stats">
-      <div class="ae-stat"><div class="ae-stat-num">8+</div><div class="ae-stat-label">Yıl kurumsal uygulama</div></div>
-      <div class="ae-stat"><div class="ae-stat-num">15→90</div><div class="ae-stat-label">Kişilik organizasyon</div></div>
-      <div class="ae-stat"><div class="ae-stat-num">GPTW</div><div class="ae-stat-label">Great Place to Work®</div></div>
-      <div class="ae-stat"><div class="ae-stat-num">Stevie</div><div class="ae-stat-label">Gold HR Planning</div></div>
+      <div class="ae-stat">
+        <div class="ae-stat-num">8+</div>
+        <div class="ae-stat-label">Yıl kurumsal uygulama</div>
+      </div>
+      <div class="ae-stat">
+        <div class="ae-stat-num">15→90</div>
+        <div class="ae-stat-label">Kişilik organizasyon</div>
+      </div>
+      <div class="ae-stat">
+        <img src="/gptw.png" alt="Great Place to Work" />
+        <div class="ae-stat-label">Great Place to Work®</div>
+      </div>
+      <div class="ae-stat">
+        <img src="/stevie.png" alt="Stevie Award" />
+        <div class="ae-stat-label">Gold HR Planning</div>
+      </div>
     </div>
   </div>
 </div>
@@ -208,7 +286,7 @@
         <div class="ae-contact-detail">
           <span>Mail: <a href="mailto:ece.demir@atelierethos.com">ece.demir@atelierethos.com</a></span>
           <span>Instagram: <a href="https://instagram.com/atelier_ethos" target="_blank">@atelier_ethos</a></span>
-          <span>WhatsApp: <a href="WHATSAPP_LINK_BURAYA" target="_blank">Atelier Ethos WhatsApp Kanalı</a></span>
+          <span>WhatsApp: <a href="https://whatsapp.com/channel/0029Vb7WEBVElagsIAnvuT3y" target="_blank">Atelier Ethos WhatsApp Kanalı</a></span>
         </div>
       </div>
       <div>
@@ -225,14 +303,14 @@
   <span class="ae-footer-copy">© 2022 Atelier Ethos</span>
   <div class="ae-footer-links">
     <a href="https://instagram.com/atelier_ethos" target="_blank">Instagram</a>
-    <a href="WHATSAPP_LINK_BURAYA" target="_blank">WhatsApp</a>
+    <a href="https://whatsapp.com/channel/0029Vb7WEBVElagsIAnvuT3y" target="_blank">WhatsApp</a>
     <a href="mailto:ece.demir@atelierethos.com">Mail</a>
   </div>
 </footer>
 
 <div class="ae-sticky">
-  <a href="#ae-iletisim">Görüşme Talep Et</a>
-  <a href="#ae-hero" class="ae-up">↑</a>
+  <a href="#ae-iletisim" class="ae-sticky-cta">Görüşme Talep Et</a>
+  <a href="#ae-hero" class="ae-sticky-up">↑</a>
 </div>
 
 </body>
