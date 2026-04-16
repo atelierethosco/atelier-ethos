@@ -1,38 +1,599 @@
-function mailBildirimi(e) {
-  var adSoyad = e.values[1];
-  var email = e.values[2];
-  var secimler = e.values[3];
-  var zaman = e.values[0];
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaynak Kütüphanesi — Atelier Ethos</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red: #C0272D;
+      --red-dark: #9B1F24;
+      --dark: #1A1A1A;
+      --gray: #5A5A5A;
+      --light: #F5F3F0;
+      --white: #FFFFFF;
+      --border: #E0DDD8;
+    }
 
-  var konu = "📥 Yeni Materyal İndirme Kaydı — " + adSoyad;
-  var icerik = "Yeni bir kayıt geldi!\n\n" +
-               "Ad Soyad: " + adSoyad + "\n" +
-               "E-posta: " + email + "\n" +
-               "Seçilen Materyaller: " + secimler + "\n" +
-               "Tarih/Saat: " + zaman;
-  MailApp.sendEmail("destek@atelierethos.com", konu, icerik);
-}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-function doPost(request) {
-  var params = JSON.parse(request.postData.contents);
-  var adSoyad = params.adSoyad;
-  var email = params.email;
-  var firma = params.firma || "";
-  var secimler = params.secimler;
-  var zaman = new Date().toLocaleString("tr-TR");
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+    }
 
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  sheet.appendRow([zaman, adSoyad, email, firma, secimler]);
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 60px;
+      height: 90px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
 
-  var konu = "📥 Yeni Materyal İndirme Kaydı — " + adSoyad;
-  var icerik = "Yeni bir kayıt geldi!\n\n" +
-               "Ad Soyad: " + adSoyad + "\n" +
-               "E-posta: " + email + "\n" +
-               "Firma: " + firma + "\n" +
-               "Seçilen Materyaller: " + secimler + "\n" +
-               "Tarih/Saat: " + zaman;
-  MailApp.sendEmail("destek@atelierethos.com", konu, icerik);
+    .nav-logo img {
+      height: 66px;
+      width: auto;
+    }
 
-  return ContentService.createTextOutput(JSON.stringify({status: "ok"}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
+    .nav-back {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--red); }
+
+    /* HERO */
+    .hero {
+      padding: 150px 40px 60px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(36px, 5vw, 52px);
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--red);
+    }
+
+    .hero p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--gray);
+      max-width: 520px;
+    }
+
+    /* FORM CARD */
+    .form-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 48px;
+    }
+
+    .field {
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    label span.req {
+      color: var(--red);
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--dark);
+      background: var(--white);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+      border-color: var(--red);
+    }
+
+    /* KATEGORI GRID */
+    .kategori-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .kategori-item {
+      position: relative;
+    }
+
+    .kategori-item input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+
+    .kategori-item label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-transform: none;
+      color: var(--dark);
+      transition: border-color 0.2s, background 0.2s;
+      user-select: none;
+    }
+
+    .kategori-item label::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 2px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .kategori-item input:checked + label {
+      border-color: var(--red);
+      background: #FDF5F5;
+    }
+
+    .kategori-item input:checked + label::before {
+      background: var(--red);
+      border-color: var(--red);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 12 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 5l3.5 3.5L11 1' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 10px;
+    }
+
+    /* HEPSINI SEÇ */
+    .select-all-wrap {
+      margin-bottom: 14px;
+    }
+
+    .select-all-btn {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--red);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: opacity 0.2s;
+    }
+    .select-all-btn:hover { opacity: 0.7; }
+
+    /* ERROR */
+    .error-msg {
+      font-size: 12px;
+      color: var(--red);
+      margin-top: 8px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* SUBMIT */
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 3px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+    }
+
+    .submit-btn:hover { background: var(--red-dark); }
+    .submit-btn:active { transform: scale(0.99); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* TEŞEKKÜR */
+    .tesekkur {
+      display: none;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .tesekkur.show { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tesekkur-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .tesekkur-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tesekkur-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .tesekkur h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--dark);
+    }
+
+    .tesekkur h2 em {
+      font-style: italic;
+      color: var(--red);
+    }
+
+    .tesekkur-desc {
+      font-size: 15px;
+      color: var(--gray);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .link-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      text-decoration: none;
+      color: var(--dark);
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.2s, background 0.2s;
+      animation: fadeUp 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    .link-item:hover {
+      border-color: var(--red);
+      background: #FDF5F5;
+    }
+
+    .link-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .link-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--red);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .link-arrow {
+      color: var(--red);
+      font-size: 18px;
+    }
+
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: var(--red);
+      margin: 32px 0;
+    }
+
+    /* LOADING */
+    .loading-wrap {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    .loading-wrap.show { display: flex; }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--red);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      nav { padding: 12px 20px; height: auto; }
+      .nav-logo img { height: 48px; }
+      .hero { padding: 110px 20px 40px; }
+      .form-wrap { padding: 0 20px 60px; }
+      .form-card { padding: 28px 24px; }
+      .kategori-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/LogoSS.png" alt="Atelier Ethos" />
+  </a>
+  <a href="/" class="nav-back">← Ana Sayfa</a>
+</nav>
+
+<section class="hero">
+  <p class="hero-tag">EST. 2022 · Webinar Materyalleri</p>
+  <h1>Kaynak<br/><em>Kütüphanesi</em></h1>
+  <p>Webinar'da ele aldığımız konulara ait doküman ve şablonlara erişmek için aşağıdaki formu doldurun.</p>
+</section>
+
+<div class="form-wrap">
+  <div class="form-card">
+
+    <!-- FORM -->
+    <div id="form-section">
+      <div class="field">
+        <label>Ad Soyad <span class="req">*</span></label>
+        <input type="text" id="adSoyad" placeholder="Adınız ve soyadınız" />
+        <div class="error-msg" id="err-ad">Lütfen adınızı girin.</div>
+      </div>
+
+      <div class="field">
+        <label>E-posta <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="ornek@email.com" />
+        <div class="error-msg" id="err-email">Geçerli bir e-posta adresi girin.</div>
+      </div>
+
+      <div class="field">
+        <label>Firma</label>
+        <input type="text" id="firma" placeholder="Çalıştığınız firma (opsiyonel)" />
+      </div>
+
+      <div class="field">
+        <label>Hangi materyalleri indirmek istiyorsunuz? <span class="req">*</span></label>
+        <div class="select-all-wrap">
+          <button class="select-all-btn" type="button" onclick="toggleAll()">Tümünü Seç</button>
+        </div>
+        <div class="kategori-grid">
+          <div class="kategori-item">
+            <input type="checkbox" id="k1" value="Audit" />
+            <label for="k1">Audit</label>
+          </div>
+          <div class="kategori-item">
+            <input type="checkbox" id="k2" value="İş Analizi" />
+            <label for="k2">İş Analizi</label>
+          </div>
+          <div class="kategori-item">
+            <input type="checkbox" id="k3" value="İşe Alım" />
+            <label for="k3">İşe Alım</label>
+          </div>
+          <div class="kategori-item">
+            <input type="checkbox" id="k4" value="Oryantasyon" />
+            <label for="k4">Oryantasyon</label>
+          </div>
+          <div class="kategori-item">
+            <input type="checkbox" id="k5" value="Performans" />
+            <label for="k5">Performans</label>
+          </div>
+          <div class="kategori-item">
+            <input type="checkbox" id="k6" value="Gelişim" />
+            <label for="k6">Gelişim</label>
+          </div>
+          <div class="kategori-item" style="grid-column: 1 / -1;">
+            <input type="checkbox" id="k7" value="İK Politikaları & Çalışan El Kitabı" />
+            <label for="k7">İK Politikaları & Çalışan El Kitabı</label>
+          </div>
+        </div>
+        <div class="error-msg" id="err-kategori">En az bir kategori seçin.</div>
+      </div>
+
+      <div class="loading-wrap" id="loading">
+        <div class="spinner"></div>
+        <span>Gönderiliyor...</span>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+        Materyallere Eriş →
+      </button>
+    </div>
+
+    <!-- TEŞEKKÜR -->
+    <div class="tesekkur" id="tesekkur-section">
+      <div class="tesekkur-header">
+        <div class="tesekkur-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2>Materyalleriniz <em>hazır!</em></h2>
+      </div>
+
+      <p class="tesekkur-desc">Seçtiğiniz kategorilerin klasörlerine aşağıdan ulaşabilirsiniz. İyi çalışmalar!</p>
+
+      <div class="link-list" id="link-list"></div>
+
+      <div class="divider"></div>
+      <p style="font-size:13px; color: var(--gray);">Sorularınız için <a href="mailto:destek@atelierethos.com" style="color:var(--red); text-decoration:none;">destek@atelierethos.com</a> adresine yazabilirsiniz.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0Qn2vKkFp1mfmYatjK9IzJ6FX8A4jIg6Hymnbg89s-ZNg8VUKthIxa--Z1vr_lWkfaA/exec";
+
+  const klasorLinkleri = {
+    "Audit": "https://drive.google.com/drive/folders/143ULuz_ielVJ5MaJdS9ib2SO1gyxGrVZ",
+    "İş Analizi": "https://drive.google.com/drive/folders/1Iu-wyYEIV7HgPKtv4X1pMVFQ5Npfz4A4",
+    "İşe Alım": "https://drive.google.com/drive/folders/1P65nf7fOTc4zfCDgFiFInYWwwsi8vtxD",
+    "Oryantasyon": "https://drive.google.com/drive/folders/1g904al8U9i8aVni0er98FaKHAXAitVxh",
+    "Performans": "https://drive.google.com/drive/folders/1kfdPnc5jMvnUXurqg2IlWA3Ge9kYXFWr",
+    "Gelişim": "https://drive.google.com/drive/folders/1TBtoOQKr0LXmlhAYBpXuertonC_SUqpp",
+    "İK Politikaları & Çalışan El Kitabı": "https://drive.google.com/drive/folders/1Br3cthEHD0lmFEDgMSLmw2h9k1H0M_Pt"
+  };
+
+  function toggleAll() {
+    const checkboxes = document.querySelectorAll('.kategori-grid input[type="checkbox"]');
+    const allChecked = Array.from(checkboxes).every(c => c.checked);
+    checkboxes.forEach(c => c.checked = !allChecked);
+    document.querySelector('.select-all-btn').textContent = allChecked ? 'Tümünü Seç' : 'Seçimi Kaldır';
+  }
+
+  function validate() {
+    let ok = true;
+
+    const ad = document.getElementById('adSoyad').value.trim();
+    const errAd = document.getElementById('err-ad');
+    if (!ad) { errAd.classList.add('show'); ok = false; }
+    else errAd.classList.remove('show');
+
+    const email = document.getElementById('email').value.trim();
+    const errEmail = document.getElementById('err-email');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailOk) { errEmail.classList.add('show'); ok = false; }
+    else errEmail.classList.remove('show');
+
+    const checked = document.querySelectorAll('.kategori-grid input:checked');
+    const errKat = document.getElementById('err-kategori');
+    if (checked.length === 0) { errKat.classList.add('show'); ok = false; }
+    else errKat.classList.remove('show');
+
+    return ok;
+  }
+
+  async function submitForm() {
+    if (!validate()) return;
+
+    const btn = document.getElementById('submitBtn');
+    const loading = document.getElementById('loading');
+    btn.style.display = 'none';
+    loading.classList.add('show');
+
+    const adSoyad = document.getElementById('adSoyad').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const firma = document.getElementById('firma').value.trim();
+    const checked = Array.from(document.querySelectorAll('.kategori-grid input:checked'));
+    const secimler = checked.map(c => c.value).join(', ');
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adSoyad, email, firma, secimler })
+      });
+    } catch (err) {
+      console.warn('Script hatası:', err);
+    }
+
+    loading.classList.remove('show');
+    document.getElementById('form-section').style.display = 'none';
+    const tesekkur = document.getElementById('tesekkur-section');
+    tesekkur.classList.add('show');
+
+    const linkList = document.getElementById('link-list');
+    checked.forEach((c, i) => {
+      const kategori = c.value;
+      const url = klasorLinkleri[kategori];
+      if (!url) return;
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.className = 'link-item';
+      a.style.animationDelay = (i * 0.08) + 's';
+      a.innerHTML = `
+        <span class="link-item-left">
+          <span class="link-dot"></span>
+          <span>${kategori}</span>
+        </span>
+        <span class="link-arrow">→</span>
+      `;
+      linkList.appendChild(a);
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
