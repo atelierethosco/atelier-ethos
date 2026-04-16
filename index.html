@@ -290,10 +290,12 @@
         </div>
       </div>
       <div>
-        <div class="ae-fg"><input type="text" placeholder="Adınız Soyadınız" /></div>
-        <div class="ae-fg"><input type="email" placeholder="Mail adresiniz" /></div>
-        <div class="ae-fg"><textarea placeholder="Kısaca ihtiyacınızı paylaşır mısınız?"></textarea></div>
-        <button class="ae-submit">Gönder</button>
+        <form action="https://formspree.io/f/mgoranyl" method="POST">
+          <div class="ae-fg"><input type="text" name="ad-soyad" placeholder="Adınız Soyadınız" required /></div>
+          <div class="ae-fg"><input type="email" name="email" placeholder="Mail adresiniz" required /></div>
+          <div class="ae-fg"><textarea name="mesaj" placeholder="Kısaca ihtiyacınızı paylaşır mısınız?" required></textarea></div>
+          <button type="submit" class="ae-submit">Gönder</button>
+        </form>
       </div>
     </div>
   </div>
