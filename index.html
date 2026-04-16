@@ -85,6 +85,28 @@
   .ae-fg textarea { height: 120px; resize: vertical; }
   .ae-submit { background: #c12033; color: #fff; border: none; padding: 14px 28px; border-radius: 4px; font-size: 15px; cursor: pointer; width: 100%; font-family: inherit; }
   .ae-submit:hover { background: #a81c2b; }
+  .ae-submit:disabled { background: #a7a9ab; cursor: not-allowed; }
+
+  .ae-form-success {
+    display: none;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-left: 3px solid #c12033;
+    border-radius: 6px;
+    padding: 32px 28px;
+  }
+  .ae-form-success h3 { font-size: 20px; font-weight: 500; color: #414042; margin-bottom: 12px; }
+  .ae-form-success p { font-size: 15px; color: #6b6b6b; line-height: 1.7; }
+  .ae-form-error {
+    display: none;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #c12033;
+    margin-bottom: 14px;
+  }
 
   .ae-footer { padding: 28px 60px; border-top: 0.5px solid #e8e8e8; display: flex; justify-content: space-between; align-items: center; }
   .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
@@ -290,12 +312,17 @@
         </div>
       </div>
       <div>
-        <form action="https://formspree.io/f/mgoranyl" method="POST">
+        <form id="ae-form" action="https://formspree.io/f/mgoranyl" method="POST">
+          <div id="ae-form-error" class="ae-form-error">Gönderilemedi. Lütfen tekrar deneyin veya doğrudan mail atın.</div>
           <div class="ae-fg"><input type="text" name="ad-soyad" placeholder="Adınız Soyadınız" required /></div>
           <div class="ae-fg"><input type="email" name="email" placeholder="Mail adresiniz" required /></div>
           <div class="ae-fg"><textarea name="mesaj" placeholder="Kısaca ihtiyacınızı paylaşır mısınız?" required></textarea></div>
-          <button type="submit" class="ae-submit">Gönder</button>
+          <button type="submit" class="ae-submit" id="ae-submit-btn">Gönder</button>
         </form>
+        <div id="ae-form-success" class="ae-form-success">
+          <h3>Teşekkürler, mesajınız alındı.</h3>
+          <p>En kısa sürede size geri dönüş yapacağız. İyi çalışmalar.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -314,6 +341,41 @@
   <a href="#ae-iletisim" class="ae-sticky-cta">Görüşme Talep Et</a>
   <a href="#ae-hero" class="ae-sticky-up">↑</a>
 </div>
+
+<script>
+  var aeForm = document.getElementById('ae-form');
+  var aeSuccess = document.getElementById('ae-form-success');
+  var aeError = document.getElementById('ae-form-error');
+  var aeBtn = document.getElementById('ae-submit-btn');
+
+  aeForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    aeError.style.display = 'none';
+    aeBtn.disabled = true;
+    aeBtn.textContent = 'Gönderiliyor...';
+
+    var data = new FormData(aeForm);
+
+    fetch(aeForm.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    }).then(function(response) {
+      if (response.ok) {
+        aeForm.style.display = 'none';
+        aeSuccess.style.display = 'block';
+      } else {
+        aeError.style.display = 'block';
+        aeBtn.disabled = false;
+        aeBtn.textContent = 'Gönder';
+      }
+    }).catch(function() {
+      aeError.style.display = 'block';
+      aeBtn.disabled = false;
+      aeBtn.textContent = 'Gönder';
+    });
+  });
+</script>
 
 </body>
 </html>
