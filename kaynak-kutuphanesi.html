@@ -424,8 +424,9 @@
       </div>
 
       <div class="field">
-        <label>Firma</label>
-        <input type="text" id="firma" placeholder="Çalıştığınız firma (opsiyonel)" />
+        <label>Firma <span class="req">*</span></label>
+        <input type="text" id="firma" placeholder="Çalıştığınız firma" />
+        <div class="error-msg" id="err-firma">Lütfen firma adını girin.</div>
       </div>
 
       <div class="field">
@@ -531,6 +532,11 @@
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!emailOk) { errEmail.classList.add('show'); ok = false; }
     else errEmail.classList.remove('show');
+
+    const firma = document.getElementById('firma').value.trim();
+    const errFirma = document.getElementById('err-firma');
+    if (!firma) { errFirma.classList.add('show'); ok = false; }
+    else errFirma.classList.remove('show');
 
     const checked = document.querySelectorAll('.kategori-grid input:checked');
     const errKat = document.getElementById('err-kategori');
