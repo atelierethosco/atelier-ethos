@@ -25,7 +25,6 @@
       min-height: 100vh;
     }
 
-    /* NAV */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -39,10 +38,7 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .nav-logo img {
-      height: 66px;
-      width: auto;
-    }
+    .nav-logo img { height: 66px; width: auto; }
 
     .nav-back {
       font-size: 13px;
@@ -54,7 +50,6 @@
     }
     .nav-back:hover { color: var(--red); }
 
-    /* HERO */
     .hero {
       padding: 150px 40px 60px;
       max-width: 760px;
@@ -78,10 +73,7 @@
       margin-bottom: 20px;
     }
 
-    .hero h1 em {
-      font-style: italic;
-      color: var(--red);
-    }
+    .hero h1 em { font-style: italic; color: var(--red); }
 
     .hero p {
       font-size: 16px;
@@ -90,7 +82,6 @@
       max-width: 520px;
     }
 
-    /* FORM CARD */
     .form-wrap {
       max-width: 760px;
       margin: 0 auto;
@@ -104,9 +95,7 @@
       padding: 48px;
     }
 
-    .field {
-      margin-bottom: 28px;
-    }
+    .field { margin-bottom: 28px; }
 
     label {
       display: block;
@@ -118,13 +107,9 @@
       margin-bottom: 10px;
     }
 
-    label span.req {
-      color: var(--red);
-      margin-left: 2px;
-    }
+    label span.req { color: var(--red); margin-left: 2px; }
 
-    input[type="text"],
-    input[type="email"] {
+    input[type="text"], input[type="email"] {
       width: 100%;
       padding: 14px 16px;
       border: 1.5px solid var(--border);
@@ -137,21 +122,15 @@
       outline: none;
     }
 
-    input[type="text"]:focus,
-    input[type="email"]:focus {
-      border-color: var(--red);
-    }
+    input[type="text"]:focus, input[type="email"]:focus { border-color: var(--red); }
 
-    /* KATEGORI GRID */
     .kategori-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
-    .kategori-item {
-      position: relative;
-    }
+    .kategori-item { position: relative; }
 
     .kategori-item input[type="checkbox"] {
       position: absolute;
@@ -200,10 +179,7 @@
       background-size: 10px;
     }
 
-    /* HEPSINI SEÇ */
-    .select-all-wrap {
-      margin-bottom: 14px;
-    }
+    .select-all-wrap { margin-bottom: 14px; }
 
     .select-all-btn {
       font-size: 12px;
@@ -219,7 +195,6 @@
     }
     .select-all-btn:hover { opacity: 0.7; }
 
-    /* ERROR */
     .error-msg {
       font-size: 12px;
       color: var(--red);
@@ -228,7 +203,6 @@
     }
     .error-msg.show { display: block; }
 
-    /* SUBMIT */
     .submit-btn {
       width: 100%;
       padding: 16px;
@@ -250,12 +224,7 @@
     .submit-btn:active { transform: scale(0.99); }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    /* TEŞEKKÜR */
-    .tesekkur {
-      display: none;
-      animation: fadeUp 0.5s ease forwards;
-    }
-
+    .tesekkur { display: none; animation: fadeUp 0.5s ease forwards; }
     .tesekkur.show { display: block; }
 
     @keyframes fadeUp {
@@ -281,21 +250,10 @@
       flex-shrink: 0;
     }
 
-    .tesekkur-icon svg {
-      width: 22px;
-      height: 22px;
-    }
+    .tesekkur-icon svg { width: 22px; height: 22px; }
 
-    .tesekkur h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 28px;
-      color: var(--dark);
-    }
-
-    .tesekkur h2 em {
-      font-style: italic;
-      color: var(--red);
-    }
+    .tesekkur h2 { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--dark); }
+    .tesekkur h2 em { font-style: italic; color: var(--red); }
 
     .tesekkur-desc {
       font-size: 15px;
@@ -304,11 +262,7 @@
       margin-bottom: 32px;
     }
 
-    .link-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .link-list { display: flex; flex-direction: column; gap: 12px; }
 
     .link-item {
       display: flex;
@@ -326,16 +280,9 @@
       opacity: 0;
     }
 
-    .link-item:hover {
-      border-color: var(--red);
-      background: #FDF5F5;
-    }
+    .link-item:hover { border-color: var(--red); background: #FDF5F5; }
 
-    .link-item-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .link-item-left { display: flex; align-items: center; gap: 12px; }
 
     .link-dot {
       width: 8px;
@@ -345,10 +292,7 @@
       flex-shrink: 0;
     }
 
-    .link-arrow {
-      color: var(--red);
-      font-size: 18px;
-    }
+    .link-arrow { color: var(--red); font-size: 18px; }
 
     .divider {
       width: 48px;
@@ -357,7 +301,6 @@
       margin: 32px 0;
     }
 
-    /* LOADING */
     .loading-wrap {
       display: none;
       align-items: center;
@@ -380,7 +323,6 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* MOBILE */
     @media (max-width: 600px) {
       nav { padding: 12px 20px; height: auto; }
       .nav-logo img { height: 48px; }
@@ -409,7 +351,6 @@
 <div class="form-wrap">
   <div class="form-card">
 
-    <!-- FORM -->
     <div id="form-section">
       <div class="field">
         <label>Ad Soyad <span class="req">*</span></label>
@@ -436,32 +377,28 @@
         </div>
         <div class="kategori-grid">
           <div class="kategori-item">
-            <input type="checkbox" id="k1" value="Audit" />
-            <label for="k1">Audit</label>
+            <input type="checkbox" id="k1" value="İş Analizi" />
+            <label for="k1">İş Analizi</label>
           </div>
           <div class="kategori-item">
-            <input type="checkbox" id="k2" value="İş Analizi" />
-            <label for="k2">İş Analizi</label>
+            <input type="checkbox" id="k2" value="İşe Alım" />
+            <label for="k2">İşe Alım</label>
           </div>
           <div class="kategori-item">
-            <input type="checkbox" id="k3" value="İşe Alım" />
-            <label for="k3">İşe Alım</label>
+            <input type="checkbox" id="k3" value="Oryantasyon" />
+            <label for="k3">Oryantasyon</label>
           </div>
           <div class="kategori-item">
-            <input type="checkbox" id="k4" value="Oryantasyon" />
-            <label for="k4">Oryantasyon</label>
+            <input type="checkbox" id="k4" value="Performans" />
+            <label for="k4">Performans</label>
           </div>
           <div class="kategori-item">
-            <input type="checkbox" id="k5" value="Performans" />
-            <label for="k5">Performans</label>
-          </div>
-          <div class="kategori-item">
-            <input type="checkbox" id="k6" value="Gelişim" />
-            <label for="k6">Gelişim</label>
+            <input type="checkbox" id="k5" value="Gelişim" />
+            <label for="k5">Gelişim</label>
           </div>
           <div class="kategori-item" style="grid-column: 1 / -1;">
-            <input type="checkbox" id="k7" value="İK Politikaları & Çalışan El Kitabı" />
-            <label for="k7">İK Politikaları & Çalışan El Kitabı</label>
+            <input type="checkbox" id="k6" value="İK Politikaları & Çalışan El Kitabı" />
+            <label for="k6">İK Politikaları & Çalışan El Kitabı</label>
           </div>
         </div>
         <div class="error-msg" id="err-kategori">En az bir kategori seçin.</div>
@@ -477,7 +414,6 @@
       </button>
     </div>
 
-    <!-- TEŞEKKÜR -->
     <div class="tesekkur" id="tesekkur-section">
       <div class="tesekkur-header">
         <div class="tesekkur-icon">
@@ -503,7 +439,6 @@
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0Qn2vKkFp1mfmYatjK9IzJ6FX8A4jIg6Hymnbg89s-ZNg8VUKthIxa--Z1vr_lWkfaA/exec";
 
   const klasorLinkleri = {
-    "Audit": "https://drive.google.com/drive/folders/143ULuz_ielVJ5MaJdS9ib2SO1gyxGrVZ",
     "İş Analizi": "https://drive.google.com/drive/folders/1Iu-wyYEIV7HgPKtv4X1pMVFQ5Npfz4A4",
     "İşe Alım": "https://drive.google.com/drive/folders/1P65nf7fOTc4zfCDgFiFInYWwwsi8vtxD",
     "Oryantasyon": "https://drive.google.com/drive/folders/1g904al8U9i8aVni0er98FaKHAXAitVxh",
