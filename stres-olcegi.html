@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algılanan Stres Ölçeği — Atelier Ethos</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #414042; background: #fff; overflow-x: hidden; }
+
+  .ae-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: #fff; border-bottom: 0.5px solid #e8e8e8;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 60px; height: 90px;
+  }
+  .ae-nav img { height: 66px; width: auto; }
+  .ae-nav-cta { background: #c12033; color: #fff !important; font-size: 14px; padding: 10px 24px; border-radius: 4px; text-decoration: none; }
+
+  .ae-hero { padding: 130px 60px 50px; text-align: center; background: linear-gradient(180deg, #faf9f9 0%, #fff 100%); }
+  .ae-label { font-size: 11px; letter-spacing: 2.5px; color: #c12033; text-transform: uppercase; margin-bottom: 16px; display: block; }
+  .ae-h1 { font-size: 48px; font-weight: 500; line-height: 1.15; color: #414042; margin-bottom: 20px; }
+  .ae-h1 em { font-style: normal; color: #c12033; }
+  .ae-lead { font-size: 17px; color: #6b6b6b; line-height: 1.7; max-width: 680px; margin: 0 auto; }
+
+  .ae-container { max-width: 780px; margin: 0 auto; padding: 50px 60px; }
+
+  .ae-info-card {
+    background: #faf9f9; border-left: 3px solid #c12033;
+    border-radius: 0 8px 8px 0; padding: 22px 26px; margin-bottom: 36px;
+  }
+  .ae-info-card p { font-size: 14px; color: #6b6b6b; line-height: 1.7; }
+
+  .ae-section-title { font-size: 13px; font-weight: 600; color: #414042; margin-bottom: 14px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .ae-fg { margin-bottom: 14px; }
+  .ae-fg input {
+    width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px;
+    padding: 14px 16px; font-size: 15px; color: #414042;
+    font-family: inherit; outline: none; background: #fff;
+    transition: border-color 0.15s;
+  }
+  .ae-fg input:focus { border-color: #c12033; }
+
+  .ae-qblock {
+    border: 0.5px solid #e8e8e8; border-radius: 8px;
+    padding: 22px 24px; margin-bottom: 14px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .ae-qblock.answered { border-color: #c12033; background: #fffafb; }
+  .ae-qnum { font-size: 12px; color: #c12033; font-weight: 600; letter-spacing: 1px; margin-bottom: 6px; }
+  .ae-qtext { font-size: 15px; color: #414042; line-height: 1.55; margin-bottom: 16px; }
+  .ae-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .ae-option {
+    position: relative; cursor: pointer;
+    border: 0.5px solid #d4d4d4; border-radius: 6px;
+    padding: 14px 8px; text-align: center; background: #fff;
+    transition: all 0.15s;
+  }
+  .ae-option:hover { border-color: #c12033; background: #fffafb; }
+  .ae-option input { position: absolute; opacity: 0; pointer-events: none; }
+  .ae-option-label { font-size: 12px; color: #6b6b6b; line-height: 1.35; }
+  .ae-option-score { font-size: 18px; font-weight: 500; color: #a7a9ab; margin-bottom: 4px; }
+  .ae-option.selected { background: #c12033; border-color: #c12033; }
+  .ae-option.selected .ae-option-label,
+  .ae-option.selected .ae-option-score { color: #fff; }
+
+  .ae-submit-wrap { margin-top: 32px; }
+  .ae-submit {
+    background: #c12033; color: #fff; border: none;
+    padding: 16px 28px; border-radius: 6px; font-size: 16px;
+    cursor: pointer; width: 100%; font-family: inherit; font-weight: 500;
+    transition: background 0.15s;
+  }
+  .ae-submit:hover:not(:disabled) { background: #a81c2b; }
+  .ae-submit:disabled { background: #a7a9ab; cursor: not-allowed; }
+
+  .ae-error {
+    display: none; background: #fef2f2; border: 1px solid #fecaca;
+    border-radius: 6px; padding: 14px 18px; font-size: 14px;
+    color: #c12033; margin-bottom: 18px;
+  }
+
+  /* Result screen */
+  .ae-result { display: none; }
+  .ae-result.visible { display: block; }
+
+  .ae-score-display {
+    background: linear-gradient(135deg, #faf9f9 0%, #fff 100%);
+    border: 0.5px solid #e8e8e8; border-radius: 10px;
+    padding: 48px 32px; text-align: center; margin-bottom: 28px;
+    position: relative; overflow: hidden;
+  }
+  .ae-score-display::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: #c12033;
+  }
+  .ae-score-num {
+    font-size: 88px; font-weight: 300; color: #c12033;
+    line-height: 1; margin-bottom: 8px;
+  }
+  .ae-score-max { font-size: 20px; color: #a7a9ab; font-weight: 300; }
+  .ae-score-level { font-size: 18px; color: #414042; font-weight: 500; margin-top: 16px; letter-spacing: 0.5px; }
+
+  .ae-score-bar {
+    position: relative; height: 6px; background: #f0f0f0;
+    border-radius: 3px; margin: 28px 60px 14px; overflow: hidden;
+  }
+  .ae-score-bar-fill {
+    position: absolute; top: 0; left: 0; height: 100%;
+    background: linear-gradient(90deg, #c12033, #e84a5f); border-radius: 3px;
+    transition: width 0.8s ease-out;
+  }
+  .ae-score-bar-labels {
+    display: flex; justify-content: space-between;
+    margin: 0 60px; font-size: 11px; color: #a7a9ab;
+  }
+
+  .ae-interpretation {
+    background: #fff; border: 0.5px solid #e8e8e8;
+    border-left: 3px solid #c12033; border-radius: 0 8px 8px 0;
+    padding: 26px 30px; margin-bottom: 24px;
+  }
+  .ae-interp-title { font-size: 16px; font-weight: 600; color: #414042; margin-bottom: 12px; }
+  .ae-interp-body { font-size: 15px; color: #6b6b6b; line-height: 1.7; margin-bottom: 16px; }
+  .ae-interp-suggestion { font-size: 14px; color: #414042; line-height: 1.7; background: #faf9f9; padding: 16px 18px; border-radius: 6px; }
+  .ae-interp-suggestion strong { color: #c12033; }
+
+  .ae-disclaimer {
+    font-size: 12px; color: #a7a9ab; line-height: 1.6;
+    padding: 16px 0; border-top: 0.5px solid #f0f0f0; margin-top: 24px;
+  }
+
+  .ae-actions { display: flex; gap: 12px; margin-top: 28px; }
+  .ae-btn-primary {
+    flex: 1; background: #c12033; color: #fff; border: none;
+    padding: 14px 20px; border-radius: 6px; font-size: 15px;
+    cursor: pointer; font-family: inherit; font-weight: 500;
+    text-decoration: none; text-align: center;
+    transition: background 0.15s;
+  }
+  .ae-btn-primary:hover { background: #a81c2b; }
+  .ae-btn-outline {
+    flex: 1; background: #fff; color: #414042;
+    border: 0.5px solid #d4d4d4; padding: 14px 20px; border-radius: 6px;
+    font-size: 15px; cursor: pointer; font-family: inherit;
+    text-decoration: none; text-align: center;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .ae-btn-outline:hover { border-color: #c12033; color: #c12033; }
+
+  .ae-footer {
+    padding: 28px 60px; border-top: 0.5px solid #e8e8e8;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 40px;
+  }
+  .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+  .ae-footer-links { display: flex; gap: 24px; }
+  .ae-footer-links a { font-size: 13px; color: #a7a9ab; text-decoration: none; }
+  .ae-footer-links a:hover { color: #c12033; }
+
+  @media (max-width: 768px) {
+    .ae-nav { padding: 14px 20px; height: auto; }
+    .ae-nav img { height: 48px; }
+    .ae-hero { padding: 100px 20px 30px; }
+    .ae-h1 { font-size: 32px; }
+    .ae-container { padding: 30px 20px; }
+    .ae-options { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+    .ae-option { padding: 10px 2px; }
+    .ae-option-label { font-size: 10px; }
+    .ae-option-score { font-size: 16px; }
+    .ae-score-num { font-size: 64px; }
+    .ae-score-bar, .ae-score-bar-labels { margin-left: 0; margin-right: 0; }
+    .ae-actions { flex-direction: column; }
+    .ae-footer { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="ae-nav">
+  <a href="/">
+    <img src="/LogoSS.png" alt="Atelier Ethos" />
+  </a>
+  <a href="/" class="ae-nav-cta">Ana Sayfa</a>
+</nav>
+
+<section class="ae-hero">
+  <span class="ae-label">Atölye Sonrası Değerlendirme</span>
+  <h1 class="ae-h1">Algılanan <em>Stres</em> Ölçeği</h1>
+  <p class="ae-lead">Son bir ayda yaşadığınız duygu ve düşünceleri değerlendirin. 10 soru, yaklaşık 3 dakika sürer.</p>
+</section>
+
+<div class="ae-container">
+
+  <!-- FORM -->
+  <div id="ae-form-wrap">
+    <div class="ae-info-card">
+      <p><strong>Yönerge:</strong> Aşağıdaki sorular geçen bir ay içindeki duygu ve düşüncelerinizi ele almaktadır. Her soruda, belirtilen duygu ya da düşünceyi ne sıklıkla yaşadığınızı belirtin. İlk aklınıza gelen yanıtı işaretleyin.</p>
+    </div>
+
+    <div id="ae-error" class="ae-error">Lütfen tüm soruları cevaplayın ve bilgilerinizi eksiksiz girin.</div>
+
+    <form id="ae-stres-form" autocomplete="off">
+      <div class="ae-section-title">Bilgileriniz</div>
+      <div class="ae-fg"><input type="text" id="ad-soyad" placeholder="Ad Soyad" required /></div>
+      <div class="ae-fg"><input type="email" id="email" placeholder="E-posta adresiniz" required /></div>
+
+      <div class="ae-section-title" style="margin-top: 36px;">Sorular</div>
+      <div id="ae-questions"></div>
+
+      <div class="ae-submit-wrap">
+        <button type="submit" class="ae-submit" id="ae-submit-btn">Sonucumu Hesapla</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- RESULT -->
+  <div id="ae-result" class="ae-result">
+    <div class="ae-score-display">
+      <div class="ae-score-num"><span id="r-score">0</span><span class="ae-score-max"> / 40</span></div>
+      <div class="ae-score-level" id="r-level">—</div>
+
+      <div class="ae-score-bar">
+        <div class="ae-score-bar-fill" id="r-bar" style="width: 0%;"></div>
+      </div>
+      <div class="ae-score-bar-labels">
+        <span>Düşük (0)</span>
+        <span>Orta (14)</span>
+        <span>Yüksek (20+)</span>
+      </div>
+    </div>
+
+    <div class="ae-interpretation">
+      <div class="ae-interp-title" id="r-interp-title">Yorum</div>
+      <div class="ae-interp-body" id="r-interp-body"></div>
+      <div class="ae-interp-suggestion" id="r-interp-suggestion"></div>
+    </div>
+
+    <div class="ae-disclaimer">
+      Not: Bu ölçek yalnızca algılanan stresi ölçer, tıbbi bir teşhis aracı değildir. Puanınız ne olursa olsun stres yönetimi geliştirilebilir bir beceridir.
+      <br><br>
+      Kaynak: Cohen, S., Kamarck, T., &amp; Mermelstein, R. (1983). A global measure of perceived stress. Journal of Health and Social Behavior, 24, 385–396.
+    </div>
+
+    <div class="ae-actions">
+      <button type="button" class="ae-btn-primary" id="ae-pdf-btn">Sonucumu PDF İndir</button>
+      <a href="/" class="ae-btn-outline">Atelier Ethos'a Dön</a>
+    </div>
+  </div>
+
+</div>
+
+<footer class="ae-footer">
+  <span class="ae-footer-copy">© 2022 Atelier Ethos</span>
+  <div class="ae-footer-links">
+    <a href="/">Ana Sayfa</a>
+    <a href="mailto:ece.demir@atelierethos.com">Mail</a>
+    <a href="https://instagram.com/atelier_ethos" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+<script>
+  // ==================== CONFIG ====================
+  var SHEETS_URL = "https://script.google.com/macros/s/AKfycbzPriB-omB3dgtYYX7lazwL5suep1caebKjYaMpna657FDZ7kPnFmAJLfwm74pzFZF-RA/exec";
+
+  var sorular = [
+    "Geçen ay, beklenmedik bir şey olduğu için ne sıklıkla üzüldünüz?",
+    "Geçen ay, hayatınızdaki önemli şeyleri kontrol edemediğinizi ne sıklıkla hissettiniz?",
+    "Geçen ay, ne sıklıkla gergin ya da stresli hissettiniz?",
+    "Geçen ay, kişisel sorunlarınızla başa çıkabilme yeteneğinize ne sıklıkla güvendiniz?",
+    "Geçen ay, işlerin istediğiniz gibi gittiğini ne sıklıkla hissettiniz?",
+    "Geçen ay, yapmanız gereken her şeyin üstesinden gelemeyeceğinizi ne sıklıkla hissettiniz?",
+    "Geçen ay, hayatınızdaki sıkıntıları kontrol edebildiğinizi ne sıklıkla hissettiniz?",
+    "Geçen ay, işlerin üstünde olduğunuzu ne sıklıkla hissettiniz?",
+    "Geçen ay, kontrolünüz dışında gerçekleşen şeyler nedeniyle ne sıklıkla sinirlendiniz?",
+    "Geçen ay, zorlukların o kadar birikmiş olduğunu ve bunların üstesinden gelemeyeceğinizi ne sıklıkla hissettiniz?"
+  ];
+
+  // 4, 5, 7, 8 ters puanlanır (0-indexed: 3, 4, 6, 7)
+  var tersSorular = [3, 4, 6, 7];
+
+  var secenekler = [
+    { skor: 0, label: "Hiç" },
+    { skor: 1, label: "Neredeyse hiç" },
+    { skor: 2, label: "Bazen" },
+    { skor: 3, label: "Oldukça sık" },
+    { skor: 4, label: "Çok sık" }
+  ];
+
+  // ==================== BUILD QUESTIONS ====================
+  var questionsWrap = document.getElementById("ae-questions");
+  sorular.forEach(function(soru, i) {
+    var block = document.createElement("div");
+    block.className = "ae-qblock";
+    block.dataset.qidx = i;
+
+    var num = document.createElement("div");
+    num.className = "ae-qnum";
+    num.textContent = "SORU " + (i + 1).toString().padStart(2, "0");
+
+    var text = document.createElement("div");
+    text.className = "ae-qtext";
+    text.textContent = soru;
+
+    var opts = document.createElement("div");
+    opts.className = "ae-options";
+
+    secenekler.forEach(function(sec) {
+      var label = document.createElement("label");
+      label.className = "ae-option";
+
+      var input = document.createElement("input");
+      input.type = "radio";
+      input.name = "q" + i;
+      input.value = sec.skor;
+
+      var score = document.createElement("div");
+      score.className = "ae-option-score";
+      score.textContent = sec.skor;
+
+      var lbl = document.createElement("div");
+      lbl.className = "ae-option-label";
+      lbl.textContent = sec.label;
+
+      label.appendChild(input);
+      label.appendChild(score);
+      label.appendChild(lbl);
+      opts.appendChild(label);
+
+      input.addEventListener("change", function() {
+        // Clear selected state from siblings
+        opts.querySelectorAll(".ae-option").forEach(function(o) {
+          o.classList.remove("selected");
+        });
+        label.classList.add("selected");
+        block.classList.add("answered");
+      });
+    });
+
+    block.appendChild(num);
+    block.appendChild(text);
+    block.appendChild(opts);
+    questionsWrap.appendChild(block);
+  });
+
+  // ==================== SUBMIT ====================
+  var form = document.getElementById("ae-stres-form");
+  var errorBox = document.getElementById("ae-error");
+  var submitBtn = document.getElementById("ae-submit-btn");
+  var formWrap = document.getElementById("ae-form-wrap");
+  var resultWrap = document.getElementById("ae-result");
+
+  var currentResult = null;
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    errorBox.style.display = "none";
+
+    var adSoyad = document.getElementById("ad-soyad").value.trim();
+    var email = document.getElementById("email").value.trim();
+    if (!adSoyad || !email) {
+      errorBox.textContent = "Lütfen ad soyad ve e-posta bilgilerinizi girin.";
+      errorBox.style.display = "block";
+      return;
+    }
+
+    // Collect answers
+    var cevaplar = [];
+    for (var i = 0; i < 10; i++) {
+      var checked = document.querySelector('input[name="q' + i + '"]:checked');
+      if (!checked) {
+        errorBox.textContent = "Lütfen tüm soruları cevaplayın. Eksik: Soru " + (i + 1);
+        errorBox.style.display = "block";
+        document.querySelector('[data-qidx="' + i + '"]').scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      cevaplar.push(parseInt(checked.value));
+    }
+
+    // Calculate score (reverse-score specific questions)
+    var toplam = 0;
+    var puanlar = [];
+    for (var j = 0; j < 10; j++) {
+      var p = cevaplar[j];
+      if (tersSorular.indexOf(j) !== -1) {
+        p = 4 - p;
+      }
+      puanlar.push(p);
+      toplam += p;
+    }
+
+    // Determine level
+    var seviye, interpTitle, interpBody, interpSug;
+    if (toplam <= 13) {
+      seviye = "Düşük Stres Seviyesi";
+      interpTitle = "Düşük Stres Seviyesi";
+      interpBody = "Stres algınız düşük düzeydedir. Günlük hayatın zorluklarıyla genel olarak başa çıkabildiğinizi hissediyorsunuz. Bu, zihinsel olarak nispeten dengeli bir dönemde olduğunuzu gösterir.";
+      interpSug = "<strong>Öneri:</strong> Mevcut iyi halinizi korumak için düzenli nefes egzersizleri, yürüyüş veya hobilerinize devam edin.";
+    } else if (toplam <= 19) {
+      seviye = "Orta Stres Seviyesi";
+      interpTitle = "Orta Stres Seviyesi";
+      interpBody = "Stres algınız orta düzeydedir. Zaman zaman işlerin kontrolünüz dışında olduğunu ve gerginlik yaşadığınızı hissedebiliyorsunuz. Bu aralık birçok insan için yaygındır.";
+      interpSug = "<strong>Öneri:</strong> Atölyede paylaştığımız teknikleri (sınır koyma, zaman bloklama, zihinsel boşaltma) düzenli uygulamaya başlayın. Küçük değişiklikler bu seviyeyi hızla düşürebilir.";
+    } else {
+      seviye = "Yüksek Stres Seviyesi";
+      interpTitle = "Yüksek Stres Seviyesi";
+      interpBody = "Stres algınız yüksek düzeydedir. Son bir ayda beklenmedik olaylar, kontrol kaybı hissi ve biriken zorluklar daha baskın olabilir. Bu seviye uzun vadede tükenmişlik riskini artırabilir.";
+      interpSug = "<strong>Öneri:</strong> Bu önemli bir sinyal olabilir. Lütfen kendinize daha fazla özen gösterin. Atölyedeki araçları hemen hayata geçirin. İsterseniz sonuçlarınızı bana iletin, birlikte basit bir eylem planı oluşturalım. Gerek duyarsanız profesyonel destek (psikolog) almanızı da öneririm.";
+    }
+
+    currentResult = {
+      adSoyad: adSoyad,
+      email: email,
+      cevaplar: cevaplar,
+      puanlar: puanlar,
+      toplamPuan: toplam,
+      seviye: seviye,
+      interpTitle: interpTitle,
+      interpBody: interpBody,
+      interpSug: interpSug.replace(/<\/?strong>/g, "")
+    };
+
+    // Show result
+    document.getElementById("r-score").textContent = toplam;
+    document.getElementById("r-level").textContent = seviye;
+    document.getElementById("r-interp-title").textContent = interpTitle;
+    document.getElementById("r-interp-body").textContent = interpBody;
+    document.getElementById("r-interp-suggestion").innerHTML = interpSug;
+
+    // Animate bar
+    var barPercent = (toplam / 40) * 100;
+    setTimeout(function() {
+      document.getElementById("r-bar").style.width = barPercent + "%";
+    }, 100);
+
+    formWrap.style.display = "none";
+    resultWrap.classList.add("visible");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Send to Sheets (fire and forget; use no-cors to avoid CORS issues)
+    fetch(SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(currentResult)
+    }).catch(function() { /* silent */ });
+  });
+
+  // ==================== PDF ====================
+  document.getElementById("ae-pdf-btn").addEventListener("click", function() {
+    if (!currentResult) return;
+    generatePDF(currentResult);
+  });
+
+  function generatePDF(data) {
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: "mm", format: "a4" });
+    var pageWidth = 210;
+    var margin = 20;
+    var contentW = pageWidth - margin * 2;
+
+    // Brand colors
+    var RED = [193, 32, 51];
+    var DARK = [65, 64, 66];
+    var LIGHT = [167, 169, 171];
+    var BG = [250, 249, 249];
+
+    // Header band
+    doc.setFillColor(RED[0], RED[1], RED[2]);
+    doc.rect(0, 0, pageWidth, 6, "F");
+
+    // Top brand
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    doc.setFontSize(16);
+    doc.text("ATELIER ETHOS", margin, 22);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+    doc.text("IK DANISMANLIK ATOLYESI", margin, 27);
+
+    // Date right
+    var today = new Date();
+    var dateStr = today.toLocaleDateString("tr-TR");
+    doc.text(dateStr, pageWidth - margin, 27, { align: "right" });
+
+    // Divider
+    doc.setDrawColor(230, 230, 230);
+    doc.setLineWidth(0.3);
+    doc.line(margin, 32, pageWidth - margin, 32);
+
+    // Category label
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(RED[0], RED[1], RED[2]);
+    doc.text("ALGILANAN STRES OLCEGI", margin, 42);
+
+    // Main title
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(22);
+    doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    doc.text("Kisisel Sonuc Raporu", margin, 52);
+
+    // Name / email
+    doc.setFontSize(10);
+    doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+    doc.text(data.adSoyad + "  |  " + data.email, margin, 60);
+
+    // Score card
+    var scoreCardY = 70;
+    var scoreCardH = 55;
+    doc.setFillColor(BG[0], BG[1], BG[2]);
+    doc.roundedRect(margin, scoreCardY, contentW, scoreCardH, 3, 3, "F");
+    // Left accent
+    doc.setFillColor(RED[0], RED[1], RED[2]);
+    doc.rect(margin, scoreCardY, 1.5, scoreCardH, "F");
+
+    // Big score
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(48);
+    doc.setTextColor(RED[0], RED[1], RED[2]);
+    doc.text(String(data.toplamPuan), margin + 12, scoreCardY + 28);
+
+    // /40
+    doc.setFontSize(14);
+    doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+    var scoreW = doc.getTextWidth(String(data.toplamPuan));
+    doc.setFontSize(48);
+    doc.text("", margin + 12 + scoreW, scoreCardY + 28); // placeholder
+    doc.setFontSize(12);
+    doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+    doc.text("/ 40", margin + 15 + scoreW, scoreCardY + 28);
+
+    // Level label right side
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    doc.text("SEVIYE", pageWidth - margin - 5, scoreCardY + 14, { align: "right" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(14);
+    doc.setTextColor(RED[0], RED[1], RED[2]);
+    var seviyeASCII = data.seviye.replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ı/g,"i").replace(/İ/g,"I").replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ş/g,"s").replace(/Ş/g,"S").replace(/ç/g,"c").replace(/Ç/g,"C").replace(/ğ/g,"g").replace(/Ğ/g,"G");
+    doc.text(seviyeASCII, pageWidth - margin - 5, scoreCardY + 22, { align: "right" });
+
+    // Bar
+    var barY = scoreCardY + 40;
+    var barX = margin + 12;
+    var barW = contentW - 24;
+    doc.setFillColor(230, 230, 230);
+    doc.roundedRect(barX, barY, barW, 2, 1, 1, "F");
+    var fillW = (data.toplamPuan / 40) * barW;
+    doc.setFillColor(RED[0], RED[1], RED[2]);
+    doc.roundedRect(barX, barY, fillW, 2, 1, 1, "F");
+
+    // Bar labels
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+    doc.text("Dusuk (0)", barX, barY + 6);
+    doc.text("Orta (14)", barX + barW * 0.35, barY + 6, { align: "center" });
+    doc.text("Yuksek (20+)", barX + barW, barY + 6, { align: "right" });
+
+    // Interpretation
+    var interpY = scoreCardY + scoreCardH + 14;
+    doc.setDrawColor(RED[0], RED[1], RED[2]);
+    doc.setLineWidth(0.8);
+    doc.line(margin, interpY, margin + 8, interpY);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    var titleASCII = data.interpTitle.replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ı/g,"i").replace(/İ/g,"I").replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ş/g,"s").replace(/Ş/g,"S").replace(/ç/g,"c").replace(/Ç/g,"C").replace(/ğ/g,"g").replace(/Ğ/g,"G");
+    doc.text(titleASCII, margin, interpY + 7);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    var bodyASCII = data.interpBody.replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ı/g,"i").replace(/İ/g,"I").replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ş/g,"s").replace(/Ş/g,"S").replace(/ç/g,"c").replace(/Ç/g,"C").replace(/ğ/g,"g").replace(/Ğ/g,"G");
+    var bodyLines = doc.splitTextToSize(bodyASCII, contentW);
+    doc.text(bodyLines, margin, interpY + 15);
+
+    var suggestionY = interpY + 15 + bodyLines.length * 5 + 6;
+
+    // Suggestion box
+    doc.setFillColor(BG[0], BG[1], BG[2]);
+    var sugASCII = data.interpSug.replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ı/g,"i").replace(/İ/g,"I").replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ş/g,"s").replace(/Ş/g,"S").replace(/ç/g,"c").replace(/Ç/g,"C").replace(/ğ/g,"g").replace(/Ğ/g,"G");
+    var sugLines = doc.splitTextToSize("Oneri: " + sugASCII.replace(/^Öneri:\s*/i, ""), contentW - 10);
+    var sugH = sugLines.length * 5 + 10;
+    doc.roundedRect(margin, suggestionY, contentW, sugH, 2, 2, "F");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(DARK[0], DARK[1], DARK[2]);
+    doc.text(sugLines, margin + 5, suggestionY + 7);
+
+    // Footer disclaimer
+    var footerY = 270;
+    doc.setDrawColor(230, 230, 230);
+    doc.line(margin, footerY, pageWidth - margin, footerY);
+
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(7.5);
+    doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+    var disclaimer = "Not: Bu olcek yalnizca algilanan stresi olcer, tibbi bir teshis araci degildir. Puaniniz ne olursa olsun stres yonetimi gelistirilebilir bir beceridir.";
+    var discLines = doc.splitTextToSize(disclaimer, contentW);
+    doc.text(discLines, margin, footerY + 5);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    var src = "Kaynak: Cohen, S., Kamarck, T., & Mermelstein, R. (1983). A global measure of perceived stress. Journal of Health and Social Behavior, 24, 385-396.";
+    var srcLines = doc.splitTextToSize(src, contentW);
+    doc.text(srcLines, margin, footerY + 14);
+
+    // Brand footer
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(RED[0], RED[1], RED[2]);
+    doc.text("atelierethos.com", margin, 287);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
+    doc.text("ece.demir@atelierethos.com", pageWidth - margin, 287, { align: "right" });
+
+    // Filename
+    var safeName = data.adSoyad.replace(/[^a-zA-ZğüşöçıİĞÜŞÖÇ0-9 ]/g, "").replace(/\s+/g, "_");
+    doc.save("Stres_Olcegi_" + safeName + ".pdf");
+  }
+</script>
+
+</body>
+</html>
