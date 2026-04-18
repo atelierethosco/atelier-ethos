@@ -34,8 +34,10 @@
   .ae-info-card p { font-size: 14px; color: #6b6b6b; line-height: 1.7; }
 
   .ae-section-title { font-size: 13px; font-weight: 600; color: #414042; margin-bottom: 14px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .ae-required-note { font-size: 12px; color: #a7a9ab; margin-bottom: 14px; margin-top: -8px; }
+  .ae-required-note span { color: #c12033; font-weight: 500; }
 
-  .ae-fg { margin-bottom: 14px; }
+  .ae-fg { margin-bottom: 14px; position: relative; }
   .ae-fg input {
     width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px;
     padding: 14px 16px; font-size: 15px; color: #414042;
@@ -43,6 +45,12 @@
     transition: border-color 0.15s;
   }
   .ae-fg input:focus { border-color: #c12033; }
+  .ae-fg input.invalid { border-color: #c12033; background: #fef7f8; }
+  .ae-fg-label {
+    display: block; font-size: 13px; color: #414042;
+    margin-bottom: 6px; font-weight: 500;
+  }
+  .ae-fg-label .req { color: #c12033; margin-left: 2px; }
 
   .ae-qblock {
     border: 0.5px solid #e8e8e8; border-radius: 8px;
@@ -50,7 +58,9 @@
     transition: border-color 0.2s, background 0.2s;
   }
   .ae-qblock.answered { border-color: #c12033; background: #fffafb; }
+  .ae-qblock.invalid { border-color: #c12033; background: #fef7f8; }
   .ae-qnum { font-size: 12px; color: #c12033; font-weight: 600; letter-spacing: 1px; margin-bottom: 6px; }
+  .ae-qnum .req { margin-left: 2px; }
   .ae-qtext { font-size: 15px; color: #414042; line-height: 1.55; margin-bottom: 16px; }
   .ae-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
   .ae-option {
@@ -203,12 +213,20 @@
 
     <div id="ae-error" class="ae-error">Lütfen tüm soruları cevaplayın ve bilgilerinizi eksiksiz girin.</div>
 
-    <form id="ae-stres-form" autocomplete="off">
+    <form id="ae-stres-form" autocomplete="off" novalidate>
       <div class="ae-section-title">Bilgileriniz</div>
-      <div class="ae-fg"><input type="text" id="ad-soyad" placeholder="Ad Soyad" required /></div>
-      <div class="ae-fg"><input type="email" id="email" placeholder="E-posta adresiniz" required /></div>
+      <div class="ae-required-note"><span>*</span> ile işaretli alanlar zorunludur.</div>
+      <div class="ae-fg">
+        <label class="ae-fg-label" for="ad-soyad">Ad Soyad <span class="req">*</span></label>
+        <input type="text" id="ad-soyad" placeholder="Adınız ve soyadınız" required />
+      </div>
+      <div class="ae-fg">
+        <label class="ae-fg-label" for="email">E-posta <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="ornek@mail.com" required />
+      </div>
 
       <div class="ae-section-title" style="margin-top: 36px;">Sorular</div>
+      <div class="ae-required-note">Tüm sorular zorunludur. <span>*</span></div>
       <div id="ae-questions"></div>
 
       <div class="ae-submit-wrap">
@@ -299,7 +317,7 @@
 
     var num = document.createElement("div");
     num.className = "ae-qnum";
-    num.textContent = "SORU " + (i + 1).toString().padStart(2, "0");
+    num.innerHTML = "SORU " + (i + 1).toString().padStart(2, "0") + " <span class='req'>*</span>";
 
     var text = document.createElement("div");
     text.className = "ae-qtext";
@@ -331,12 +349,12 @@
       opts.appendChild(label);
 
       input.addEventListener("change", function() {
-        // Clear selected state from siblings
         opts.querySelectorAll(".ae-option").forEach(function(o) {
           o.classList.remove("selected");
         });
         label.classList.add("selected");
         block.classList.add("answered");
+        block.classList.remove("invalid");
       });
     });
 
@@ -352,6 +370,12 @@
   var submitBtn = document.getElementById("ae-submit-btn");
   var formWrap = document.getElementById("ae-form-wrap");
   var resultWrap = document.getElementById("ae-result");
+  var adInput = document.getElementById("ad-soyad");
+  var emailInput = document.getElementById("email");
+
+  // Clear invalid state on input
+  adInput.addEventListener("input", function() { adInput.classList.remove("invalid"); });
+  emailInput.addEventListener("input", function() { emailInput.classList.remove("invalid"); });
 
   var currentResult = null;
 
@@ -359,25 +383,47 @@
     e.preventDefault();
     errorBox.style.display = "none";
 
-    var adSoyad = document.getElementById("ad-soyad").value.trim();
-    var email = document.getElementById("email").value.trim();
-    if (!adSoyad || !email) {
-      errorBox.textContent = "Lütfen ad soyad ve e-posta bilgilerinizi girin.";
-      errorBox.style.display = "block";
-      return;
+    var hasError = false;
+    var firstErrorEl = null;
+
+    var adSoyad = adInput.value.trim();
+    var email = emailInput.value.trim();
+    var emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!adSoyad) {
+      adInput.classList.add("invalid");
+      if (!firstErrorEl) firstErrorEl = adInput;
+      hasError = true;
+    }
+    if (!email || !emailValid) {
+      emailInput.classList.add("invalid");
+      if (!firstErrorEl) firstErrorEl = emailInput;
+      hasError = true;
     }
 
-    // Collect answers
+    // Collect answers, mark missing
     var cevaplar = [];
     for (var i = 0; i < 10; i++) {
       var checked = document.querySelector('input[name="q' + i + '"]:checked');
+      var block = document.querySelector('[data-qidx="' + i + '"]');
       if (!checked) {
-        errorBox.textContent = "Lütfen tüm soruları cevaplayın. Eksik: Soru " + (i + 1);
-        errorBox.style.display = "block";
-        document.querySelector('[data-qidx="' + i + '"]').scrollIntoView({ behavior: "smooth", block: "center" });
-        return;
+        block.classList.add("invalid");
+        if (!firstErrorEl) firstErrorEl = block;
+        hasError = true;
+        cevaplar.push(null);
+      } else {
+        block.classList.remove("invalid");
+        cevaplar.push(parseInt(checked.value));
       }
-      cevaplar.push(parseInt(checked.value));
+    }
+
+    if (hasError) {
+      errorBox.textContent = "Lütfen kırmızıyla işaretli zorunlu alanları doldurun.";
+      errorBox.style.display = "block";
+      if (firstErrorEl) {
+        firstErrorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
     }
 
     // Calculate score (reverse-score specific questions)
@@ -423,14 +469,12 @@
       interpSug: interpSug.replace(/<\/?strong>/g, "")
     };
 
-    // Show result
     document.getElementById("r-score").textContent = toplam;
     document.getElementById("r-level").textContent = seviye;
     document.getElementById("r-interp-title").textContent = interpTitle;
     document.getElementById("r-interp-body").textContent = interpBody;
     document.getElementById("r-interp-suggestion").innerHTML = interpSug;
 
-    // Animate bar
     var barPercent = (toplam / 40) * 100;
     setTimeout(function() {
       document.getElementById("r-bar").style.width = barPercent + "%";
@@ -440,13 +484,13 @@
     resultWrap.classList.add("visible");
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Send to Sheets (fire and forget; use no-cors to avoid CORS issues)
+    // Send to Sheets
     fetch(SHEETS_URL, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(currentResult)
-    }).catch(function() { /* silent */ });
+    }).catch(function() { });
   });
 
   // ==================== PDF ====================
@@ -455,6 +499,12 @@
     generatePDF(currentResult);
   });
 
+  function asciiTR(s) {
+    return s.replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ı/g,"i").replace(/İ/g,"I")
+            .replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ş/g,"s").replace(/Ş/g,"S")
+            .replace(/ç/g,"c").replace(/Ç/g,"C").replace(/ğ/g,"g").replace(/Ğ/g,"G");
+  }
+
   function generatePDF(data) {
     var jsPDF = window.jspdf.jsPDF;
     var doc = new jsPDF({ unit: "mm", format: "a4" });
@@ -462,17 +512,14 @@
     var margin = 20;
     var contentW = pageWidth - margin * 2;
 
-    // Brand colors
     var RED = [193, 32, 51];
     var DARK = [65, 64, 66];
     var LIGHT = [167, 169, 171];
     var BG = [250, 249, 249];
 
-    // Header band
     doc.setFillColor(RED[0], RED[1], RED[2]);
     doc.rect(0, 0, pageWidth, 6, "F");
 
-    // Top brand
     doc.setFont("helvetica", "bold");
     doc.setTextColor(DARK[0], DARK[1], DARK[2]);
     doc.setFontSize(16);
@@ -482,59 +529,45 @@
     doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
     doc.text("IK DANISMANLIK ATOLYESI", margin, 27);
 
-    // Date right
     var today = new Date();
     var dateStr = today.toLocaleDateString("tr-TR");
     doc.text(dateStr, pageWidth - margin, 27, { align: "right" });
 
-    // Divider
     doc.setDrawColor(230, 230, 230);
     doc.setLineWidth(0.3);
     doc.line(margin, 32, pageWidth - margin, 32);
 
-    // Category label
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(RED[0], RED[1], RED[2]);
     doc.text("ALGILANAN STRES OLCEGI", margin, 42);
 
-    // Main title
     doc.setFont("helvetica", "normal");
     doc.setFontSize(22);
     doc.setTextColor(DARK[0], DARK[1], DARK[2]);
     doc.text("Kisisel Sonuc Raporu", margin, 52);
 
-    // Name / email
     doc.setFontSize(10);
     doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
-    doc.text(data.adSoyad + "  |  " + data.email, margin, 60);
+    doc.text(asciiTR(data.adSoyad) + "  |  " + data.email, margin, 60);
 
-    // Score card
     var scoreCardY = 70;
     var scoreCardH = 55;
     doc.setFillColor(BG[0], BG[1], BG[2]);
     doc.roundedRect(margin, scoreCardY, contentW, scoreCardH, 3, 3, "F");
-    // Left accent
     doc.setFillColor(RED[0], RED[1], RED[2]);
     doc.rect(margin, scoreCardY, 1.5, scoreCardH, "F");
 
-    // Big score
     doc.setFont("helvetica", "normal");
     doc.setFontSize(48);
     doc.setTextColor(RED[0], RED[1], RED[2]);
     doc.text(String(data.toplamPuan), margin + 12, scoreCardY + 28);
 
-    // /40
-    doc.setFontSize(14);
-    doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
     var scoreW = doc.getTextWidth(String(data.toplamPuan));
-    doc.setFontSize(48);
-    doc.text("", margin + 12 + scoreW, scoreCardY + 28); // placeholder
     doc.setFontSize(12);
     doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
     doc.text("/ 40", margin + 15 + scoreW, scoreCardY + 28);
 
-    // Level label right side
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.setTextColor(DARK[0], DARK[1], DARK[2]);
@@ -542,10 +575,8 @@
     doc.setFont("helvetica", "normal");
     doc.setFontSize(14);
     doc.setTextColor(RED[0], RED[1], RED[2]);
-    var seviyeASCII = data.seviye.replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ı/g,"i").replace(/İ/g,"I").replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ş/g,"s").replace(/Ş/g,"S").replace(/ç/g,"c").replace(/Ç/g,"C").replace(/ğ/g,"g").replace(/Ğ/g,"G");
-    doc.text(seviyeASCII, pageWidth - margin - 5, scoreCardY + 22, { align: "right" });
+    doc.text(asciiTR(data.seviye), pageWidth - margin - 5, scoreCardY + 22, { align: "right" });
 
-    // Bar
     var barY = scoreCardY + 40;
     var barX = margin + 12;
     var barW = contentW - 24;
@@ -555,7 +586,6 @@
     doc.setFillColor(RED[0], RED[1], RED[2]);
     doc.roundedRect(barX, barY, fillW, 2, 1, 1, "F");
 
-    // Bar labels
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7);
     doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
@@ -563,7 +593,6 @@
     doc.text("Orta (14)", barX + barW * 0.35, barY + 6, { align: "center" });
     doc.text("Yuksek (20+)", barX + barW, barY + 6, { align: "right" });
 
-    // Interpretation
     var interpY = scoreCardY + scoreCardH + 14;
     doc.setDrawColor(RED[0], RED[1], RED[2]);
     doc.setLineWidth(0.8);
@@ -572,22 +601,19 @@
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
     doc.setTextColor(DARK[0], DARK[1], DARK[2]);
-    var titleASCII = data.interpTitle.replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ı/g,"i").replace(/İ/g,"I").replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ş/g,"s").replace(/Ş/g,"S").replace(/ç/g,"c").replace(/Ç/g,"C").replace(/ğ/g,"g").replace(/Ğ/g,"G");
-    doc.text(titleASCII, margin, interpY + 7);
+    doc.text(asciiTR(data.interpTitle), margin, interpY + 7);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.setTextColor(DARK[0], DARK[1], DARK[2]);
-    var bodyASCII = data.interpBody.replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ı/g,"i").replace(/İ/g,"I").replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ş/g,"s").replace(/Ş/g,"S").replace(/ç/g,"c").replace(/Ç/g,"C").replace(/ğ/g,"g").replace(/Ğ/g,"G");
-    var bodyLines = doc.splitTextToSize(bodyASCII, contentW);
+    var bodyLines = doc.splitTextToSize(asciiTR(data.interpBody), contentW);
     doc.text(bodyLines, margin, interpY + 15);
 
     var suggestionY = interpY + 15 + bodyLines.length * 5 + 6;
 
-    // Suggestion box
     doc.setFillColor(BG[0], BG[1], BG[2]);
-    var sugASCII = data.interpSug.replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ı/g,"i").replace(/İ/g,"I").replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ş/g,"s").replace(/Ş/g,"S").replace(/ç/g,"c").replace(/Ç/g,"C").replace(/ğ/g,"g").replace(/Ğ/g,"G");
-    var sugLines = doc.splitTextToSize("Oneri: " + sugASCII.replace(/^Öneri:\s*/i, ""), contentW - 10);
+    var sugClean = asciiTR(data.interpSug).replace(/^Oneri:\s*/i, "");
+    var sugLines = doc.splitTextToSize("Oneri: " + sugClean, contentW - 10);
     var sugH = sugLines.length * 5 + 10;
     doc.roundedRect(margin, suggestionY, contentW, sugH, 2, 2, "F");
     doc.setFont("helvetica", "normal");
@@ -595,7 +621,6 @@
     doc.setTextColor(DARK[0], DARK[1], DARK[2]);
     doc.text(sugLines, margin + 5, suggestionY + 7);
 
-    // Footer disclaimer
     var footerY = 270;
     doc.setDrawColor(230, 230, 230);
     doc.line(margin, footerY, pageWidth - margin, footerY);
@@ -613,7 +638,6 @@
     var srcLines = doc.splitTextToSize(src, contentW);
     doc.text(srcLines, margin, footerY + 14);
 
-    // Brand footer
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(RED[0], RED[1], RED[2]);
@@ -622,7 +646,6 @@
     doc.setTextColor(LIGHT[0], LIGHT[1], LIGHT[2]);
     doc.text("ece.demir@atelierethos.com", pageWidth - margin, 287, { align: "right" });
 
-    // Filename
     var safeName = data.adSoyad.replace(/[^a-zA-ZğüşöçıİĞÜŞÖÇ0-9 ]/g, "").replace(/\s+/g, "_");
     doc.save("Stres_Olcegi_" + safeName + ".pdf");
   }
