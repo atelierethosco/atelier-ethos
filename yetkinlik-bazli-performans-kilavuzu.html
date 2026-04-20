@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yetkinlik Bazlı Performans Sistemi Kurulum Kılavuzu — Atelier Ethos</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #414042;
+  background: #fff;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ae-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: #fff; border-bottom: 0.5px solid #e8e8e8;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 60px; height: 90px;
+}
+.ae-nav img { height: 66px; width: auto; }
+.ae-nav-cta {
+  background: #c12033; color: #fff !important; font-size: 14px;
+  padding: 10px 24px; border-radius: 4px; text-decoration: none;
+  transition: background 0.15s;
+}
+.ae-nav-cta:hover { background: #a81c2b; }
+
+.ae-main {
+  flex: 1;
+  padding: 130px 60px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #faf9f9 0%, #fff 100%);
+}
+
+.ae-hero {
+  text-align: center;
+  max-width: 680px;
+}
+
+.ae-label {
+  font-size: 11px; letter-spacing: 2.5px; color: #c12033;
+  text-transform: uppercase; margin-bottom: 16px; display: block;
+  font-weight: 500;
+}
+
+.ae-h1 {
+  font-size: 40px; font-weight: 500; line-height: 1.15;
+  color: #414042; margin-bottom: 20px;
+}
+.ae-h1 em { font-style: normal; color: #c12033; }
+
+.ae-lead {
+  font-size: 17px; color: #6b6b6b; line-height: 1.7;
+  max-width: 580px; margin: 0 auto 36px;
+}
+
+.ae-download-btn {
+  background: #c12033; color: #fff; border: none;
+  padding: 18px 40px; border-radius: 6px;
+  font-size: 16px; font-weight: 500; font-family: inherit;
+  cursor: pointer; text-decoration: none;
+  display: inline-block;
+  transition: background 0.15s, transform 0.1s;
+}
+.ae-download-btn:hover { background: #a81c2b; }
+.ae-download-btn:active { transform: scale(0.98); }
+.ae-download-btn:disabled { background: #a7a9ab; cursor: not-allowed; }
+
+.ae-meta {
+  font-size: 13px; color: #a7a9ab;
+  margin-top: 18px; letter-spacing: 0.3px;
+}
+
+.ae-status {
+  margin-top: 24px; padding: 12px 18px;
+  border-radius: 6px; font-size: 14px;
+  display: none;
+}
+.ae-status.ok {
+  background: #faf9f9; border-left: 3px solid #c12033;
+  color: #414042; text-align: left;
+}
+.ae-status.err {
+  background: #fef2f2; border: 1px solid #fecaca;
+  color: #c12033;
+}
+
+.ae-footer {
+  padding: 24px 60px; border-top: 0.5px solid #e8e8e8;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+.ae-footer-links { display: flex; gap: 24px; }
+.ae-footer-links a {
+  font-size: 13px; color: #a7a9ab; text-decoration: none;
+  transition: color 0.15s;
+}
+.ae-footer-links a:hover { color: #c12033; }
+
+@media (max-width: 768px) {
+  .ae-nav { padding: 14px 20px; height: auto; }
+  .ae-nav img { height: 48px; }
+  .ae-main { padding: 100px 20px 30px; }
+  .ae-h1 { font-size: 28px; }
+  .ae-lead { font-size: 15px; }
+  .ae-download-btn { padding: 16px 32px; font-size: 15px; width: 100%; max-width: 320px; }
+  .ae-footer {
+    flex-direction: column; gap: 12px; text-align: center; padding: 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav class="ae-nav">
+  <a href="/"><img src="/LogoSS.png" alt="Atelier Ethos" /></a>
+  <a href="/" class="ae-nav-cta">Ana Sayfa</a>
+</nav>
+
+<main class="ae-main">
+  <div class="ae-hero">
+    <span class="ae-label">Performans ve Geri Bildirim</span>
+    <h1 class="ae-h1">Yetkinlik Bazlı Performans Sistemi <em>Kurulum Kılavuzu</em></h1>
+    <p class="ae-lead">
+      İK ekipleri ve yöneticiler için hazırlanmış kavramsal çerçeve. 6 adımda sistem kurulumu,
+      kaçınılması gereken 5 yaygın hata, 3 aylık örnek takvim ve lansman öncesi kontrol listesi içerir.
+    </p>
+
+    <a href="#" id="downloadBtn" class="ae-download-btn" onclick="handleDownload(event)">
+      Kılavuzu İndir
+    </a>
+
+    <div class="ae-meta">PDF · Kavramsal Çerçeve · Ücretsiz</div>
+
+    <div id="status" class="ae-status"></div>
+  </div>
+</main>
+
+<footer class="ae-footer">
+  <span class="ae-footer-copy">© 2022 Atelier Ethos</span>
+  <div class="ae-footer-links">
+    <a href="/">Ana Sayfa</a>
+    <a href="mailto:ece.demir@atelierethos.com">Mail</a>
+    <a href="https://instagram.com/atelier_ethos" target="_blank" rel="noopener">Instagram</a>
+  </div>
+</footer>
+
+<script>
+// === KONFİGÜRASYON ===
+var TOOL_ID = "P003";
+var TOOL_NAME = "yetkinlik-bazli-performans-kilavuzu";
+var DRIVE_FILE_URL = "https://drive.google.com/uc?export=download&id=1zVn3jH00Bv4sfk-FKprc_E9rGPZCsV3P";
+var LOG_ENDPOINT = "https://script.google.com/macros/s/AKfycbzKYUsVdVd7VojPuqKEvMoftjJcH-Z8BzBZbUmeLEA-NqTMVY14vXklAanjDQuj3T8I/exec";
+
+// === URL PARAMETRELERİ ===
+var urlParams = new URLSearchParams(window.location.search);
+var encodedEmail = urlParams.get("e") || "";
+// Base64'ten decode et (URL'de kod olarak geçiyor, Events sheet'e düz email gitsin)
+var userEmail = "";
+if (encodedEmail) {
+  try {
+    userEmail = atob(encodedEmail.replace(/-/g, '+').replace(/_/g, '/'));
+  } catch (e) {
+    userEmail = encodedEmail;
+  }
+}
+var utmSource = urlParams.get("utm_source") || "";
+var utmMedium = urlParams.get("utm_medium") || "";
+var utmCampaign = urlParams.get("utm_campaign") || "";
+var utmContent = urlParams.get("utm_content") || "";
+
+function handleDownload(event) {
+  event.preventDefault();
+  var btn = document.getElementById("downloadBtn");
+  var status = document.getElementById("status");
+
+  btn.disabled = true;
+  btn.textContent = "Hazırlanıyor...";
+
+  try {
+    fetch(LOG_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        tip: "tool_download",
+        tool_id: TOOL_ID,
+        tool_name: TOOL_NAME,
+        email: userEmail,
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: utmCampaign,
+        utm_content: utmContent,
+        timestamp: new Date().toISOString(),
+        user_agent: navigator.userAgent
+      })
+    });
+  } catch (e) {
+    console.error("Log error:", e);
+  }
+
+  setTimeout(function() {
+    if (DRIVE_FILE_URL && DRIVE_FILE_URL !== "REPLACE_WITH_DRIVE_LINK") {
+      window.location.href = DRIVE_FILE_URL;
+    }
+    btn.disabled = false;
+    btn.textContent = "Kılavuzu İndir";
+    status.className = "ae-status ok";
+    status.innerHTML = "İndirme başladı. Geri bildiriminiz için: <a href='mailto:ece.demir@atelierethos.com' style='color:#c12033;'>ece.demir@atelierethos.com</a>";
+    status.style.display = "block";
+  }, 400);
+}
+</script>
+
+</body>
+</html>
