@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yetkinlik Bazlı Performans Sistemi Nasıl Kurulur? — Atelier Ethos</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #414042; background: #fff; overflow-x: hidden; }
+
+  .ae-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: #fff; border-bottom: 0.5px solid #e8e8e8;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 60px; height: 90px;
+  }
+  .ae-nav img { height: 66px; width: auto; }
+  .ae-nav-cta { background: #c12033; color: #fff !important; font-size: 14px; padding: 10px 24px; border-radius: 4px; text-decoration: none; }
+
+  .ae-page {
+    min-height: 100vh;
+    padding: 130px 40px 60px;
+    background: linear-gradient(180deg, #faf9f9 0%, #fff 100%);
+  }
+
+  .ae-layout {
+    max-width: 1080px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
+  }
+
+  /* --- LEFT: POSTER --- */
+  .ae-poster-card {
+    position: sticky; top: 110px;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(65, 64, 66, 0.08), 0 4px 12px rgba(65, 64, 66, 0.04);
+  }
+  .ae-poster {
+    position: relative;
+    background: linear-gradient(135deg, #c12033 0%, #7a1420 100%);
+    color: #fff;
+    padding: 40px 36px;
+    min-height: 460px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    overflow: hidden;
+  }
+  .ae-poster::before {
+    content: ''; position: absolute;
+    top: -100px; right: -120px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .ae-poster::after {
+    content: ''; position: absolute;
+    bottom: -80px; left: -80px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .ae-poster-tag {
+    position: relative;
+    display: inline-block; align-self: flex-start;
+    font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+    background: rgba(255,255,255,0.18); backdrop-filter: blur(6px);
+    padding: 8px 14px; border-radius: 4px;
+    margin-bottom: 28px;
+  }
+  .ae-poster-title {
+    position: relative;
+    font-size: 32px; font-weight: 500; line-height: 1.2;
+    margin-bottom: auto;
+  }
+  .ae-poster-meta {
+    position: relative;
+    margin-top: 32px;
+    font-size: 14px; line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.25);
+    padding-top: 20px;
+  }
+  .ae-poster-meta strong { font-weight: 500; }
+
+  .ae-poster-footer {
+    background: #fff; padding: 20px 28px;
+    border-top: 1px solid #f0f0f0;
+  }
+  .ae-poster-host {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px;
+  }
+  .ae-poster-host .host-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #c12033, #e84a5f);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 500; font-size: 14px;
+  }
+  .ae-poster-host .host-name { font-weight: 500; color: #414042; }
+  .ae-poster-host .host-role { color: #a7a9ab; font-size: 12px; }
+
+  /* --- RIGHT: REGISTRATION CARD --- */
+  .ae-right { min-width: 0; }
+
+  .ae-title-block { margin-bottom: 28px; }
+  .ae-label-small { font-size: 11px; letter-spacing: 2.5px; color: #c12033; text-transform: uppercase; margin-bottom: 14px; display: block; }
+  .ae-page-title { font-size: 28px; font-weight: 500; line-height: 1.25; color: #414042; margin-bottom: 14px; }
+  .ae-page-title em { font-style: normal; color: #c12033; }
+  .ae-page-lead { font-size: 15px; color: #6b6b6b; line-height: 1.7; }
+
+  .ae-info-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px; background: #faf9f9; border-radius: 8px;
+    margin-bottom: 10px; font-size: 14px; color: #414042;
+  }
+  .ae-info-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: #fff; border: 0.5px solid #e8e8e8;
+    display: flex; align-items: center; justify-content: center;
+    color: #c12033; font-size: 14px; font-weight: 500; flex-shrink: 0;
+  }
+  .ae-info-row strong { font-weight: 500; }
+  .ae-info-row small { display: block; color: #a7a9ab; font-size: 12px; margin-top: 2px; }
+
+  .ae-form-card {
+    background: #fff; border: 0.5px solid #e8e8e8;
+    border-radius: 10px; padding: 32px 30px;
+    margin-top: 24px;
+    box-shadow: 0 2px 10px rgba(65, 64, 66, 0.03);
+  }
+  .ae-form-card h3 { font-size: 16px; font-weight: 500; color: #414042; margin-bottom: 6px; }
+  .ae-form-card .sub { font-size: 13px; color: #a7a9ab; margin-bottom: 20px; }
+
+  .ae-fg { margin-bottom: 14px; }
+  .ae-fg-label { display: block; font-size: 13px; color: #414042; margin-bottom: 6px; font-weight: 500; }
+  .ae-fg-label .req { color: #c12033; margin-left: 2px; }
+  .ae-fg input {
+    width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px;
+    padding: 14px 16px; font-size: 15px; color: #414042;
+    font-family: inherit; outline: none; background: #fff;
+    transition: border-color 0.15s;
+  }
+  .ae-fg input:focus { border-color: #c12033; }
+  .ae-fg input.invalid { border-color: #c12033; background: #fef7f8; }
+
+  .ae-submit {
+    background: #c12033; color: #fff; border: none;
+    padding: 15px 24px; border-radius: 6px; font-size: 15px;
+    cursor: pointer; width: 100%; font-family: inherit; font-weight: 500;
+    transition: background 0.15s; margin-top: 6px;
+  }
+  .ae-submit:hover:not(:disabled) { background: #a81c2b; }
+  .ae-submit:disabled { background: #a7a9ab; cursor: not-allowed; }
+
+  .ae-error {
+    display: none; background: #fef2f2; border: 1px solid #fecaca;
+    border-radius: 6px; padding: 12px 16px; font-size: 13px;
+    color: #c12033; margin-bottom: 16px;
+  }
+
+  .ae-privacy {
+    font-size: 12px; color: #a7a9ab;
+    text-align: center; line-height: 1.6; margin-top: 14px;
+  }
+
+  /* --- SUCCESS STATE --- */
+  .ae-success { display: none; }
+  .ae-success.visible { display: block; }
+  .ae-success-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #c12033; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin-bottom: 20px;
+  }
+  .ae-success h2 { font-size: 22px; font-weight: 500; color: #414042; margin-bottom: 12px; }
+  .ae-success p { font-size: 14px; color: #6b6b6b; line-height: 1.7; margin-bottom: 18px; }
+  .ae-success-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .ae-btn-primary, .ae-btn-outline {
+    padding: 13px 20px; border-radius: 6px; font-size: 14px;
+    font-family: inherit; text-decoration: none; text-align: center;
+    font-weight: 500; cursor: pointer; border: none;
+    transition: all 0.15s;
+  }
+  .ae-btn-primary { background: #c12033; color: #fff; }
+  .ae-btn-primary:hover { background: #a81c2b; }
+  .ae-btn-outline { background: #fff; color: #414042; border: 0.5px solid #d4d4d4; }
+  .ae-btn-outline:hover { border-color: #c12033; color: #c12033; }
+
+  .ae-footer {
+    padding: 28px 60px; border-top: 0.5px solid #e8e8e8;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 40px; background: #fff;
+  }
+  .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+  .ae-footer-links { display: flex; gap: 24px; }
+  .ae-footer-links a { font-size: 13px; color: #a7a9ab; text-decoration: none; }
+  .ae-footer-links a:hover { color: #c12033; }
+
+  @media (max-width: 880px) {
+    .ae-nav { padding: 14px 20px; height: auto; }
+    .ae-nav img { height: 48px; }
+    .ae-page { padding: 100px 20px 40px; }
+    .ae-layout { grid-template-columns: 1fr; gap: 30px; }
+    .ae-poster-card { position: static; }
+    .ae-poster { padding: 32px 26px; min-height: 300px; }
+    .ae-poster-title { font-size: 24px; }
+    .ae-page-title { font-size: 24px; }
+    .ae-form-card { padding: 24px 20px; }
+    .ae-footer { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="ae-nav">
+  <a href="/"><img src="/LogoSS.png" alt="Atelier Ethos" /></a>
+  <a href="/" class="ae-nav-cta">Ana Sayfa</a>
+</nav>
+
+<main class="ae-page">
+  <div class="ae-layout">
+
+    <!-- LEFT: POSTER -->
+    <div class="ae-poster-card">
+      <div class="ae-poster">
+        <div class="ae-poster-tag">Webinar · Atölye Formatı</div>
+        <div class="ae-poster-title">Yetkinlik Bazlı Performans Sistemi Nasıl Kurulur?</div>
+        <div class="ae-poster-meta">
+          <strong>24 Nisan 2026 Perşembe</strong><br>
+          12:00 – 13:00 (GMT+3 / Istanbul)<br>
+          Zoom üzerinden
+        </div>
+      </div>
+      <div class="ae-poster-footer">
+        <div class="ae-poster-host">
+          <div class="host-dot">E</div>
+          <div>
+            <div class="host-name">Ece Demir</div>
+            <div class="host-role">Kurucu · Atelier Ethos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: REGISTRATION -->
+    <div class="ae-right">
+
+      <!-- FORM STATE -->
+      <div id="ae-form-wrap">
+        <div class="ae-title-block">
+          <span class="ae-label-small">Kayıt</span>
+          <h1 class="ae-page-title">Ücretsiz <em>atölye</em>mize kayıt olun</h1>
+          <p class="ae-page-lead">Yetkinlik bazlı bir performans sistemi kurmanın adımlarını, yönetici-çalışan deneyimine etkisini ve sahada nelere dikkat edilmesi gerektiğini birlikte konuşacağız.</p>
+        </div>
+
+        <div class="ae-info-row">
+          <div class="ae-info-icon">📅</div>
+          <div>
+            <strong>24 Nisan 2026, Perşembe</strong>
+            <small>12:00 – 13:00 (GMT+3 / Istanbul)</small>
+          </div>
+        </div>
+        <div class="ae-info-row">
+          <div class="ae-info-icon">🎥</div>
+          <div>
+            <strong>Zoom üzerinden canlı yayın</strong>
+            <small>Kayıt sonrası link mailinize gönderilecek</small>
+          </div>
+        </div>
+        <div class="ae-info-row">
+          <div class="ae-info-icon">⏱</div>
+          <div>
+            <strong>60 dakika</strong>
+            <small>Sunum + soru-cevap</small>
+          </div>
+        </div>
+
+        <div class="ae-form-card">
+          <h3>Kayıt Bilgileri</h3>
+          <div class="sub">Bilgileriniz yalnızca webinar iletişimi için kullanılır.</div>
+
+          <div id="ae-error" class="ae-error"></div>
+
+          <form id="ae-form" autocomplete="off" novalidate>
+            <div class="ae-fg">
+              <label class="ae-fg-label" for="ad-soyad">Ad Soyad <span class="req">*</span></label>
+              <input type="text" id="ad-soyad" placeholder="Adınız ve soyadınız" required />
+            </div>
+            <div class="ae-fg">
+              <label class="ae-fg-label" for="email">E-posta <span class="req">*</span></label>
+              <input type="email" id="email" placeholder="ornek@mail.com" required />
+            </div>
+            <button type="submit" class="ae-submit" id="ae-submit-btn">Kayıt Ol</button>
+          </form>
+          <p class="ae-privacy">Kaydınız sonrasında webinar detayları ve takvim daveti mail adresinize gönderilecektir.</p>
+        </div>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div id="ae-success" class="ae-success">
+        <div class="ae-form-card">
+          <div class="ae-success-icon">✓</div>
+          <h2>Kaydınız alındı</h2>
+          <p>
+            Webinar detayları ve takvim daveti e-posta adresinize gönderildi. Birkaç dakika içinde ulaşmazsa spam klasörünüzü kontrol edin.
+          </p>
+          <p style="background: #faf9f9; padding: 14px 18px; border-radius: 6px; border-left: 3px solid #c12033;">
+            <strong style="color: #414042;">24 Nisan 2026 Perşembe, 12:00</strong><br>
+            Yetkinlik Bazlı Performans Sistemi Nasıl Kurulur?
+          </p>
+          <div class="ae-success-actions">
+            <button type="button" class="ae-btn-primary" id="ae-ics-btn">Takvime Ekle (.ics)</button>
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Yetkinlik+Bazl%C4%B1+Performans+Sistemi+Nas%C4%B1l+Kurulur%3F&dates=20260424T090000Z/20260424T100000Z&details=Zoom+Link%3A+https%3A%2F%2Fus06web.zoom.us%2Fj%2F87201403028%3Fpwd%3DUSfPE6zvcIKvbxPIKhT37UVThj3i60.1%0APasscode%3A+771223&location=https%3A%2F%2Fus06web.zoom.us%2Fj%2F87201403028%3Fpwd%3DUSfPE6zvcIKvbxPIKhT37UVThj3i60.1" target="_blank" class="ae-btn-outline">Google Takvim'e Ekle</a>
+            <a href="/" class="ae-btn-outline">Atelier Ethos'a Dön</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="ae-footer">
+  <span class="ae-footer-copy">© 2022 Atelier Ethos</span>
+  <div class="ae-footer-links">
+    <a href="/">Ana Sayfa</a>
+    <a href="mailto:ece.demir@atelierethos.com">Mail</a>
+    <a href="https://instagram.com/atelier_ethos" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+<script>
+  // =====================================================================
+  // CONFIG — YENİ WEBINAR İÇİN SADECE BU BLOĞU GÜNCELLE
+  // =====================================================================
+  var WEBINAR_ID = "W001_yetkinlik_performans";
+  var WEBINAR_BASLIK = "Yetkinlik Bazlı Performans Sistemi Nasıl Kurulur?";
+  var SHEETS_URL = "https://script.google.com/macros/s/AKfycbzKYUsVdVd7VojPuqKEvMoftjJcH-Z8BzBZbUmeLEA-NqTMVY14vXklAanjDQuj3T8I/exec";
+  // ICS dosyası için tarih (UTC)
+  var ICS_START = "20260424T090000Z";
+  var ICS_END   = "20260424T100000Z";
+  var ZOOM_LINK = "https://us06web.zoom.us/j/87201403028?pwd=USfPE6zvcIKvbxPIKhT37UVThj3i60.1";
+  var PASSCODE  = "771223";
+  // =====================================================================
+
+  // UTM parametrelerini URL'den oku
+  function getUTM() {
+    var params = new URLSearchParams(window.location.search);
+    return {
+      utm_source:   params.get("utm_source")   || "direct",
+      utm_medium:   params.get("utm_medium")   || "",
+      utm_campaign: params.get("utm_campaign") || "",
+      utm_content:  params.get("utm_content")  || "",
+      referrer: document.referrer || ""
+    };
+  }
+
+  var form = document.getElementById("ae-form");
+  var errorBox = document.getElementById("ae-error");
+  var submitBtn = document.getElementById("ae-submit-btn");
+  var formWrap = document.getElementById("ae-form-wrap");
+  var successWrap = document.getElementById("ae-success");
+  var adInput = document.getElementById("ad-soyad");
+  var emailInput = document.getElementById("email");
+
+  adInput.addEventListener("input", function() { adInput.classList.remove("invalid"); });
+  emailInput.addEventListener("input", function() { emailInput.classList.remove("invalid"); });
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    errorBox.style.display = "none";
+
+    var adSoyad = adInput.value.trim();
+    var email = emailInput.value.trim();
+    var emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    var hasError = false;
+    if (!adSoyad) { adInput.classList.add("invalid"); hasError = true; }
+    if (!email || !emailValid) { emailInput.classList.add("invalid"); hasError = true; }
+
+    if (hasError) {
+      errorBox.textContent = "Lütfen zorunlu alanları eksiksiz doldurun.";
+      errorBox.style.display = "block";
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Kaydediliyor...";
+
+    var utm = getUTM();
+    var payload = {
+      tip: "webinar_kayit",
+      webinarId: WEBINAR_ID,
+      adSoyad: adSoyad,
+      email: email,
+      utmSource: utm.utm_source,
+      utmMedium: utm.utm_medium,
+      utmCampaign: utm.utm_campaign,
+      utmContent: utm.utm_content,
+      referrer: utm.referrer
+    };
+
+    fetch(SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(function() {
+      formWrap.style.display = "none";
+      successWrap.classList.add("visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }).catch(function() {
+      formWrap.style.display = "none";
+      successWrap.classList.add("visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
+  // ICS indirme (Apple Calendar, Outlook için)
+  document.getElementById("ae-ics-btn").addEventListener("click", function() {
+    var ics = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Atelier Ethos//Webinar//TR",
+      "CALSCALE:GREGORIAN",
+      "METHOD:PUBLISH",
+      "BEGIN:VEVENT",
+      "UID:" + WEBINAR_ID + "-" + Date.now() + "@atelierethos.com",
+      "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z",
+      "DTSTART:" + ICS_START,
+      "DTEND:" + ICS_END,
+      "SUMMARY:" + WEBINAR_BASLIK,
+      "DESCRIPTION:Zoom Link: " + ZOOM_LINK + "\\nPasscode: " + PASSCODE,
+      "LOCATION:" + ZOOM_LINK,
+      "URL:" + ZOOM_LINK,
+      "STATUS:CONFIRMED",
+      "BEGIN:VALARM",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Webinar basliyor",
+      "TRIGGER:-PT15M",
+      "END:VALARM",
+      "END:VEVENT",
+      "END:VCALENDAR"
+    ].join("\r\n");
+
+    var blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "webinar-yetkinlik-performans.ics";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
