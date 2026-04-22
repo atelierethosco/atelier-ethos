@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Atelier Ethos</title>
+<meta name="robots" content="noindex,nofollow">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #414042; background: #faf9f9; min-height: 100vh; }
+
+  /* --- LOGIN --- */
+  .ae-login-wrap {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 20px; background: linear-gradient(180deg, #faf9f9 0%, #f0ecec 100%);
+  }
+  .ae-login-card {
+    background: #fff; border: 0.5px solid #e8e8e8; border-radius: 14px;
+    padding: 44px 40px; width: 100%; max-width: 420px;
+    box-shadow: 0 20px 60px rgba(65, 64, 66, 0.08);
+  }
+  .ae-login-brand { font-size: 11px; letter-spacing: 2.5px; color: #c12033; text-transform: uppercase; margin-bottom: 18px; font-weight: 500; }
+  .ae-login-title { font-size: 24px; font-weight: 500; color: #414042; margin-bottom: 10px; }
+  .ae-login-sub { font-size: 14px; color: #6b6b6b; margin-bottom: 26px; line-height: 1.6; }
+  .ae-login-input {
+    width: 100%; padding: 14px 16px; border: 0.5px solid #d4d4d4; border-radius: 6px;
+    font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.15s;
+  }
+  .ae-login-input:focus { border-color: #c12033; }
+  .ae-login-btn {
+    width: 100%; background: #c12033; color: #fff; border: none;
+    padding: 14px 20px; border-radius: 6px; font-size: 15px; font-weight: 500;
+    cursor: pointer; margin-top: 12px; font-family: inherit;
+    transition: background 0.15s;
+  }
+  .ae-login-btn:hover { background: #a81c2b; }
+  .ae-login-error {
+    margin-top: 12px; font-size: 13px; color: #c12033;
+    background: #fef2f2; padding: 10px 14px; border-radius: 6px; display: none;
+  }
+  .ae-login-error.visible { display: block; }
+
+  /* --- DASHBOARD --- */
+  .ae-dash { display: none; }
+  .ae-dash.visible { display: block; }
+
+  .ae-dash-nav {
+    background: #fff; border-bottom: 0.5px solid #e8e8e8;
+    padding: 16px 32px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .ae-dash-brand { display: flex; align-items: center; gap: 14px; }
+  .ae-dash-brand img { height: 40px; }
+  .ae-dash-title-wrap { line-height: 1.2; }
+  .ae-dash-title { font-size: 16px; font-weight: 500; color: #414042; }
+  .ae-dash-sub { font-size: 11px; color: #a7a9ab; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  .ae-dash-actions { display: flex; gap: 12px; align-items: center; }
+  .ae-refresh-btn {
+    background: #fff; border: 0.5px solid #d4d4d4; padding: 8px 14px;
+    border-radius: 6px; font-size: 13px; cursor: pointer; color: #414042;
+    display: flex; align-items: center; gap: 6px;
+    font-family: inherit;
+  }
+  .ae-refresh-btn:hover { border-color: #c12033; color: #c12033; }
+  .ae-updated { font-size: 12px; color: #a7a9ab; }
+
+  .ae-dash-body { padding: 28px 32px 60px; max-width: 1400px; margin: 0 auto; }
+
+  .ae-section-title {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: #c12033; font-weight: 500; margin: 28px 0 14px;
+  }
+  .ae-section-title:first-child { margin-top: 0; }
+
+  /* KPI GRID */
+  .ae-kpi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px; margin-bottom: 20px;
+  }
+  .ae-kpi-card {
+    background: #fff; border: 0.5px solid #e8e8e8; border-radius: 10px;
+    padding: 20px 22px; position: relative; overflow: hidden;
+  }
+  .ae-kpi-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+    background: #c12033;
+  }
+  .ae-kpi-label { font-size: 11px; letter-spacing: 1.2px; color: #a7a9ab; text-transform: uppercase; margin-bottom: 10px; }
+  .ae-kpi-value { font-size: 32px; font-weight: 400; color: #414042; line-height: 1.1; }
+  .ae-kpi-unit { font-size: 12px; color: #a7a9ab; margin-top: 4px; }
+
+  /* CHARTS GRID */
+  .ae-chart-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
+  }
+  .ae-chart-card {
+    background: #fff; border: 0.5px solid #e8e8e8; border-radius: 10px;
+    padding: 22px 24px;
+  }
+  .ae-chart-card h3 {
+    font-size: 14px; font-weight: 500; color: #414042; margin-bottom: 16px;
+  }
+  .ae-chart-wrap { position: relative; height: 260px; }
+  .ae-chart-wrap-tall { position: relative; height: 320px; }
+
+  .ae-chart-full { grid-column: 1 / -1; }
+
+  /* TABLE */
+  .ae-table-card {
+    background: #fff; border: 0.5px solid #e8e8e8; border-radius: 10px;
+    padding: 22px 0; overflow: hidden;
+  }
+  .ae-table-card h3 {
+    font-size: 14px; font-weight: 500; color: #414042; margin: 0 24px 14px;
+  }
+  .ae-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ae-table th {
+    text-align: left; padding: 10px 14px; color: #a7a9ab; font-weight: 500;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    border-bottom: 0.5px solid #e8e8e8;
+  }
+  .ae-table th:first-child { padding-left: 24px; }
+  .ae-table th:last-child { padding-right: 24px; }
+  .ae-table td {
+    padding: 12px 14px; color: #414042; border-bottom: 0.5px solid #f5f5f5;
+  }
+  .ae-table td:first-child { padding-left: 24px; }
+  .ae-table td:last-child { padding-right: 24px; }
+  .ae-table tr:last-child td { border-bottom: none; }
+  .ae-table tr:hover td { background: #faf9f9; }
+
+  .ae-badge {
+    display: inline-block; padding: 3px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 500; background: #faf9f9; color: #414042;
+  }
+  .ae-badge-red { background: #fef2f2; color: #c12033; }
+  .ae-badge-blue { background: #eff6ff; color: #2563eb; }
+  .ae-badge-green { background: #f0fdf4; color: #16a34a; }
+  .ae-badge-gray { background: #f4f4f5; color: #6b7280; }
+
+  /* WEBINAR CARDS */
+  .ae-webinar-list {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 14px;
+  }
+  .ae-webinar-card {
+    background: #fff; border: 0.5px solid #e8e8e8; border-radius: 10px;
+    padding: 22px 24px;
+  }
+  .ae-webinar-id { font-size: 11px; letter-spacing: 1.5px; color: #c12033; text-transform: uppercase; margin-bottom: 6px; }
+  .ae-webinar-count { font-size: 28px; font-weight: 400; color: #414042; margin-bottom: 14px; }
+  .ae-webinar-count small { font-size: 12px; color: #a7a9ab; font-weight: 400; margin-left: 6px; }
+  .ae-webinar-channels { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .ae-spinner {
+    width: 32px; height: 32px; border: 2.5px solid #f0ecec;
+    border-top-color: #c12033; border-radius: 50%; animation: spin 0.8s linear infinite;
+    margin: 80px auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .ae-empty {
+    text-align: center; padding: 40px 20px; color: #a7a9ab; font-size: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .ae-dash-nav { padding: 14px 18px; flex-wrap: wrap; gap: 12px; }
+    .ae-dash-body { padding: 20px 18px; }
+    .ae-chart-grid { grid-template-columns: 1fr; }
+    .ae-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .ae-kpi-value { font-size: 24px; }
+    .ae-table { font-size: 12px; }
+    .ae-table th, .ae-table td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-wrap" class="ae-login-wrap">
+  <div class="ae-login-card">
+    <div class="ae-login-brand">Atelier Ethos</div>
+    <h1 class="ae-login-title">Dashboard Girişi</h1>
+    <p class="ae-login-sub">Devam etmek için erişim anahtarını girin.</p>
+    <input type="password" id="pw-input" class="ae-login-input" placeholder="Anahtar" autocomplete="off" />
+    <button id="login-btn" class="ae-login-btn">Giriş Yap</button>
+    <div id="login-error" class="ae-login-error">Anahtar doğru değil veya sunucuya ulaşılamadı.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash" class="ae-dash">
+
+  <nav class="ae-dash-nav">
+    <div class="ae-dash-brand">
+      <img src="/LogoSS.png" alt="Atelier Ethos" />
+      <div class="ae-dash-title-wrap">
+        <div class="ae-dash-title">Master Dashboard</div>
+        <div class="ae-dash-sub">Contact System · Analytics</div>
+      </div>
+    </div>
+    <div class="ae-dash-actions">
+      <span class="ae-updated" id="last-updated">—</span>
+      <button class="ae-refresh-btn" onclick="loadDashboard()">↻ Yenile</button>
+    </div>
+  </nav>
+
+  <div class="ae-dash-body">
+
+    <div id="loading-state">
+      <div class="ae-spinner"></div>
+      <p style="text-align:center;color:#a7a9ab;font-size:13px;">Veriler çekiliyor...</p>
+    </div>
+
+    <div id="data-state" style="display:none;">
+
+      <!-- ÖZET KPI -->
+      <div class="ae-section-title">Özet</div>
+      <div class="ae-kpi-grid" id="kpi-grid"></div>
+
+      <!-- KANAL & TAG DAĞILIMI -->
+      <div class="ae-section-title">Dağılımlar</div>
+      <div class="ae-chart-grid">
+        <div class="ae-chart-card">
+          <h3>İlk Temas Kanalı (tüm kişiler)</h3>
+          <div class="ae-chart-wrap"><canvas id="chart-firsttouch"></canvas></div>
+        </div>
+        <div class="ae-chart-card">
+          <h3>İlgi Alanları (tag dağılımı)</h3>
+          <div class="ae-chart-wrap"><canvas id="chart-tags"></canvas></div>
+        </div>
+      </div>
+
+      <!-- ZAMAN TRENDİ -->
+      <div class="ae-section-title">Son 30 Gün</div>
+      <div class="ae-chart-card" style="margin-bottom:20px;">
+        <h3>Günlük Event Trendi</h3>
+        <div class="ae-chart-wrap-tall"><canvas id="chart-daily"></canvas></div>
+      </div>
+
+      <!-- WEBINAR DETAY -->
+      <div class="ae-section-title">Webinarlar</div>
+      <div class="ae-webinar-list" id="webinar-list"></div>
+
+      <!-- EVENT TYPES & TOP TOOLS -->
+      <div class="ae-section-title" style="margin-top:28px;">Event Tipleri & Popüler İçerikler</div>
+      <div class="ae-chart-grid">
+        <div class="ae-chart-card">
+          <h3>Event Tipleri</h3>
+          <div class="ae-chart-wrap"><canvas id="chart-eventtypes"></canvas></div>
+        </div>
+        <div class="ae-chart-card">
+          <h3>En Çok İndirilen Tool'lar</h3>
+          <div class="ae-chart-wrap"><canvas id="chart-tools"></canvas></div>
+        </div>
+      </div>
+
+      <!-- RECENT EVENTS -->
+      <div class="ae-section-title" style="margin-top:28px;">Son Aktiviteler</div>
+      <div class="ae-table-card">
+        <h3>Son 20 Event</h3>
+        <table class="ae-table">
+          <thead>
+            <tr>
+              <th>Tarih</th>
+              <th>E-posta</th>
+              <th>Tip</th>
+              <th>Kanal</th>
+              <th>Referans</th>
+            </tr>
+          </thead>
+          <tbody id="recent-tbody"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div id="error-state" style="display:none;">
+      <div class="ae-empty">Veriler yüklenemedi. Sayfayı yenilemeyi deneyin.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ==================== CONFIG ====================
+  var BACKEND_URL = "https://script.google.com/macros/s/AKfycbzKYUsVdVd7VojPuqKEvMoftjJcH-Z8BzBZbUmeLEA-NqTMVY14vXklAanjDQuj3T8I/exec";
+  var DASHBOARD_KEY = "ethos2026";
+  // ================================================
+
+  var RED = '#c12033';
+  var RED_LIGHT = '#e84a5f';
+  var DARK = '#414042';
+  var LIGHT = '#a7a9ab';
+  var BG = '#faf9f9';
+
+  var PALETTE = ['#c12033', '#e84a5f', '#f47a5a', '#fab06b', '#6b7b8c', '#8b9aa9', '#a7a9ab', '#d4d4d4'];
+
+  var charts = {}; // chart instance'larını tut, refresh'te destroy edelim
+
+  // URL'de key varsa direkt giriş yap
+  (function checkUrlKey() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('key') === DASHBOARD_KEY) {
+      unlockDashboard();
+    }
+  })();
+
+  document.getElementById('login-btn').addEventListener('click', attemptLogin);
+  document.getElementById('pw-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') attemptLogin();
+  });
+
+  function attemptLogin() {
+    var pw = document.getElementById('pw-input').value.trim();
+    if (pw === DASHBOARD_KEY) {
+      unlockDashboard();
+    } else {
+      var err = document.getElementById('login-error');
+      err.textContent = "Anahtar doğru değil.";
+      err.classList.add('visible');
+    }
+  }
+
+  function unlockDashboard() {
+    document.getElementById('login-wrap').style.display = 'none';
+    document.getElementById('dash').classList.add('visible');
+    loadDashboard();
+  }
+
+  function loadDashboard() {
+    document.getElementById('loading-state').style.display = 'block';
+    document.getElementById('data-state').style.display = 'none';
+    document.getElementById('error-state').style.display = 'none';
+
+    var url = BACKEND_URL + '?key=' + encodeURIComponent(DASHBOARD_KEY) + '&action=dashboard';
+
+    fetch(url)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data.ok) throw new Error(data.error || 'Unknown');
+        renderDashboard(data);
+      })
+      .catch(function(err) {
+        console.error(err);
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('error-state').style.display = 'block';
+      });
+  }
+
+  function renderDashboard(data) {
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('data-state').style.display = 'block';
+
+    // Last updated
+    var updatedAt = new Date(data.generatedAt);
+    document.getElementById('last-updated').textContent =
+      'Son güncelleme: ' + updatedAt.toLocaleString('tr-TR');
+
+    renderKPI(data.kpi);
+    renderFirstTouch(data.firstTouchChannels);
+    renderTags(data.tags);
+    renderDaily(data.dailyTrend);
+    renderWebinars(data.webinarBreakdown);
+    renderEventTypes(data.eventTypes);
+    renderTools(data.toolDownloads);
+    renderRecent(data.recentEvents);
+  }
+
+  function renderKPI(kpi) {
+    var cards = [
+      { label: 'Toplam Kişi', value: kpi.totalContacts, unit: 'contact' },
+      { label: 'Toplam Event', value: kpi.totalEvents, unit: 'işlem' },
+      { label: 'Bu Ay Yeni', value: kpi.thisMonthContacts, unit: 'kişi' },
+      { label: 'Bugün', value: kpi.todayEvents, unit: 'işlem' },
+      { label: 'Tool İndirme', value: kpi.toolDownloads, unit: 'indirme' },
+      { label: 'Webinar Kaydı', value: kpi.webinarRegistrations, unit: 'kayıt' },
+      { label: 'Stres Anketi', value: kpi.stresCompletions, unit: 'tamamlandı' },
+      { label: 'Gönderilen Mail', value: kpi.mailsSent, unit: 'mail' }
+    ];
+
+    var html = cards.map(function(c) {
+      return '<div class="ae-kpi-card">' +
+               '<div class="ae-kpi-label">' + c.label + '</div>' +
+               '<div class="ae-kpi-value">' + c.value.toLocaleString('tr-TR') + '</div>' +
+               '<div class="ae-kpi-unit">' + c.unit + '</div>' +
+             '</div>';
+    }).join('');
+
+    document.getElementById('kpi-grid').innerHTML = html;
+  }
+
+  function destroyChart(key) {
+    if (charts[key]) { charts[key].destroy(); delete charts[key]; }
+  }
+
+  function renderFirstTouch(obj) {
+    destroyChart('firsttouch');
+    var entries = Object.entries(obj).sort(function(a,b){ return b[1]-a[1]; });
+    var labels = entries.map(function(e){ return e[0]; });
+    var values = entries.map(function(e){ return e[1]; });
+
+    var ctx = document.getElementById('chart-firsttouch').getContext('2d');
+    charts['firsttouch'] = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{ data: values, backgroundColor: PALETTE, borderWidth: 0 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { font: { size: 12 }, color: DARK, padding: 10 } }
+        },
+        cutout: '60%'
+      }
+    });
+  }
+
+  function renderTags(obj) {
+    destroyChart('tags');
+    var entries = Object.entries(obj).sort(function(a,b){ return b[1]-a[1]; }).slice(0, 8);
+    var labels = entries.map(function(e){ return e[0]; });
+    var values = entries.map(function(e){ return e[1]; });
+
+    var ctx = document.getElementById('chart-tags').getContext('2d');
+    charts['tags'] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{ data: values, backgroundColor: RED, borderRadius: 4 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 11 } } },
+          y: { grid: { display: false }, ticks: { color: DARK, font: { size: 12 } } }
+        }
+      }
+    });
+  }
+
+  function renderDaily(obj) {
+    destroyChart('daily');
+    // Son 30 günü sıralı göster
+    var keys = Object.keys(obj).sort();
+    var values = keys.map(function(k){ return obj[k]; });
+    var labels = keys.map(function(k){
+      var d = new Date(k);
+      return d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' });
+    });
+
+    if (keys.length === 0) {
+      document.getElementById('chart-daily').parentElement.innerHTML = '<div class="ae-empty">Son 30 günde event yok.</div>';
+      return;
+    }
+
+    var ctx = document.getElementById('chart-daily').getContext('2d');
+    charts['daily'] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: values,
+          borderColor: RED,
+          backgroundColor: 'rgba(193, 32, 51, 0.08)',
+          fill: true,
+          tension: 0.35,
+          pointBackgroundColor: RED,
+          pointRadius: 3,
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 10 }, maxRotation: 0 } },
+          y: { grid: { color: '#f5f5f5' }, ticks: { color: LIGHT, font: { size: 11 } }, beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  function renderWebinars(breakdown) {
+    var entries = Object.entries(breakdown);
+    if (entries.length === 0) {
+      document.getElementById('webinar-list').innerHTML = '<div class="ae-empty">Henüz webinar kaydı yok.</div>';
+      return;
+    }
+
+    var html = entries.map(function(e) {
+      var id = e[0];
+      var info = e[1];
+      var chBadges = Object.entries(info.channels)
+        .sort(function(a,b){ return b[1]-a[1]; })
+        .map(function(c) {
+          var cls = c[0] === 'linkedin' ? 'ae-badge-blue' :
+                    c[0] === 'whatsapp' ? 'ae-badge-green' :
+                    c[0] === 'email' ? 'ae-badge-red' : 'ae-badge-gray';
+          return '<span class="ae-badge ' + cls + '">' + c[0] + ' · ' + c[1] + '</span>';
+        }).join('');
+
+      return '<div class="ae-webinar-card">' +
+               '<div class="ae-webinar-id">' + id + '</div>' +
+               '<div class="ae-webinar-count">' + info.total + '<small>kayıt</small></div>' +
+               '<div class="ae-webinar-channels">' + chBadges + '</div>' +
+             '</div>';
+    }).join('');
+
+    document.getElementById('webinar-list').innerHTML = html;
+  }
+
+  function renderEventTypes(obj) {
+    destroyChart('eventtypes');
+    var entries = Object.entries(obj).sort(function(a,b){ return b[1]-a[1]; });
+    var labels = entries.map(function(e){ return e[0]; });
+    var values = entries.map(function(e){ return e[1]; });
+
+    var ctx = document.getElementById('chart-eventtypes').getContext('2d');
+    charts['eventtypes'] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{ data: values, backgroundColor: PALETTE, borderRadius: 4 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 11 } } },
+          y: { grid: { display: false }, ticks: { color: DARK, font: { size: 11 } } }
+        }
+      }
+    });
+  }
+
+  function renderTools(obj) {
+    destroyChart('tools');
+    var entries = Object.entries(obj).sort(function(a,b){ return b[1]-a[1]; }).slice(0, 6);
+
+    if (entries.length === 0) {
+      document.getElementById('chart-tools').parentElement.innerHTML = '<div class="ae-empty">Henüz tool indirme yok.</div>';
+      return;
+    }
+
+    var labels = entries.map(function(e){ return e[0].length > 30 ? e[0].substring(0, 28) + '…' : e[0]; });
+    var values = entries.map(function(e){ return e[1]; });
+
+    var ctx = document.getElementById('chart-tools').getContext('2d');
+    charts['tools'] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{ data: values, backgroundColor: RED, borderRadius: 4 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 11 } } },
+          y: { grid: { display: false }, ticks: { color: DARK, font: { size: 11 } } }
+        }
+      }
+    });
+  }
+
+  function renderRecent(events) {
+    if (events.length === 0) {
+      document.getElementById('recent-tbody').innerHTML = '<tr><td colspan="5" class="ae-empty">Kayıt yok.</td></tr>';
+      return;
+    }
+    var html = events.map(function(e) {
+      var typeCls = e.type === 'webinar_registered' ? 'ae-badge-red' :
+                    e.type === 'tool_downloaded' ? 'ae-badge-blue' :
+                    e.type === 'commented' ? 'ae-badge-green' : 'ae-badge-gray';
+      return '<tr>' +
+               '<td>' + escapeHtml(e.date) + '</td>' +
+               '<td>' + escapeHtml(e.email) + '</td>' +
+               '<td><span class="ae-badge ' + typeCls + '">' + escapeHtml(e.type || '—') + '</span></td>' +
+               '<td>' + escapeHtml(e.channel || '—') + '</td>' +
+               '<td>' + escapeHtml(e.reference || '—') + '</td>' +
+             '</tr>';
+    }).join('');
+    document.getElementById('recent-tbody').innerHTML = html;
+  }
+
+  function escapeHtml(s) {
+    if (!s) return '';
+    return s.toString()
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+</script>
+
+</body>
+</html>
