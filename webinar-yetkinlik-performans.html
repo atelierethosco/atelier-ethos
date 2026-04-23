@@ -286,7 +286,17 @@
             <strong style="color: #414042;">24 Nisan 2026 Cuma, 12:30</strong><br>
             Yetkinlik Bazlı Performans Sistemi Nasıl Kurulur?
           </p>
-          <div class="ae-success-actions">
+
+          <!-- OPSİYONEL SORU BÖLÜMÜ -->
+          <div id="ae-soru-section" style="margin-top: 28px; padding-top: 24px; border-top: 0.5px solid #e8e8e8;">
+            <h3 style="font-size: 15px; font-weight: 500; color: #414042; margin-bottom: 6px;">Webinardan beklentiniz nedir? <span style="color: #a7a9ab; font-weight: 400; font-size: 13px;">(opsiyonel)</span></h3>
+            <p style="font-size: 13px; color: #a7a9ab; line-height: 1.6; margin-bottom: 14px;">Aklınızdaki soruları veya odaklanmamızı istediğiniz bir konuyu paylaşabilirsiniz. Sunuma dahil etmeye çalışırız.</p>
+            <textarea id="ae-beklenti" placeholder="Örn: Şirketimde yetkinlik bazlı performans sistemini sıfırdan kurmam gerekiyor, nereden başlamalıyım?" style="width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px; padding: 12px 14px; font-size: 14px; color: #414042; font-family: inherit; outline: none; resize: vertical; min-height: 100px; line-height: 1.6;"></textarea>
+            <button type="button" class="ae-btn-primary" id="ae-soru-gonder-btn" style="margin-top: 12px;">Gönder</button>
+            <div id="ae-soru-gonderildi" style="display: none; margin-top: 12px; padding: 12px 14px; background: #faf9f9; border-radius: 6px; font-size: 13px; color: #414042; text-align: center;">✓ Beklentiniz bize ulaştı. Teşekkürler!</div>
+          </div>
+
+          <div class="ae-success-actions" style="margin-top: 24px; padding-top: 20px; border-top: 0.5px solid #e8e8e8;">
             <button type="button" class="ae-btn-primary" id="ae-ics-btn">Takvime Ekle (.ics)</button>
             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Yetkinlik+Bazl%C4%B1+Performans+Sistemi+Nas%C4%B1l+Kurulur%3F&dates=20260424T093000Z/20260424T103000Z&details=Zoom+Link%3A+https%3A%2F%2Fus06web.zoom.us%2Fj%2F87201403028%3Fpwd%3DUSfPE6zvcIKvbxPIKhT37UVThj3i60.1%0APasscode%3A+771223&location=https%3A%2F%2Fus06web.zoom.us%2Fj%2F87201403028%3Fpwd%3DUSfPE6zvcIKvbxPIKhT37UVThj3i60.1" target="_blank" class="ae-btn-outline">Google Takvim'e Ekle</a>
             <a href="/" class="ae-btn-outline">Atelier Ethos'a Dön</a>
@@ -339,6 +349,10 @@
   var adInput = document.getElementById("ad-soyad");
   var emailInput = document.getElementById("email");
 
+  // Kayıt sonrası hatırlamak için
+  var submittedAd = "";
+  var submittedEmail = "";
+
   adInput.addEventListener("input", function() { adInput.classList.remove("invalid"); });
   emailInput.addEventListener("input", function() { emailInput.classList.remove("invalid"); });
 
@@ -376,6 +390,10 @@
       referrer: utm.referrer
     };
 
+    // Kayıt bilgilerini sakla (soru formu için)
+    submittedAd = adSoyad;
+    submittedEmail = email;
+
     fetch(SHEETS_URL, {
       method: "POST",
       mode: "no-cors",
@@ -389,6 +407,47 @@
       formWrap.style.display = "none";
       successWrap.classList.add("visible");
       window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
+  // Opsiyonel soru gönderimi
+  document.getElementById("ae-soru-gonder-btn").addEventListener("click", function() {
+    var beklentiEl = document.getElementById("ae-beklenti");
+    var beklenti = beklentiEl.value.trim();
+    if (!beklenti) {
+      beklentiEl.focus();
+      return;
+    }
+
+    var btn = document.getElementById("ae-soru-gonder-btn");
+    btn.disabled = true;
+    btn.textContent = "Gönderiliyor...";
+
+    var payload = {
+      tip: "webinar_on_soru",
+      webinarId: WEBINAR_ID,
+      adSoyad: submittedAd,
+      email: submittedEmail,
+      beklenti: beklenti,
+      soru: ""
+    };
+
+    fetch(SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(function() {
+      document.getElementById("ae-soru-section").innerHTML =
+        '<div style="padding: 20px; background: #faf9f9; border-left: 3px solid #c12033; border-radius: 0 6px 6px 0; text-align: center;">' +
+        '<div style="font-size: 15px; color: #414042; font-weight: 500;">✓ Beklentiniz bize ulaştı</div>' +
+        '<div style="font-size: 13px; color: #6b6b6b; margin-top: 4px;">Webinar sırasında sunuma dahil etmeye çalışacağız.</div>' +
+        '</div>';
+    }).catch(function() {
+      document.getElementById("ae-soru-section").innerHTML =
+        '<div style="padding: 20px; background: #faf9f9; border-left: 3px solid #c12033; border-radius: 0 6px 6px 0; text-align: center;">' +
+        '<div style="font-size: 15px; color: #414042; font-weight: 500;">✓ Beklentiniz bize ulaştı</div>' +
+        '</div>';
     });
   });
 
@@ -430,5 +489,5 @@
   });
 </script>
 
-<script defer src="/_vercel/insights/script.js"></script>
+</body>
 </html>
