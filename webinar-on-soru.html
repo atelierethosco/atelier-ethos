@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webinar Öncesi Beklentiler — Atelier Ethos</title>
+<meta name="description" content="Webinar öncesi beklentilerinizi bize iletin.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #414042; background: #fff; overflow-x: hidden; }
+
+  .ae-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: #fff; border-bottom: 0.5px solid #e8e8e8;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 60px; height: 90px;
+  }
+  .ae-nav img { height: 66px; width: auto; }
+  .ae-nav-cta { background: #c12033; color: #fff !important; font-size: 14px; padding: 10px 24px; border-radius: 4px; text-decoration: none; }
+
+  .ae-page {
+    min-height: 100vh;
+    padding: 130px 40px 60px;
+    background: linear-gradient(180deg, #faf9f9 0%, #fff 100%);
+  }
+
+  .ae-container { max-width: 640px; margin: 0 auto; }
+
+  .ae-intro { margin-bottom: 28px; text-align: center; }
+  .ae-label-small {
+    font-size: 11px; letter-spacing: 2.5px; color: #c12033;
+    text-transform: uppercase; margin-bottom: 14px; display: block; font-weight: 500;
+  }
+  .ae-page-title { font-size: 30px; font-weight: 500; line-height: 1.2; color: #414042; margin-bottom: 14px; }
+  .ae-page-title em { font-style: normal; color: #c12033; }
+  .ae-page-lead { font-size: 15px; color: #6b6b6b; line-height: 1.75; }
+
+  .ae-webinar-card {
+    background: #fff; border: 0.5px solid #e8e8e8; border-left: 3px solid #c12033;
+    border-radius: 0 8px 8px 0; padding: 18px 22px; margin-bottom: 24px;
+  }
+  .ae-webinar-card .title { font-size: 14px; font-weight: 500; color: #414042; margin-bottom: 6px; }
+  .ae-webinar-card .meta { font-size: 13px; color: #6b6b6b; line-height: 1.6; }
+
+  .ae-form-card {
+    background: #fff; border: 0.5px solid #e8e8e8;
+    border-radius: 12px; padding: 32px 30px;
+    box-shadow: 0 4px 20px rgba(65, 64, 66, 0.04);
+  }
+
+  .ae-fg { margin-bottom: 18px; }
+  .ae-fg-label { display: block; font-size: 13px; color: #414042; margin-bottom: 6px; font-weight: 500; }
+  .ae-fg-label .req { color: #c12033; margin-left: 2px; }
+  .ae-fg-hint { font-size: 12px; color: #a7a9ab; margin-top: 4px; line-height: 1.5; }
+  .ae-fg input, .ae-fg textarea {
+    width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px;
+    padding: 12px 16px; font-size: 15px; color: #414042;
+    font-family: inherit; outline: none; background: #fff;
+    transition: border-color 0.15s;
+    resize: vertical;
+  }
+  .ae-fg textarea { min-height: 140px; line-height: 1.6; }
+  .ae-fg input:focus, .ae-fg textarea:focus { border-color: #c12033; }
+  .ae-fg input.invalid, .ae-fg textarea.invalid { border-color: #c12033; background: #fef7f8; }
+
+  .ae-fg input:disabled {
+    background: #faf9f9; color: #6b6b6b; cursor: not-allowed;
+  }
+  .ae-locked-badge {
+    display: inline-block; font-size: 10px; color: #a7a9ab;
+    background: #faf9f9; padding: 2px 8px; border-radius: 3px;
+    margin-left: 8px; letter-spacing: 0.5px;
+  }
+
+  .ae-submit {
+    background: #c12033; color: #fff; border: none;
+    padding: 15px 24px; border-radius: 6px; font-size: 15px;
+    cursor: pointer; width: 100%; font-family: inherit; font-weight: 500;
+    transition: background 0.15s; margin-top: 8px;
+  }
+  .ae-submit:hover:not(:disabled) { background: #a81c2b; }
+  .ae-submit:disabled { background: #a7a9ab; cursor: not-allowed; }
+
+  .ae-error {
+    display: none; background: #fef2f2; border: 1px solid #fecaca;
+    border-radius: 6px; padding: 12px 16px; font-size: 13px;
+    color: #c12033; margin-bottom: 16px;
+  }
+
+  .ae-privacy {
+    font-size: 12px; color: #a7a9ab;
+    text-align: center; line-height: 1.6; margin-top: 14px;
+  }
+
+  /* --- SUCCESS STATE --- */
+  .ae-success { display: none; text-align: center; }
+  .ae-success.visible { display: block; }
+  .ae-success-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #c12033; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 20px;
+  }
+  .ae-success h2 { font-size: 22px; font-weight: 500; color: #414042; margin-bottom: 12px; }
+  .ae-success p { font-size: 14px; color: #6b6b6b; line-height: 1.7; margin-bottom: 18px; }
+  .ae-success-btn {
+    display: inline-block; background: #c12033; color: #fff;
+    padding: 12px 24px; border-radius: 6px; text-decoration: none;
+    font-size: 14px; font-weight: 500; margin-top: 10px;
+  }
+  .ae-success-btn:hover { background: #a81c2b; }
+
+  .ae-footer {
+    padding: 28px 60px; border-top: 0.5px solid #e8e8e8;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 40px; background: #fff;
+  }
+  .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+  .ae-footer-links { display: flex; gap: 24px; }
+  .ae-footer-links a { font-size: 13px; color: #a7a9ab; text-decoration: none; }
+  .ae-footer-links a:hover { color: #c12033; }
+
+  @media (max-width: 768px) {
+    .ae-nav { padding: 14px 20px; height: auto; }
+    .ae-nav img { height: 48px; }
+    .ae-page { padding: 100px 20px 40px; }
+    .ae-page-title { font-size: 24px; }
+    .ae-form-card { padding: 24px 20px; }
+    .ae-footer { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="ae-nav">
+  <a href="/"><img src="/LogoSS.png" alt="Atelier Ethos" /></a>
+  <a href="/" class="ae-nav-cta">Ana Sayfa</a>
+</nav>
+
+<main class="ae-page">
+  <div class="ae-container">
+
+    <!-- INTRO -->
+    <div class="ae-intro">
+      <span class="ae-label-small">Webinar Öncesi</span>
+      <h1 class="ae-page-title">Beklentilerinizi duymak <em>istiyoruz</em></h1>
+      <p class="ae-page-lead">Webinardan önce aklınızdaki soruları ve bu buluşmadan beklentilerinizi bize iletin. Sunuma olabildiğince dahil etmeye çalışalım.</p>
+    </div>
+
+    <!-- WEBINAR INFO -->
+    <div class="ae-webinar-card">
+      <div class="title">Yetkinlik Bazlı Performans Sistemi Nasıl Kurulur?</div>
+      <div class="meta">24 Nisan 2026 Cuma · 12:30 – 13:30 (GMT+3)</div>
+    </div>
+
+    <!-- FORM STATE -->
+    <div id="ae-form-wrap">
+      <div class="ae-form-card">
+
+        <div id="ae-error" class="ae-error"></div>
+
+        <form id="ae-form" autocomplete="off" novalidate>
+          <div class="ae-fg">
+            <label class="ae-fg-label" for="ad-soyad">Ad Soyad <span class="req">*</span></label>
+            <input type="text" id="ad-soyad" placeholder="Adınız ve soyadınız" required />
+          </div>
+
+          <div class="ae-fg">
+            <label class="ae-fg-label" for="email">E-posta <span id="email-badge" class="ae-locked-badge" style="display:none;">Kilitli</span></label>
+            <input type="email" id="email" placeholder="ornek@mail.com" required />
+            <div class="ae-fg-hint" id="email-hint" style="display:none;">Webinar kaydınızdaki mail adresiniz. Değiştirmek isterseniz yeniden formdan kayıt olmanız gerekir.</div>
+          </div>
+
+          <div class="ae-fg">
+            <label class="ae-fg-label" for="beklenti">Bu webinardan beklentiniz nedir? <span class="req">*</span></label>
+            <textarea id="beklenti" placeholder="Aklınızdaki soruları, merak ettiklerinizi ve sunumda odaklanmamızı istediğiniz konuları paylaşabilirsiniz."></textarea>
+            <div class="ae-fg-hint">Paylaştıklarınızı sunuma dahil etmeye çalışırız.</div>
+          </div>
+
+          <button type="submit" class="ae-submit" id="ae-submit-btn">Gönder</button>
+        </form>
+        <p class="ae-privacy">Yanıtlarınız sadece Atelier Ethos ekibi tarafından görülür.</p>
+      </div>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div id="ae-success" class="ae-success">
+      <div class="ae-form-card">
+        <div class="ae-success-icon">✓</div>
+        <h2>Teşekkürler</h2>
+        <p>
+          Beklentileriniz bize ulaştı. Webinar sırasında sunuma dahil etmeye çalışacağız.
+        </p>
+        <p style="background: #faf9f9; padding: 14px 18px; border-radius: 6px; border-left: 3px solid #c12033; text-align: left;">
+          <strong style="color: #414042;">24 Nisan 2026 Cuma, 12:30</strong><br>
+          Yetkinlik Bazlı Performans Sistemi Nasıl Kurulur?
+        </p>
+        <a href="/" class="ae-success-btn">Atelier Ethos'a Dön</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="ae-footer">
+  <span class="ae-footer-copy">© 2022 Atelier Ethos</span>
+  <div class="ae-footer-links">
+    <a href="/">Ana Sayfa</a>
+    <a href="mailto:ece.demir@atelierethos.com">Mail</a>
+    <a href="https://instagram.com/atelier_ethos" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+<script>
+  // ==================== CONFIG ====================
+  var WEBINAR_ID = "W001_yetkinlik_performans";
+  var SHEETS_URL = "https://script.google.com/macros/s/AKfycbzKYUsVdVd7VojPuqKEvMoftjJcH-Z8BzBZbUmeLEA-NqTMVY14vXklAanjDQuj3T8I/exec";
+  // =================================================
+
+  var form = document.getElementById("ae-form");
+  var errorBox = document.getElementById("ae-error");
+  var submitBtn = document.getElementById("ae-submit-btn");
+  var formWrap = document.getElementById("ae-form-wrap");
+  var successWrap = document.getElementById("ae-success");
+  var adInput = document.getElementById("ad-soyad");
+  var emailInput = document.getElementById("email");
+  var beklentiInput = document.getElementById("beklenti");
+  var emailBadge = document.getElementById("email-badge");
+  var emailHint = document.getElementById("email-hint");
+
+  // URL'den email ve ad bilgisini oku, forma önce doldur, email alanını kilitle
+  (function prefillFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    var emailParam = params.get("email");
+    var adParam = params.get("ad");
+
+    if (emailParam) {
+      emailInput.value = emailParam;
+      emailInput.disabled = true;
+      emailBadge.style.display = "inline-block";
+      emailHint.style.display = "block";
+    }
+    if (adParam) {
+      adInput.value = decodeURIComponent(adParam);
+    }
+  })();
+
+  // Clear invalid state
+  [adInput, emailInput, beklentiInput].forEach(function(el) {
+    el.addEventListener("input", function() { el.classList.remove("invalid"); });
+  });
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    errorBox.style.display = "none";
+
+    var adSoyad = adInput.value.trim();
+    var email = emailInput.value.trim();
+    var beklenti = beklentiInput.value.trim();
+    var emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    var hasError = false;
+    var firstErr = null;
+    if (!adSoyad) { adInput.classList.add("invalid"); if (!firstErr) firstErr = adInput; hasError = true; }
+    if (!email || !emailValid) { emailInput.classList.add("invalid"); if (!firstErr) firstErr = emailInput; hasError = true; }
+    if (!beklenti) { beklentiInput.classList.add("invalid"); if (!firstErr) firstErr = beklentiInput; hasError = true; }
+
+    if (hasError) {
+      errorBox.textContent = "Lütfen zorunlu alanları eksiksiz doldurun.";
+      errorBox.style.display = "block";
+      if (firstErr) firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Gönderiliyor...";
+
+    var payload = {
+      tip: "webinar_on_soru",
+      webinarId: WEBINAR_ID,
+      adSoyad: adSoyad,
+      email: email,
+      beklenti: beklenti,
+      soru: ""
+    };
+
+    fetch(SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(function() {
+      formWrap.style.display = "none";
+      successWrap.classList.add("visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }).catch(function() {
+      formWrap.style.display = "none";
+      successWrap.classList.add("visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+</script>
+
+</body>
+</html>
