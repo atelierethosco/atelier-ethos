@@ -478,6 +478,52 @@
     .ae-doc-package-cta:hover { background: #a81c2b; }
     .ae-doc-package-cta .lucide { stroke: #fff; }
 
+    /* === KİLİTLİ PAKET NOTU === */
+    .ae-pkg-locked {
+      background: #faf9f9;
+      border: 0.5px solid #e8e8e8;
+      border-left: 3px solid #c12033;
+      border-radius: 4px;
+      padding: 14px 18px;
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .ae-pkg-locked-icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      stroke: #c12033;
+      stroke-width: 1.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      margin-top: 2px;
+    }
+    .ae-pkg-locked-content {
+      flex: 1;
+    }
+    .ae-pkg-locked-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: #414042;
+      margin-bottom: 4px;
+    }
+    .ae-pkg-locked-desc {
+      font-size: 12px;
+      color: #6b6b6b;
+      line-height: 1.55;
+    }
+    .ae-pkg-locked-link {
+      color: #c12033;
+      font-weight: 500;
+      border-bottom: 1px solid #c12033;
+      padding-bottom: 1px;
+      transition: opacity 0.2s;
+    }
+    .ae-pkg-locked-link:hover { opacity: 0.7; }
+
     /* ---------- BOŞ DURUM ---------- */
     .ae-empty {
       text-align: center;
@@ -611,7 +657,7 @@
         <p class="ae-teaser-num">02 · Etkinlik Sonrası</p>
         <h3 class="ae-teaser-title">Webinar / Atölye Materyalleri</h3>
         <p class="ae-teaser-desc">Etkinliklerimizden çıkan tam paketler. Sunum, kılavuzlar ve örnek dokümanlar bir arada.</p>
-        <p class="ae-teaser-count">1 paket →</p>
+        <p class="ae-teaser-count">2 paket →</p>
       </a>
       <a href="#kilavuzlar" class="ae-teaser-card">
         <p class="ae-teaser-num">03 · İndirilebilir</p>
@@ -706,7 +752,7 @@
         <p class="ae-cat-num">02 · Etkinlik Sonrası</p>
         <h2 class="ae-cat-title">Webinar / Atölye Materyalleri</h2>
       </div>
-      <span class="ae-cat-count">1 paket</span>
+      <span class="ae-cat-count">2 paket</span>
     </div>
 
     <div class="ae-docs">
@@ -726,13 +772,10 @@
                 <div class="ae-doc-meta" style="margin-top: 8px;">
                   <span class="ae-doc-meta-tag">Paket</span>
                   <span class="ae-doc-meta-item">6 doküman</span>
+                  <span class="ae-doc-meta-item" style="color:#c12033;">Katılımcılara özel</span>
                 </div>
               </div>
             </div>
-            <a href="/webinar-yetkinlik-materyalleri.html" class="ae-doc-package-cta">
-              Paketi al
-              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
           </div>
         </div>
 
@@ -763,6 +806,82 @@
             <li>
               <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               Bonus Kontrol Listesi (PDF)
+            </li>
+          </ul>
+
+          <!-- Kilitli paket notu -->
+          <div class="ae-pkg-locked">
+            <svg class="ae-pkg-locked-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <div class="ae-pkg-locked-content">
+              <p class="ae-pkg-locked-title">Bu paket sadece etkinlik katılımcıları ile paylaşılır</p>
+              <p class="ae-pkg-locked-desc">Yaklaşan webinar ve atölyelere kayıt olarak siz de bu kapsamlı materyal paketlerine erişebilirsiniz. <a href="/etkinlikler.html" class="ae-pkg-locked-link">Etkinlik takvimine göz atın →</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ PAKET 2: İK'YA NEREDEN BAŞLANIR (Nisan 2026 — açık) ============ -->
+      <div class="ae-doc ae-doc-package" data-search="ik nereden başlanır sıfırdan sistematik webinar paket nisan">
+
+        <!-- Üst başlık alanı -->
+        <div class="ae-doc-package-content">
+          <div class="ae-doc-package-header">
+            <div class="ae-doc-package-icon-wrap">
+              <div class="ae-doc-icon-wrap">
+                <!-- Lucide: package -->
+                <svg class="lucide" viewBox="0 0 24 24"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
+              <div class="ae-doc-package-meta">
+                <h3 class="ae-doc-title">İK'ya Nereden Başlanır?</h3>
+                <p class="ae-doc-desc" style="margin-bottom: 0;">17 Nisan 2026 webinarından çıkan tüm materyaller. Sıfırdan sistematik bir İK süreci kurmak için 8 adımlık yol haritası ve pratik formlar.</p>
+                <div class="ae-doc-meta" style="margin-top: 8px;">
+                  <span class="ae-doc-meta-tag">Paket</span>
+                  <span class="ae-doc-meta-item">8 doküman</span>
+                </div>
+              </div>
+            </div>
+            <a href="/kaynak-kutuphanesi.html" class="ae-doc-package-cta">
+              Paketi al
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Doküman listesi -->
+        <div class="ae-doc-package-content">
+          <p class="ae-doc-package-includes-title">Pakette neler var</p>
+          <ul class="ae-doc-package-list">
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Webinar Sunumu (PDF)
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              İK Pusulası Formu
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              İş Analizi Formu
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Yapılandırılmış Mülakat Soru Bankası
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Oryantasyon Checklist
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Çalışan El Kitabı Şablonu
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Kişisel Gelişim Planı Görüşme Formu
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Eğitim İhtiyaç Analizi Formu
             </li>
           </ul>
         </div>
