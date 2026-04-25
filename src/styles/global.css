@@ -172,4 +172,19 @@ h3, .ae-h3 {
   }
 
   h1, .ae-h1 { font-size: 32px; }
-  h2, .ae-h2
+  h2, .ae-h2 { font-size: 26px; }
+  h3, .ae-h3 { font-size: 19px; }
+  .ae-lead { font-size: 17px; }
+}
+
+/* ---------- 9. FOCUS STATES (erişilebilirlik) ---------- */
+*:focus-visible {
+  outline: 2px solid var(--ae-red);
+  outline-offset: 2px;
+}
+
+/* ---------- 10. SELECTION ---------- */
+::selection {
+  background: var(--ae-red);
+  color: var(--ae-white);
+}

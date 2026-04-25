@@ -1,18 +1,4 @@
 ---
-// ============================================================
-// BaseLayout.astro
-// Tüm sayfalar bu layout'u sarar. <head>, font, navbar, footer,
-// sticky CTA ve ana <slot/> burada tanımlı.
-//
-// Kullanım:
-//   ---
-//   import BaseLayout from '../layouts/BaseLayout.astro';
-//   ---
-//   <BaseLayout title="Sayfa başlığı" description="Meta açıklama">
-//     <p>Sayfa içeriği</p>
-//   </BaseLayout>
-// ============================================================
-
 import '../styles/global.css';
 import Navbar from '../components/layout/Navbar.astro';
 import Footer from '../components/layout/Footer.astro';
@@ -58,8 +44,6 @@ const canonical = Astro.url.href;
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
-
-    <!-- TRACKING SLOT — Tur 4'te Analytics.astro buraya gelecek -->
   </head>
 
   <body>
