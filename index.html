@@ -90,11 +90,11 @@
   .ae-svc ul li::before { content: '—'; position: absolute; left: 0; color: #c12033; font-size: 11px; }
 
   /* === KAYNAK KÜTÜPHANESİ === */
-  .ae-kaynak-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
-  .ae-kaynak-header > div { flex: 1; min-width: 280px; }
-  .ae-kaynak-link { font-size: 14px; color: #c12033; border-bottom: 1px solid #c12033; padding-bottom: 2px; text-decoration: none; transition: opacity 0.2s; }
-  .ae-kaynak-link:hover { opacity: 0.7; }
-  .ae-kaynak-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .ae-kaynak-header { margin-bottom: 32px; }
+  .ae-kaynak-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  .ae-kaynak-cta-row { display: flex; justify-content: center; }
+  .ae-kaynak-cta-btn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #414042; color: #414042; padding: 13px 28px; border-radius: 4px; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+  .ae-kaynak-cta-btn:hover { border-color: #c12033; color: #c12033; }
   .ae-kaynak-card { border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 28px; transition: all 0.2s; cursor: pointer; display: flex; flex-direction: column; min-height: 220px; text-decoration: none; color: inherit; }
   .ae-kaynak-card:hover { border-color: #c12033; transform: translateY(-2px); }
   .ae-kaynak-num { font-size: 11px; letter-spacing: 2.5px; color: #c12033; text-transform: uppercase; margin-bottom: 14px; font-weight: 500; }
@@ -355,11 +355,8 @@
 <div id="ae-kaynaklar" class="ae-section">
   <div class="ae-inner">
     <div class="ae-kaynak-header">
-      <div>
-        <span class="ae-label" data-tr="Kaynak Kütüphanesi" data-en="Resource Library">Kaynak Kütüphanesi</span>
-        <h2 class="ae-h2" data-tr="Atölyelerden damıttığımız <em>kaynaklar</em>" data-en="<em>Resources</em> distilled from our workshops">Atölyelerden damıttığımız <em>kaynaklar</em></h2>
-      </div>
-      <a href="/kaynak-kutuphanesi.html" class="ae-kaynak-link" data-tr="Tüm kütüphaneye git →" data-en="Go to full library →">Tüm kütüphaneye git →</a>
+      <span class="ae-label" data-tr="Kaynak Kütüphanesi" data-en="Resource Library">Kaynak Kütüphanesi</span>
+      <h2 class="ae-h2" data-tr="Atölyelerden damıttığımız <em>kaynaklar</em>" data-en="<em>Resources</em> distilled from our workshops">Atölyelerden damıttığımız <em>kaynaklar</em></h2>
     </div>
 
     <div class="ae-kaynak-grid">
@@ -381,6 +378,10 @@
         <p class="ae-kaynak-desc" data-tr="Tek başına kullanılabilen kılavuzlar, şablonlar ve hesaplama araçları." data-en="Standalone guides, templates and calculation tools.">Tek başına kullanılabilen kılavuzlar, şablonlar ve hesaplama araçları.</p>
         <p class="ae-kaynak-count" data-tr="2 doküman →" data-en="2 documents →">2 doküman →</p>
       </a>
+    </div>
+
+    <div class="ae-kaynak-cta-row">
+      <a href="/kaynak-kutuphanesi.html" class="ae-kaynak-cta-btn" data-tr="Tüm kütüphaneye git →" data-en="Go to full library →">Tüm kütüphaneye git →</a>
     </div>
   </div>
 </div>
