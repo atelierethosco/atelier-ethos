@@ -1,0 +1,218 @@
+---
+// ============================================================
+// Footer.astro
+// Tasarım rehberi 10. bölüm — "İletişim":
+//  - KİŞİSEL İLETİŞİM YOK (Ece Demir adı görünmez)
+//  - Sadece jenerik kanal: web, sosyal medya, telefon, adres
+//  - Genel mail: info@atelierethos.com (henüz oluşturulduysa)
+// ============================================================
+
+const currentYear = new Date().getFullYear();
+
+const social = [
+  { href: 'https://www.linkedin.com/company/atelier-ethos', label: 'LinkedIn' },
+  { href: 'https://instagram.com/atelierethos', label: 'Instagram' },
+  {
+    href: 'https://whatsapp.com/channel/0029Vb7WEBVElagsIAnvuT3y',
+    label: 'WhatsApp',
+  },
+];
+
+const navLinks = [
+  { href: '/', label: 'Ana sayfa' },
+  { href: '/etkinlikler', label: 'Etkinlikler' },
+  { href: '/araclar', label: 'Araçlar' },
+  { href: '/kaynaklar', label: 'Kaynaklar' },
+];
+---
+
+<footer class="ae-footer">
+  <div class="ae-container ae-footer-inner">
+    <div class="ae-footer-grid">
+      <!-- Marka kolonu -->
+      <div class="ae-footer-col ae-footer-brand-col">
+        <a href="/" class="ae-footer-brand" aria-label="Atelier Ethos ana sayfa">
+          <img src="/LogoSS.png" alt="Atelier Ethos" />
+        </a>
+        <p class="ae-footer-tagline">
+          İnsanı merkeze alan <em>sistemler</em> kuruyoruz.
+        </p>
+        <p class="ae-footer-est">EST. 2022 · İK DANIŞMANLIK ATÖLYESİ</p>
+      </div>
+
+      <!-- Sayfa linkleri -->
+      <div class="ae-footer-col">
+        <h4 class="ae-footer-heading">Site</h4>
+        <ul class="ae-footer-links">
+          {
+            navLinks.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- İletişim (jenerik) -->
+      <div class="ae-footer-col">
+        <h4 class="ae-footer-heading">İletişim</h4>
+        <ul class="ae-footer-links">
+          <li>
+            <a href="mailto:info@atelierethos.com">info@atelierethos.com</a>
+          </li>
+          <li><a href="tel:+905304746948">+90 530 474 69 48</a></li>
+          <li class="ae-footer-address">
+            Kızılırmak Mah. Dumlupınar Blv. No:3<br />
+            C-1 İç Kapı No:160, Çankaya/Ankara
+          </li>
+        </ul>
+      </div>
+
+      <!-- Sosyal -->
+      <div class="ae-footer-col">
+        <h4 class="ae-footer-heading">Sosyal</h4>
+        <ul class="ae-footer-links">
+          {
+            social.map((s) => (
+              <li>
+                <a href={s.href} target="_blank" rel="noopener noreferrer">
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <hr class="ae-hairline ae-footer-divider" />
+
+    <div class="ae-footer-bottom">
+      <p>© {currentYear} Atelier Ethos. Tüm hakları saklıdır.</p>
+      <p class="ae-footer-bottom-meta">atelierethos.com</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ae-footer {
+    background: var(--ae-bg-quiet);
+    border-top: 0.5px solid var(--ae-line);
+    padding-top: var(--ae-s-10);
+    padding-bottom: var(--ae-s-8);
+    margin-top: var(--ae-s-11);
+  }
+
+  .ae-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.4fr 1fr;
+    gap: 48px;
+    margin-bottom: var(--ae-s-8);
+  }
+
+  .ae-footer-brand-col {
+    max-width: 320px;
+  }
+
+  .ae-footer-brand img {
+    height: 36px;
+    width: auto;
+    margin-bottom: 16px;
+  }
+
+  .ae-footer-tagline {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ae-ink);
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+
+  .ae-footer-est {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ae-mute);
+  }
+
+  .ae-footer-heading {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ae-red);
+    margin-bottom: 16px;
+  }
+
+  .ae-footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ae-footer-links a {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ae-ink-soft);
+    transition: color 0.2s ease;
+  }
+
+  .ae-footer-links a:hover {
+    color: var(--ae-red);
+  }
+
+  .ae-footer-address {
+    font-size: 13px;
+    color: var(--ae-ink-soft);
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+
+  .ae-footer-divider {
+    margin: 0;
+  }
+
+  .ae-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--ae-s-6);
+    font-size: 13px;
+    color: var(--ae-mute);
+  }
+
+  .ae-footer-bottom p {
+    margin: 0;
+  }
+
+  .ae-footer-bottom-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .ae-footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .ae-footer-brand-col {
+      grid-column: 1 / -1;
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ae-footer-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ae-footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  }
+</style>
