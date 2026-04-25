@@ -33,13 +33,10 @@
     --hairline: rgba(45, 31, 16, 0.12);
   }
 
-  /* Kör link — görünür ama tıklanmaz */
-  a.dead {
-    pointer-events: none;
-    cursor: default;
-  }
+  /* Kör link */
+  a.dead { pointer-events: none; cursor: default; }
 
-  /* Nav */
+  /* Nav — kurumsal pattern: 90px height, 12px 60px padding */
   .nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -48,28 +45,33 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 0.5px solid var(--hairline);
-    height: 80px;
+    height: 90px;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 60px;
+    padding: 12px 60px;
   }
   .nav-brand {
-    display: flex; align-items: center; gap: 14px;
+    display: flex; align-items: center; gap: 16px;
     text-decoration: none;
   }
-  .nav-brand svg { width: 36px; height: 46px; }
+  .nav-brand img {
+    height: 66px;
+    width: auto;
+    display: block;
+  }
   .nav-brand-name {
     font-family: 'Fraunces', serif;
-    font-size: 15px; font-style: italic; font-weight: 300;
+    font-size: 16px; font-style: italic; font-weight: 300;
     color: var(--ink-soft);
     letter-spacing: 0.01em;
   }
-  .nav-links { display: flex; gap: 40px; align-items: center; }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
   .nav-links a {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     color: var(--ink-soft);
     text-decoration: none;
     font-weight: 400;
+    white-space: nowrap;
   }
   .nav-cta {
     padding: 10px 22px;
@@ -83,7 +85,7 @@
   .section {
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
-    padding: 120px 60px 80px;
+    padding: 130px 60px 80px;
     border-bottom: 0.5px solid var(--hairline);
   }
   .section-inner {
@@ -437,16 +439,19 @@
     box-shadow: 0 4px 16px rgba(45, 31, 16, 0.2);
   }
 
+  /* Responsive — kurumsal ile aynı: 70px nav, 44px logo */
   @media (max-width: 900px) {
-    .nav { padding: 0 24px; height: 72px; }
+    .nav { padding: 10px 20px; height: 70px; }
+    .nav-brand img { height: 44px; }
+    .nav-brand-name { display: none; }
     .nav-links { display: none; }
     .nav-cta { display: inline-block; }
-    .section { padding: 100px 24px 60px; }
+    .section { padding: 100px 20px 60px; }
     .atolye-active { padding: 40px 28px; }
     .atolye-meta { gap: 20px; }
     .atolye-row { grid-template-columns: 1fr; gap: 8px; }
     .ilkeler-grid { grid-template-columns: 1fr; gap: 40px; }
-    .footer { flex-direction: column; gap: 16px; padding: 32px 24px; text-align: center; }
+    .footer { flex-direction: column; gap: 16px; padding: 32px 20px; text-align: center; }
     .sticky-cta { bottom: 20px; right: 20px; }
     .sticky-cta-main { font-size: 13px; padding: 11px 20px; }
   }
@@ -456,11 +461,7 @@
 
 <nav class="nav">
   <a href="#hero" class="nav-brand">
-    <svg viewBox="0 0 100 130">
-      <path d="M10 5 H90 A5 5 0 0 1 95 10 V85 A5 5 0 0 1 90 90 H55 L42 110 L38 90 H10 A5 5 0 0 1 5 85 V10 A5 5 0 0 1 10 5 Z" fill="#8B5A3C"/>
-      <text x="50" y="52" text-anchor="middle" font-family="Fraunces, serif" font-size="22" font-weight="400" fill="#F1EADD" font-style="italic">atelier</text>
-      <text x="50" y="72" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="400" letter-spacing="3" fill="#F1EADD">ETHOS</text>
-    </svg>
+    <img src="/atelier-ethos-logo.svg" alt="Atelier Ethos" />
     <span class="nav-brand-name">— kendinle bir alan</span>
   </a>
   <div class="nav-links">
@@ -614,5 +615,6 @@
   <a href="#hero" class="sticky-cta-up">↑</a>
 </div>
 
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
