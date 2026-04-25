@@ -1,0 +1,72 @@
+---
+// ============================================================
+// index.astro — geçici placeholder (Tur 3'te tamamen yeniden yazılacak)
+// Bu sürüm sadece iskeletin çalıştığını test etmek için.
+// Tur 3'te buraya tam Hero + Yaklaşım + İstatistikler + Hizmetler +
+// Neden Biz + İletişim section'ları gelecek.
+// ============================================================
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Atelier Ethos — İnsanı merkeze alan sistemler kuruyoruz"
+  description="Çankaya/Ankara merkezli İK danışmanlık atölyesi. İşe alımdan performansa, kültür kurulumuna kadar insan sistemleri kuruyoruz."
+>
+  <section class="ae-section">
+    <div class="ae-container">
+      <p class="ae-eyebrow">EST. 2022 · İK DANIŞMANLIK ATÖLYESİ</p>
+
+      <h1 class="ae-display ae-hero-title">
+        İnsanı merkeze alan <em>sistemler</em> kuruyoruz.
+      </h1>
+
+      <p class="ae-lead ae-hero-lead">
+        Süreç anlatmıyoruz, <em>birlikte</em> kuruyoruz. Bir İK atölyesiyiz.
+      </p>
+
+      <div class="ae-placeholder-note">
+        <strong>Not:</strong> Bu geçici bir placeholder. Tur 3'te ana sayfa
+        tamamen yeniden yazılacak — hero, yaklaşım, istatistikler, hizmetler,
+        neden biz ve iletişim bölümleri gelecek.
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ae-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ae-red);
+    margin-bottom: 24px;
+  }
+
+  .ae-hero-title {
+    margin-bottom: 24px;
+    max-width: 880px;
+  }
+
+  .ae-hero-lead {
+    max-width: 640px;
+    margin-bottom: 48px;
+  }
+
+  .ae-placeholder-note {
+    background: var(--ae-bg-quiet);
+    border: 0.5px solid var(--ae-line);
+    border-left: 3px solid var(--ae-mute);
+    border-radius: var(--ae-radius-md);
+    padding: 20px 24px;
+    font-size: 14px;
+    color: var(--ae-ink-soft);
+    max-width: 640px;
+  }
+
+  .ae-placeholder-note strong {
+    color: var(--ae-ink);
+    font-weight: 500;
+  }
+</style>
