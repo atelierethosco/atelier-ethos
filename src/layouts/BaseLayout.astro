@@ -1,0 +1,89 @@
+---
+// ============================================================
+// BaseLayout.astro
+// Tüm sayfalar bu layout'u sarar. <head>, font, navbar, footer,
+// sticky CTA ve ana <slot/> burada tanımlı.
+//
+// Kullanım:
+//   ---
+//   import BaseLayout from '../layouts/BaseLayout.astro';
+//   ---
+//   <BaseLayout title="Sayfa başlığı" description="Meta açıklama">
+//     <p>Sayfa içeriği</p>
+//   </BaseLayout>
+// ============================================================
+
+import '../styles/global.css';
+import Navbar from '../components/layout/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
+import StickyCTA from '../components/layout/StickyCTA.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  hideStickyCTA?: boolean;
+}
+
+const {
+  title = 'Atelier Ethos — İnsanı merkeze alan sistemler kuruyoruz',
+  description = 'İK danışmanlık atölyesi. İşe alımdan performansa, kültür kurulumuna kadar insan sistemleri kuruyoruz.',
+  ogImage = '/og-default.png',
+  hideStickyCTA = false,
+} = Astro.props;
+
+const canonical = Astro.url.href;
+---
+
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta property="og:locale" content="tr_TR" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Favicon (geçici — ileride /public/favicon.svg ile değiştir) -->
+    <link rel="icon" type="image/png" href="/LogoSS.png" />
+
+    <!-- Inter font (Google Fonts) — tek font ailesi, yedek yok -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- TRACKING SLOT — Tur 4'te Analytics.astro buraya gelecek -->
+    <!-- <Analytics /> -->
+  </head>
+
+  <body>
+    <Navbar />
+
+    <main>
+      <slot />
+    </main>
+
+    <Footer />
+
+    {!hideStickyCTA && <StickyCTA />}
+  </body>
+</html>
