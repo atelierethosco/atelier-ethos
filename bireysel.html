@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier Ethos — kendinle bir alan</title>
+<meta name="description" content="Atelier Ethos'un bireysel yüzü. Kendinle çalışmak için küçük ve yavaş bir atölye.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #4A2F1C;
+    background: #F1EADD;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  :root {
+    --bg: #F1EADD;
+    --bg-deep: #E8DFCD;
+    --bg-card: #FAF5EB;
+    --ink: #2D1F10;
+    --ink-soft: #4A2F1C;
+    --ink-mute: #7A6650;
+    --toprak: #8B5A3C;
+    --toprak-deep: #6B4328;
+    --toprak-light: #B88666;
+    --hairline: rgba(45, 31, 16, 0.12);
+  }
+
+  /* Nav */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(241, 234, 221, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--hairline);
+    height: 80px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 60px;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none;
+  }
+  .nav-brand svg { width: 36px; height: 46px; }
+  .nav-brand-name {
+    font-family: 'Fraunces', serif;
+    font-size: 15px; font-style: italic; font-weight: 300;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+  .nav-links { display: flex; gap: 40px; align-items: center; }
+  .nav-links a {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--toprak); }
+  .nav-cta {
+    padding: 10px 22px;
+    background: var(--toprak);
+    color: var(--bg) !important;
+    border-radius: 999px;
+    font-size: 14px !important;
+    transition: background 0.25s;
+  }
+  .nav-cta:hover { background: var(--toprak-deep); color: var(--bg) !important; }
+
+  /* Section — her bölüm tam ekran */
+  .section {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 120px 60px 80px;
+    border-bottom: 0.5px solid var(--hairline);
+  }
+  .section-inner {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+  }
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: var(--toprak);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 32px;
+    display: block;
+  }
+
+  /* Tipografi */
+  .display {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(48px, 6.5vw, 88px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-bottom: 32px;
+  }
+  .display em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--toprak);
+  }
+  .h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .h2 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--toprak);
+  }
+  .lede {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 580px;
+    margin: 0 auto 48px;
+  }
+
+  /* Butonlar */
+  .btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-block;
+    padding: 15px 32px;
+    background: var(--toprak);
+    color: var(--bg);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 999px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .btn-primary:hover {
+    background: var(--toprak-deep);
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    display: inline-block;
+    padding: 15px 32px;
+    border: 0.5px solid var(--ink-soft);
+    color: var(--ink-soft);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 999px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: all 0.25s;
+  }
+  .btn-outline:hover {
+    border-color: var(--toprak);
+    color: var(--toprak);
+  }
+
+  /* 1. Hero */
+  .hero-flourish {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--toprak);
+    letter-spacing: 0.4em;
+    opacity: 0.6;
+    margin-bottom: 40px;
+  }
+
+  /* 2. Manifesto */
+  .manifesto-section { background: var(--bg-deep); }
+  .manifesto-text {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(40px, 5.5vw, 72px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .manifesto-text em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--toprak);
+  }
+
+  /* 3. Aktif atölye */
+  .atolye-active {
+    display: block;
+    background: var(--bg-card);
+    border: 0.5px solid var(--hairline);
+    border-radius: 24px;
+    padding: 64px 56px;
+    max-width: 680px;
+    margin: 0 auto;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s, border-color 0.3s;
+    text-align: left;
+  }
+  .atolye-active:hover {
+    transform: translateY(-4px);
+    border-color: var(--toprak);
+  }
+  .atolye-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: var(--toprak);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  .atolye-status::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--toprak);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  .atolye-active h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .atolye-active h3 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--toprak);
+  }
+  .atolye-lede {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+  .atolye-meta {
+    display: flex;
+    gap: 40px;
+    padding-top: 24px;
+    border-top: 0.5px solid var(--hairline);
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .meta-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  .meta-value {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .meta-value em {
+    font-style: italic;
+    color: var(--toprak);
+  }
+  .atolye-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--toprak);
+    transition: gap 0.25s;
+  }
+  .atolye-cta::after { content: "→"; }
+  .atolye-active:hover .atolye-cta { gap: 16px; }
+
+  /* 4. Sıra bekleyenler */
+  .atolye-list {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .atolye-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 32px;
+    padding: 28px 0;
+    border-top: 0.5px solid var(--hairline);
+    align-items: baseline;
+  }
+  .atolye-row:last-child { border-bottom: 0.5px solid var(--hairline); }
+  .atolye-row-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--ink-soft);
+    letter-spacing: -0.01em;
+  }
+  .atolye-row-title em {
+    font-style: italic;
+    color: var(--toprak);
+  }
+  .atolye-row-desc {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 15px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+  }
+  .atolye-row-status {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* 5. Yaklaşım */
+  .ilkeler-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    max-width: 960px;
+    margin: 56px auto 0;
+    text-align: left;
+  }
+  .ilke {
+    padding-top: 24px;
+    border-top: 1px solid var(--toprak);
+  }
+  .ilke-no {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--toprak);
+    margin-bottom: 16px;
+  }
+  .ilke h4 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .ilke h4 em {
+    font-style: italic;
+    color: var(--toprak);
+  }
+  .ilke p {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  /* 6. Kapanış */
+  .closing-section { background: var(--bg-deep); }
+  .closing-flourish {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--toprak);
+    letter-spacing: 0.4em;
+    opacity: 0.6;
+    margin-bottom: 40px;
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 32px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--bg-deep);
+    opacity: 0.75;
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-links a {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--bg-deep);
+    text-decoration: none;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+  }
+  .footer-links a:hover { opacity: 1; color: var(--toprak-light); }
+
+  /* Sticky CTA */
+  .sticky-cta {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    display: flex; flex-direction: column;
+    gap: 12px; align-items: flex-end;
+    z-index: 50;
+  }
+  .sticky-cta-main {
+    background: var(--toprak);
+    color: var(--bg);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 13px 24px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(139, 90, 60, 0.25);
+    transition: background 0.25s;
+  }
+  .sticky-cta-main:hover { background: var(--toprak-deep); }
+  .sticky-cta-up {
+    background: var(--ink);
+    color: var(--bg);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(45, 31, 16, 0.2);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .nav { padding: 0 24px; height: 72px; }
+    .nav-links { display: none; }
+    .nav-cta { display: inline-block; }
+    .section { padding: 100px 24px 60px; }
+    .atolye-active { padding: 40px 28px; }
+    .atolye-meta { gap: 20px; }
+    .atolye-row { grid-template-columns: 1fr; gap: 8px; }
+    .ilkeler-grid { grid-template-columns: 1fr; gap: 40px; }
+    .footer { flex-direction: column; gap: 16px; padding: 32px 24px; text-align: center; }
+    .sticky-cta { bottom: 20px; right: 20px; }
+    .sticky-cta-main { font-size: 13px; padding: 11px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="#hero" class="nav-brand">
+    <svg viewBox="0 0 100 130">
+      <path d="M10 5 H90 A5 5 0 0 1 95 10 V85 A5 5 0 0 1 90 90 H55 L42 110 L38 90 H10 A5 5 0 0 1 5 85 V10 A5 5 0 0 1 10 5 Z" fill="#8B5A3C"/>
+      <text x="50" y="52" text-anchor="middle" font-family="Fraunces, serif" font-size="22" font-weight="400" fill="#F1EADD" font-style="italic">atelier</text>
+      <text x="50" y="72" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="400" letter-spacing="3" fill="#F1EADD">ETHOS</text>
+    </svg>
+    <span class="nav-brand-name">— kendinle bir alan</span>
+  </a>
+  <div class="nav-links">
+    <a href="#manifesto">Hikaye</a>
+    <a href="#atolye">Atölyeler</a>
+    <a href="#yaklasim">Yaklaşım</a>
+    <a href="/kendine-yolculuk.html" class="nav-cta">Kayıt</a>
+  </div>
+</nav>
+
+<!-- 1. Hero -->
+<section class="section" id="hero">
+  <div class="section-inner">
+    <div class="hero-flourish">✿ ❋ ✿</div>
+    <h1 class="display">
+      Kendine <em>dönmek</em>,<br>bir beceridir.
+    </h1>
+    <p class="lede">
+      Terapi değil, performans koçluğu da değil. Yoğun bir hayatın içinde sana ait küçük bir alan.
+    </p>
+    <div class="btns">
+      <a href="/kendine-yolculuk.html" class="btn-primary">Başlayalım</a>
+      <a href="#atolye" class="btn-outline">Atölyelere bak</a>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Manifesto -->
+<section class="section manifesto-section" id="manifesto">
+  <div class="section-inner">
+    <span class="section-label">— Manifesto</span>
+    <p class="manifesto-text">
+      Burada <em>acele</em> yok,<br>takvim yok, performans yok.
+    </p>
+  </div>
+</section>
+
+<!-- 3. Aktif atölye -->
+<section class="section" id="atolye">
+  <div class="section-inner">
+    <span class="section-label">— Şu an açık</span>
+    <h2 class="h2">Atölyeler, kendi <em>hızında</em>.</h2>
+    <p class="lede">
+      Küçük ve yavaş bir atölye. Bir başlıyoruz, birlikte yürüyoruz.
+    </p>
+
+    <a href="/kendine-yolculuk.html" class="atolye-active">
+      <div class="atolye-status">kayıt açık</div>
+      <h3>Kendine<br><em>Yolculuk</em></h3>
+      <p class="atolye-lede">
+        İki seansta kendi stres haritanı çıkar, sana özel araçlarla donan.
+      </p>
+      <div class="atolye-meta">
+        <div class="meta-item">
+          <span class="meta-label">Format</span>
+          <span class="meta-value">2 × 60 dk <em>online</em></span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Süre</span>
+          <span class="meta-value">1–2 <em>hafta</em></span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Ücret</span>
+          <span class="meta-value">2.000 ₺</span>
+        </div>
+      </div>
+      <span class="atolye-cta">Programı incele</span>
+    </a>
+  </div>
+</section>
+
+<!-- 4. Sıra bekleyenler -->
+<section class="section">
+  <div class="section-inner">
+    <span class="section-label">— Sıra bekliyor</span>
+    <h2 class="h2">Yakında <em>gelenler</em>.</h2>
+    <p class="lede">
+      Zaman içinde yeni atölyeler ve programlar buraya eklenecek.
+    </p>
+
+    <div class="atolye-list">
+      <div class="atolye-row">
+        <div class="atolye-row-title">Kendine <em>Söz Ver</em></div>
+        <div class="atolye-row-desc">Hedef değil, niyet. Sınırlar ve sözler üzerine kısa bir program.</div>
+        <div class="atolye-row-status">yakında</div>
+      </div>
+      <div class="atolye-row">
+        <div class="atolye-row-title">İç Ses <em>Günlüğü</em></div>
+        <div class="atolye-row-desc">4 haftalık yazı pratiği. Kendini okumaya alışmak üzerine.</div>
+        <div class="atolye-row-status">yakında</div>
+      </div>
+      <div class="atolye-row">
+        <div class="atolye-row-title">Mola <em>Atölyesi</em></div>
+        <div class="atolye-row-desc">Mikro-mola ritüelleri ve günlük hayata dinlenme yerleştirme pratiği.</div>
+        <div class="atolye-row-status">yakında</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Yaklaşım -->
+<section class="section" id="yaklasim">
+  <div class="section-inner">
+    <span class="section-label">— Yaklaşım</span>
+    <h2 class="h2">Yavaşlık, bir <em>yöntemdir</em>.</h2>
+    <p class="lede">
+      Üç temel ilkeyle çalışıyoruz. Sürat değil, kalıcılık.
+    </p>
+
+    <div class="ilkeler-grid">
+      <div class="ilke">
+        <div class="ilke-no">— i.</div>
+        <h4>Yavaşlık bir <em>yöntemdir</em></h4>
+        <p>İç yolculuk sprint değildir. Kendini tanımak zaman ister; biz sürati değil, kalıcılığı hedefleriz.</p>
+      </div>
+      <div class="ilke">
+        <div class="ilke-no">— ii.</div>
+        <h4>Her ses <em>kendine</em> aittir</h4>
+        <p>Herkese uyan reçete yok. Profilinden çıkan araçlar yalnız senin için derlenir.</p>
+      </div>
+      <div class="ilke">
+        <div class="ilke-no">— iii.</div>
+        <h4>Pratik, bilgiden <em>önemli</em></h4>
+        <p>Bilmek yetmez. Her seans uygulama seansıdır; ayrıldığında elinde gerçek bir şey olur.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Kapanış -->
+<section class="section closing-section">
+  <div class="section-inner">
+    <div class="closing-flourish">✿ ❋ ✿</div>
+    <h2 class="display">
+      Kendine bir alan <em>aç</em>.
+    </h2>
+    <p class="lede">
+      Süreç anlatmıyoruz, birlikte kuruyoruz.
+    </p>
+    <div class="btns">
+      <a href="/kendine-yolculuk.html" class="btn-primary">Başlayalım</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <span class="footer-copy">© 2026 Atelier Ethos · kendinle bir alan</span>
+  <div class="footer-links">
+    <a href="/kendine-yolculuk.html">Kendine Yolculuk</a>
+    <a href="https://atelierethos.com" target="_blank">Kurumsal →</a>
+    <a href="#">Instagram</a>
+  </div>
+</footer>
+
+<!-- Sticky CTA -->
+<div class="sticky-cta">
+  <a href="/kendine-yolculuk.html" class="sticky-cta-main">Kayıt ol</a>
+  <a href="#hero" class="sticky-cta-up">↑</a>
+</div>
+
+</body>
+</html>
