@@ -1,14 +1,4 @@
 ---
-// ============================================================
-// Navbar.astro
-// Üst navigasyon. Logo sol, menü ortası/sağı, CTA sağ uçta.
-// Tasarım rehberi 6.bölüm — "Top navigation":
-//  - Sticky DEĞİL (sayfa kaydırılınca kaybolur, StickyCTA devralır)
-//  - Alt sınır: hairline ayrım
-//  - Bileşik link grubu: Etkinlikler, Araçlar, Kaynaklar
-//  - CTA: "Görüşme talep et" (ana sayfadaki #iletisim'e gider)
-// ============================================================
-
 const currentPath = Astro.url.pathname;
 
 const links = [
@@ -30,16 +20,11 @@ function isActive(href) {
     </a>
 
     <nav class="ae-navbar-links" aria-label="Ana navigasyon">
-      {
-        links.map((link) => (
-          
-            href={link.href}
-            class:list={['ae-navbar-link', { 'is-active': isActive(link.href) }]}
-          >
-            {link.label}
-          </a>
-        ))
-      }
+      {links.map((link) => (
+        <a href={link.href} class:list={['ae-navbar-link', { 'is-active': isActive(link.href) }]}>
+          {link.label}
+        </a>
+      ))}
     </nav>
 
     <a href="/#iletisim" class="ae-navbar-cta">Görüşme talep et</a>
@@ -53,7 +38,6 @@ function isActive(href) {
     position: relative;
     z-index: 10;
   }
-
   .ae-navbar-inner {
     display: flex;
     align-items: center;
@@ -61,18 +45,15 @@ function isActive(href) {
     height: 72px;
     gap: 32px;
   }
-
   .ae-navbar-brand {
     display: flex;
     align-items: center;
     flex-shrink: 0;
   }
-
   .ae-navbar-brand img {
     height: 36px;
     width: auto;
   }
-
   .ae-navbar-links {
     display: flex;
     align-items: center;
@@ -80,7 +61,6 @@ function isActive(href) {
     flex: 1;
     justify-content: center;
   }
-
   .ae-navbar-link {
     font-size: 14px;
     font-weight: 500;
@@ -89,15 +69,12 @@ function isActive(href) {
     position: relative;
     padding: 4px 0;
   }
-
   .ae-navbar-link:hover {
     color: var(--ae-red);
   }
-
   .ae-navbar-link.is-active {
     color: var(--ae-red);
   }
-
   .ae-navbar-link.is-active::after {
     content: '';
     position: absolute;
@@ -107,7 +84,6 @@ function isActive(href) {
     height: 1px;
     background: var(--ae-red);
   }
-
   .ae-navbar-cta {
     background: var(--ae-red);
     color: var(--ae-white);
@@ -118,26 +94,20 @@ function isActive(href) {
     transition: background 0.2s ease;
     flex-shrink: 0;
   }
-
   .ae-navbar-cta:hover {
     background: var(--ae-red-hover);
   }
-
-  /* Mobile — basit responsive (Tur 2'de mobile menu eklenebilir) */
   @media (max-width: 768px) {
     .ae-navbar-inner {
       height: 64px;
       gap: 16px;
     }
-
     .ae-navbar-brand img {
       height: 28px;
     }
-
     .ae-navbar-links {
       display: none;
     }
-
     .ae-navbar-cta {
       padding: 8px 16px;
       font-size: 13px;
