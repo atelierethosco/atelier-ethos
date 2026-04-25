@@ -9,6 +9,8 @@
   html { scroll-behavior: smooth; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #414042; background: #fff; overflow-x: hidden; }
 
+  em { font-style: normal; color: #c12033; }
+
   .ae-nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     background: #fff; border-bottom: 0.5px solid #e8e8e8;
@@ -16,13 +18,20 @@
     padding: 12px 60px; height: 90px;
   }
   .ae-nav img { height: 66px; width: auto; }
-  .ae-nav-links { display: flex; gap: 36px; align-items: center; }
-  .ae-nav-links a { font-size: 14px; color: #414042; text-decoration: none; }
+  .ae-nav-links { display: flex; gap: 28px; align-items: center; }
+  .ae-nav-links a { font-size: 14px; color: #414042; text-decoration: none; white-space: nowrap; }
   .ae-nav-links a:hover { color: #c12033; }
-  .ae-nav-right { display: flex; align-items: center; gap: 20px; }
-  .ae-nav-cta { background: #c12033; color: #fff !important; font-size: 14px; padding: 10px 24px; border-radius: 4px; text-decoration: none; }
+  .ae-nav-right { display: flex; align-items: center; gap: 16px; }
 
-  /* Dil Switcher */
+  .ae-nav-cta {
+    background: #c12033; color: #fff !important;
+    font-size: 12px; padding: 7px 14px;
+    border-radius: 4px; text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background 0.2s;
+  }
+  .ae-nav-cta:hover { background: #a81c2b; }
+
   .ae-lang { display: flex; align-items: center; gap: 0; border: 0.5px solid #e8e8e8; border-radius: 4px; overflow: hidden; }
   .ae-lang button {
     background: none; border: none; cursor: pointer;
@@ -47,8 +56,10 @@
   #ae-hero .ae-inner { display: flex; flex-direction: column; align-items: center; }
   #ae-hero .ae-lead { text-align: center; }
   .ae-btns { display: flex; gap: 16px; justify-content: center; }
-  .ae-btn-primary { background: #c12033; color: #fff; padding: 15px 32px; border-radius: 4px; font-size: 15px; text-decoration: none; }
-  .ae-btn-outline { border: 1px solid #414042; color: #414042; padding: 15px 32px; border-radius: 4px; font-size: 15px; text-decoration: none; }
+  .ae-btn-primary { background: #c12033; color: #fff; padding: 15px 32px; border-radius: 4px; font-size: 15px; text-decoration: none; transition: background 0.2s; }
+  .ae-btn-primary:hover { background: #a81c2b; }
+  .ae-btn-outline { border: 1px solid #414042; color: #414042; padding: 15px 32px; border-radius: 4px; font-size: 15px; text-decoration: none; transition: all 0.2s; }
+  .ae-btn-outline:hover { border-color: #c12033; color: #c12033; }
 
   .ae-values { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
   .ae-val { background: #f7f7f6; border-radius: 6px; padding: 24px 28px; }
@@ -61,7 +72,7 @@
   .ae-stat { text-align: center; }
   .ae-stat-num { font-size: 30px; font-weight: 500; color: #c12033; margin-bottom: 8px; }
   .ae-stat-label { font-size: 12px; color: #a7a9ab; line-height: 1.5; }
-  .ae-stat img { height: 52px; width: auto; margin-bottom: 8px; object-fit: contain; }
+  .ae-stat img { height: 52px; width: auto; margin-bottom: 8px; object-fit: contain; margin-left: auto; margin-right: auto; }
 
   .ae-referans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .ae-ref-card { border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 24px 28px; }
@@ -77,6 +88,41 @@
   .ae-svc ul { list-style: none; }
   .ae-svc ul li { font-size: 14px; color: #6b6b6b; line-height: 1.85; padding-left: 16px; position: relative; }
   .ae-svc ul li::before { content: '—'; position: absolute; left: 0; color: #c12033; font-size: 11px; }
+
+  /* === KAYNAK KÜTÜPHANESİ === */
+  .ae-kaynak-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+  .ae-kaynak-header > div { flex: 1; min-width: 280px; }
+  .ae-kaynak-link { font-size: 14px; color: #c12033; border-bottom: 1px solid #c12033; padding-bottom: 2px; text-decoration: none; transition: opacity 0.2s; }
+  .ae-kaynak-link:hover { opacity: 0.7; }
+  .ae-kaynak-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .ae-kaynak-card { border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 28px; transition: all 0.2s; cursor: pointer; display: flex; flex-direction: column; min-height: 220px; text-decoration: none; color: inherit; }
+  .ae-kaynak-card:hover { border-color: #c12033; transform: translateY(-2px); }
+  .ae-kaynak-num { font-size: 11px; letter-spacing: 2.5px; color: #c12033; text-transform: uppercase; margin-bottom: 14px; font-weight: 500; }
+  .ae-kaynak-title { font-size: 17px; font-weight: 500; color: #414042; line-height: 1.3; margin-bottom: 12px; }
+  .ae-kaynak-desc { font-size: 13px; color: #6b6b6b; line-height: 1.7; flex: 1; margin-bottom: 18px; }
+  .ae-kaynak-count { font-size: 12px; color: #a7a9ab; padding-top: 14px; border-top: 1px solid #f0f0f0; }
+
+  /* === ETKİNLİKLER === */
+  .ae-events-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+  .ae-events-header > div { flex: 1; min-width: 280px; }
+  .ae-events-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+  .ae-event-card { border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 24px 28px; transition: all 0.2s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
+  .ae-event-card:hover { border-color: #c12033; transform: translateY(-2px); }
+  .ae-event-date { display: flex; align-items: baseline; gap: 8px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid #e8e8e8; }
+  .ae-event-day { font-size: 32px; font-weight: 500; color: #c12033; line-height: 1; }
+  .ae-event-month { font-size: 11px; letter-spacing: 2px; color: #a7a9ab; text-transform: uppercase; }
+  .ae-event-type { font-size: 11px; letter-spacing: 2px; color: #a7a9ab; text-transform: uppercase; margin-bottom: 10px; }
+  .ae-event-title { font-size: 16px; font-weight: 500; color: #414042; line-height: 1.3; margin-bottom: 12px; }
+  .ae-event-desc { font-size: 13px; color: #6b6b6b; line-height: 1.7; margin-bottom: 18px; }
+  .ae-event-cta { font-size: 13px; color: #414042; border-bottom: 1px solid #414042; padding-bottom: 2px; transition: all 0.2s; }
+  .ae-event-card:hover .ae-event-cta { color: #c12033; border-color: #c12033; }
+  .ae-events-past-title { font-size: 11px; letter-spacing: 2.5px; color: #a7a9ab; text-transform: uppercase; margin-bottom: 20px; padding-top: 24px; border-top: 1px solid #f0f0f0; }
+  .ae-past-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .ae-past-card { background: #faf9f9; border-radius: 8px; padding: 18px; }
+  .ae-past-thumb { aspect-ratio: 16 / 9; background: #ececec; border-radius: 6px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #a7a9ab; position: relative; }
+  .ae-past-thumb::after { content: '▶'; position: absolute; width: 44px; height: 44px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #c12033; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .ae-past-meta { font-size: 11px; letter-spacing: 1.5px; color: #a7a9ab; text-transform: uppercase; margin-bottom: 6px; }
+  .ae-past-title { font-size: 14px; font-weight: 500; color: #414042; line-height: 1.4; }
 
   .ae-why { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
   .ae-why-card { border: 0.5px solid #e8e8e8; border-radius: 8px; padding: 24px 28px; }
@@ -96,7 +142,7 @@
   .ae-fg input, .ae-fg textarea { width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px; padding: 14px 16px; font-size: 15px; color: #414042; font-family: inherit; outline: none; background: #fff; }
   .ae-fg input:focus, .ae-fg textarea:focus { border-color: #c12033; }
   .ae-fg textarea { height: 120px; resize: vertical; }
-  .ae-submit { background: #c12033; color: #fff; border: none; padding: 14px 28px; border-radius: 4px; font-size: 15px; cursor: pointer; width: 100%; font-family: inherit; }
+  .ae-submit { background: #c12033; color: #fff; border: none; padding: 14px 28px; border-radius: 4px; font-size: 15px; cursor: pointer; width: 100%; font-family: inherit; transition: background 0.2s; }
   .ae-submit:hover { background: #a81c2b; }
   .ae-submit:disabled { background: #a7a9ab; cursor: not-allowed; }
 
@@ -108,22 +154,26 @@
   .ae-footer { padding: 28px 60px; border-top: 0.5px solid #e8e8e8; display: flex; justify-content: space-between; align-items: center; }
   .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
   .ae-footer-links { display: flex; gap: 24px; }
-  .ae-footer-links a { font-size: 13px; color: #a7a9ab; text-decoration: none; }
+  .ae-footer-links a { font-size: 13px; color: #a7a9ab; text-decoration: none; transition: color 0.15s; }
   .ae-footer-links a:hover { color: #c12033; }
 
   .ae-sticky { position: fixed; bottom: 28px; right: 28px; z-index: 2000; display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
-  .ae-sticky-cta { display: flex; align-items: center; gap: 8px; background: #c12033; color: #fff; font-size: 14px; padding: 13px 22px; border-radius: 40px; text-decoration: none; }
-  .ae-sticky-up { background: #414042; color: #fff; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; text-decoration: none; }
+  .ae-sticky-cta { display: flex; align-items: center; gap: 8px; background: #c12033; color: #fff; font-size: 14px; padding: 13px 22px; border-radius: 40px; text-decoration: none; box-shadow: 0 4px 14px rgba(0,0,0,0.08); transition: background 0.2s; }
+  .ae-sticky-cta:hover { background: #a81c2b; }
+  .ae-sticky-up { background: #414042; color: #fff; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; text-decoration: none; box-shadow: 0 4px 14px rgba(0,0,0,0.08); transition: background 0.2s; }
+  .ae-sticky-up:hover { background: #2a2a2c; }
 
   @media (max-width: 768px) {
-    .ae-nav { padding: 14px 20px; height: auto; }
+    .ae-nav { padding: 14px 20px; height: 70px; }
+    .ae-nav img { height: 44px; }
     .ae-nav-links { display: none; }
-    .ae-section { padding: 100px 20px 40px; }
+    .ae-section { padding: 90px 20px 40px; min-height: auto; }
     .ae-h1 { font-size: 40px; }
     .ae-h2 { font-size: 28px; }
-    .ae-values, .ae-why, .ae-contact, .ae-referans-grid { grid-template-columns: 1fr; }
+    .ae-values, .ae-why, .ae-contact, .ae-referans-grid, .ae-kaynak-grid, .ae-events-grid, .ae-past-grid { grid-template-columns: 1fr; }
     .ae-stats { grid-template-columns: repeat(2, 1fr); }
     .ae-footer { flex-direction: column; gap: 12px; text-align: center; }
+    .ae-svc { flex-direction: column; gap: 12px; }
   }
 </style>
 </head>
@@ -137,6 +187,7 @@
     <a href="#ae-yaklasim" data-tr="Yaklaşımımız" data-en="Our Approach">Yaklaşımımız</a>
     <a href="#ae-referanslar" data-tr="Gerçekleştirdiklerimiz" data-en="Our Work">Gerçekleştirdiklerimiz</a>
     <a href="#ae-hizmetler" data-tr="Hizmetler" data-en="Services">Hizmetler</a>
+    <a href="#ae-kaynaklar" data-tr="Kaynak Kütüphanesi" data-en="Resource Library">Kaynak Kütüphanesi</a>
     <a href="#ae-neden" data-tr="Neden Biz?" data-en="Why Us?">Neden Biz?</a>
   </div>
   <div class="ae-nav-right">
@@ -145,7 +196,7 @@
       <div class="ae-lang-divider"></div>
       <button onclick="setLang('en')" id="btn-en">EN</button>
     </div>
-    <a href="#ae-iletisim" class="ae-nav-cta" data-tr="İletişim" data-en="Contact">İletişim</a>
+    <a href="#ae-etkinlikler" class="ae-nav-cta" data-tr="Etkinlik Takvimi" data-en="Event Calendar">Etkinlik Takvimi</a>
   </div>
 </nav>
 
@@ -300,6 +351,104 @@
   </div>
 </div>
 
+<!-- ============ KAYNAK KÜTÜPHANESİ (yeni) ============ -->
+<div id="ae-kaynaklar" class="ae-section">
+  <div class="ae-inner">
+    <div class="ae-kaynak-header">
+      <div>
+        <span class="ae-label" data-tr="Kaynak Kütüphanesi" data-en="Resource Library">Kaynak Kütüphanesi</span>
+        <h2 class="ae-h2" data-tr="Atölyelerden damıttığımız <em>kaynaklar</em>" data-en="<em>Resources</em> distilled from our workshops">Atölyelerden damıttığımız <em>kaynaklar</em></h2>
+      </div>
+      <a href="/kaynak-kutuphanesi.html" class="ae-kaynak-link" data-tr="Tüm kütüphaneye git →" data-en="Go to full library →">Tüm kütüphaneye git →</a>
+    </div>
+
+    <div class="ae-kaynak-grid">
+      <a href="/kaynak-kutuphanesi.html#olcekler" class="ae-kaynak-card">
+        <p class="ae-kaynak-num" data-tr="01 · İnteraktif" data-en="01 · Interactive">01 · İnteraktif</p>
+        <h3 class="ae-kaynak-title" data-tr="Ölçekler / Envanterler" data-en="Scales / Inventories">Ölçekler / Envanterler</h3>
+        <p class="ae-kaynak-desc" data-tr="İK Pusulası, Algılanan Stres Ölçeği — sayfada doldurun, anında PDF rapor alın." data-en="HR Compass, Perceived Stress Scale — fill in on the page, get an instant PDF report.">İK Pusulası, Algılanan Stres Ölçeği — sayfada doldurun, anında PDF rapor alın.</p>
+        <p class="ae-kaynak-count" data-tr="2 araç →" data-en="2 tools →">2 araç →</p>
+      </a>
+      <a href="/kaynak-kutuphanesi.html#webinar" class="ae-kaynak-card">
+        <p class="ae-kaynak-num" data-tr="02 · Etkinlik Sonrası" data-en="02 · Post-Event">02 · Etkinlik Sonrası</p>
+        <h3 class="ae-kaynak-title" data-tr="Webinar / Atölye Materyalleri" data-en="Webinar / Workshop Materials">Webinar / Atölye Materyalleri</h3>
+        <p class="ae-kaynak-desc" data-tr="Etkinliklerimizden çıkan tam paketler. Sunum, kayıt, kılavuzlar ve örnekler bir arada." data-en="Full packages from our events. Presentation, recording, guides and examples together.">Etkinliklerimizden çıkan tam paketler. Sunum, kayıt, kılavuzlar ve örnekler bir arada.</p>
+        <p class="ae-kaynak-count" data-tr="1 paket →" data-en="1 package →">1 paket →</p>
+      </a>
+      <a href="/kaynak-kutuphanesi.html#kilavuzlar" class="ae-kaynak-card">
+        <p class="ae-kaynak-num" data-tr="03 · İndirilebilir" data-en="03 · Downloadable">03 · İndirilebilir</p>
+        <h3 class="ae-kaynak-title" data-tr="Kılavuzlar / Hesaplama Araçları" data-en="Guides / Calculation Tools">Kılavuzlar / Hesaplama Araçları</h3>
+        <p class="ae-kaynak-desc" data-tr="Tek başına kullanılabilen kılavuzlar, şablonlar ve hesaplama araçları." data-en="Standalone guides, templates and calculation tools.">Tek başına kullanılabilen kılavuzlar, şablonlar ve hesaplama araçları.</p>
+        <p class="ae-kaynak-count" data-tr="2 doküman →" data-en="2 documents →">2 doküman →</p>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ETKİNLİK TAKVİMİ (yeni) ============ -->
+<div id="ae-etkinlikler" class="ae-section">
+  <div class="ae-inner">
+    <div class="ae-events-header">
+      <div>
+        <span class="ae-label" data-tr="Etkinlik Takvimi" data-en="Event Calendar">Etkinlik Takvimi</span>
+        <h2 class="ae-h2" data-tr="Yaklaşan <em>webinar</em> ve atölyeler" data-en="Upcoming <em>webinars</em> and workshops">Yaklaşan <em>webinar</em> ve atölyeler</h2>
+      </div>
+    </div>
+
+    <div class="ae-events-grid">
+      <a href="#ae-iletisim" class="ae-event-card">
+        <div class="ae-event-date">
+          <span class="ae-event-day">06</span>
+          <span class="ae-event-month" data-tr="May 2026" data-en="May 2026">May 2026</span>
+        </div>
+        <p class="ae-event-type" data-tr="Webinar · Ücretsiz" data-en="Webinar · Free">Webinar · Ücretsiz</p>
+        <h3 class="ae-event-title" data-tr="[Etkinlik başlığı buraya gelecek]" data-en="[Event title here]">[Etkinlik başlığı buraya gelecek]</h3>
+        <p class="ae-event-desc" data-tr="Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı." data-en="Short description. Which questions will be answered, who it's for, who will present.">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
+        <span class="ae-event-cta" data-tr="Kayıt ol →" data-en="Register →">Kayıt ol →</span>
+      </a>
+      <a href="#ae-iletisim" class="ae-event-card">
+        <div class="ae-event-date">
+          <span class="ae-event-day">19</span>
+          <span class="ae-event-month" data-tr="May 2026" data-en="May 2026">May 2026</span>
+        </div>
+        <p class="ae-event-type" data-tr="Atölye · Yüz yüze" data-en="Workshop · In-person">Atölye · Yüz yüze</p>
+        <h3 class="ae-event-title" data-tr="[Etkinlik başlığı buraya gelecek]" data-en="[Event title here]">[Etkinlik başlığı buraya gelecek]</h3>
+        <p class="ae-event-desc" data-tr="Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı." data-en="Short description. Which questions will be answered, who it's for, who will present.">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
+        <span class="ae-event-cta" data-tr="Kayıt ol →" data-en="Register →">Kayıt ol →</span>
+      </a>
+      <a href="#ae-iletisim" class="ae-event-card">
+        <div class="ae-event-date">
+          <span class="ae-event-day">03</span>
+          <span class="ae-event-month" data-tr="Haz 2026" data-en="Jun 2026">Haz 2026</span>
+        </div>
+        <p class="ae-event-type" data-tr="Webinar · Ücretsiz" data-en="Webinar · Free">Webinar · Ücretsiz</p>
+        <h3 class="ae-event-title" data-tr="[Etkinlik başlığı buraya gelecek]" data-en="[Event title here]">[Etkinlik başlığı buraya gelecek]</h3>
+        <p class="ae-event-desc" data-tr="Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı." data-en="Short description. Which questions will be answered, who it's for, who will present.">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
+        <span class="ae-event-cta" data-tr="Kayıt ol →" data-en="Register →">Kayıt ol →</span>
+      </a>
+    </div>
+
+    <p class="ae-events-past-title" data-tr="Geçmiş Etkinlik Kayıtları" data-en="Past Event Recordings">Geçmiş Etkinlik Kayıtları</p>
+    <div class="ae-past-grid">
+      <article class="ae-past-card">
+        <div class="ae-past-thumb">YouTube</div>
+        <p class="ae-past-meta" data-tr="Mart 2026 · Webinar" data-en="March 2026 · Webinar">Mart 2026 · Webinar</p>
+        <p class="ae-past-title" data-tr="Yetkinlik Bazlı Performans Yönetimi" data-en="Competency-Based Performance Management">Yetkinlik Bazlı Performans Yönetimi</p>
+      </article>
+      <article class="ae-past-card">
+        <div class="ae-past-thumb">YouTube</div>
+        <p class="ae-past-meta" data-tr="Şubat 2026 · Atölye" data-en="February 2026 · Workshop">Şubat 2026 · Atölye</p>
+        <p class="ae-past-title" data-tr="Geri Bildirim Kültürü Kurma" data-en="Building a Feedback Culture">Geri Bildirim Kültürü Kurma</p>
+      </article>
+      <article class="ae-past-card">
+        <div class="ae-past-thumb">YouTube</div>
+        <p class="ae-past-meta" data-tr="Ocak 2026 · Webinar" data-en="January 2026 · Webinar">Ocak 2026 · Webinar</p>
+        <p class="ae-past-title" data-tr="OKR ile Stratejik Hizalama" data-en="Strategic Alignment with OKRs">OKR ile Stratejik Hizalama</p>
+      </article>
+    </div>
+  </div>
+</div>
+
 <div id="ae-neden" class="ae-section">
   <div class="ae-inner">
     <span class="ae-label" data-tr="Neden Atelier Ethos?" data-en="Why Atelier Ethos?">Neden Atelier Ethos?</span>
@@ -351,7 +500,7 @@
 </div>
 
 <footer class="ae-footer">
-  <span class="ae-footer-copy">© 2022 Atelier Ethos</span>
+  <span class="ae-footer-copy">© 2026 Atelier Ethos</span>
   <div class="ae-footer-links">
     <a href="https://instagram.com/atelier_ethos" target="_blank">Instagram</a>
     <a href="https://whatsapp.com/channel/0029Vb7WEBVElagsIAnvuT3y" target="_blank">WhatsApp</a>
@@ -370,11 +519,9 @@
   function setLang(lang) {
     currentLang = lang;
 
-    // Buton aktif durumu
     document.getElementById('btn-tr').classList.toggle('active', lang === 'tr');
     document.getElementById('btn-en').classList.toggle('active', lang === 'en');
 
-    // Tüm data-tr / data-en elementleri güncelle
     document.querySelectorAll('[data-tr]').forEach(function(el) {
       var val = el.getAttribute('data-' + lang);
       if (!val) return;
@@ -385,13 +532,11 @@
       }
     });
 
-    // Placeholder'lar
     document.querySelectorAll('[data-tr-placeholder]').forEach(function(el) {
       var key = 'data-' + lang + '-placeholder';
       el.placeholder = el.getAttribute(key) || el.placeholder;
     });
 
-    // html lang attribute
     document.documentElement.lang = lang;
   }
 
