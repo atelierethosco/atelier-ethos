@@ -1,0 +1,1040 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atelier Ethos — Mockup V3</title>
+  <style>
+    /* ============================================================
+       ATELIER ETHOS — Mockup V3
+       Eski sitenin somut sayılarına sadık + yeni kurallar:
+        - Navbar fixed, logo 66px, navbar 90px
+        - Sağ üstte: dil toggle + "Etkinlik Takvimi" (kırmızı)
+        - "Görüşme Talep Et" SADECE hero ortada + sticky
+        - Navbar linki olarak Kaynaklar EKLE, Etkinlikler navbar'da YOK
+        - H1 weight 500 (eski siten öyle)
+        - Stat sayıları kırmızı, küçük (30px)
+        - Cards: rounded 6-8px, border veya gri zemin
+        - Bullet: '—' (tire)
+        - Section min-height 100vh
+       ============================================================ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #414042;
+      background: #fff;
+      overflow-x: hidden;
+    }
+
+    em { font-style: normal; color: #c12033; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; }
+    ul { list-style: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ---------- NAVBAR (fixed, 90px) ---------- */
+    .ae-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: #fff;
+      border-bottom: 0.5px solid #e8e8e8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 60px;
+      height: 90px;
+    }
+    .ae-nav-brand img { height: 66px; width: auto; }
+
+    .ae-nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+    .ae-nav-links a {
+      font-size: 14px;
+      color: #414042;
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+    .ae-nav-links a:hover { color: #c12033; }
+
+    .ae-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* DİL TOGGLE — bizim tasarım dilimizde, sade */
+    .ae-lang {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      font-weight: 500;
+    }
+    .ae-lang button {
+      background: none;
+      border: none;
+      padding: 4px 6px;
+      color: #a7a9ab;
+      cursor: pointer;
+      transition: color 0.15s;
+      font-family: inherit;
+      font-size: 11px;
+      letter-spacing: inherit;
+      font-weight: 500;
+    }
+    .ae-lang button.active { color: #414042; }
+    .ae-lang button:hover:not(.active) { color: #414042; }
+    .ae-lang-sep {
+      width: 1px;
+      height: 12px;
+      background: #e8e8e8;
+    }
+
+    /* SAĞ ÜST — Etkinlik Takvimi butonu (küçültülmüş) */
+    .ae-nav-cta {
+      background: #c12033;
+      color: #fff !important;
+      font-size: 12px;
+      padding: 7px 14px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      transition: background 0.2s;
+    }
+    .ae-nav-cta:hover { background: #a81c2b; }
+
+    /* ---------- SECTION GENERIC ---------- */
+    .ae-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 110px 60px 60px;
+      border-bottom: 0.5px solid #f0f0f0;
+    }
+    .ae-inner { width: 100%; max-width: 1100px; }
+
+    .ae-label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: #c12033;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: block;
+      font-weight: 500;
+    }
+    .ae-h1 {
+      font-size: 68px;
+      font-weight: 500;
+      line-height: 1.1;
+      color: #414042;
+      margin-bottom: 24px;
+    }
+    .ae-h2 {
+      font-size: 38px;
+      font-weight: 500;
+      color: #414042;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .ae-lead {
+      font-size: 18px;
+      color: #6b6b6b;
+      line-height: 1.75;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    /* ---------- HERO ---------- */
+    #ae-hero { text-align: center; }
+    #ae-hero .ae-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #ae-hero .ae-lead { text-align: center; }
+
+    .ae-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+    .ae-btn-primary {
+      background: #c12033;
+      color: #fff;
+      padding: 15px 32px;
+      border-radius: 4px;
+      font-size: 15px;
+      transition: background 0.2s;
+    }
+    .ae-btn-primary:hover { background: #a81c2b; }
+    .ae-btn-outline {
+      border: 1px solid #414042;
+      color: #414042;
+      padding: 15px 32px;
+      border-radius: 4px;
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+    .ae-btn-outline:hover {
+      border-color: #c12033;
+      color: #c12033;
+    }
+
+    /* ---------- YAKLAŞIM ---------- */
+    .ae-values {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .ae-val {
+      background: #f7f7f6;
+      border-radius: 6px;
+      padding: 24px 28px;
+    }
+    .ae-val h3 {
+      font-size: 15px;
+      font-weight: 500;
+      color: #414042;
+      margin-bottom: 8px;
+    }
+    .ae-val p {
+      font-size: 14px;
+      color: #6b6b6b;
+      line-height: 1.65;
+    }
+    .ae-quote {
+      border-left: 3px solid #c12033;
+      padding: 20px 28px;
+      background: #faf9f9;
+      border-radius: 0 6px 6px 0;
+    }
+    .ae-quote p {
+      font-size: 15px;
+      color: #414042;
+      line-height: 1.75;
+      font-style: italic;
+    }
+
+    /* ---------- STATS / GERÇEKLEŞTİRDİKLERİMİZ ---------- */
+    .ae-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .ae-stat { text-align: center; }
+    .ae-stat-num {
+      font-size: 30px;
+      font-weight: 500;
+      color: #c12033;
+      margin-bottom: 8px;
+    }
+    .ae-stat-label {
+      font-size: 12px;
+      color: #a7a9ab;
+      line-height: 1.5;
+    }
+    .ae-stat img {
+      height: 52px;
+      width: auto;
+      margin-bottom: 8px;
+      object-fit: contain;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ae-referans-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .ae-ref-card {
+      border: 0.5px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 24px 28px;
+    }
+    .ae-ref-card h3 {
+      font-size: 15px;
+      font-weight: 500;
+      color: #414042;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .ae-ref-card ul li {
+      font-size: 13px;
+      color: #6b6b6b;
+      line-height: 1.85;
+      padding-left: 16px;
+      position: relative;
+    }
+    .ae-ref-card ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: #c12033;
+      font-size: 11px;
+    }
+
+    /* ---------- HİZMETLER ---------- */
+    .ae-services {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .ae-svc {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      border: 0.5px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 24px 28px;
+    }
+    .ae-svc-num {
+      font-size: 32px;
+      font-weight: 500;
+      color: #ececec;
+      flex-shrink: 0;
+      width: 40px;
+    }
+    .ae-svc h3 {
+      font-size: 16px;
+      font-weight: 500;
+      color: #414042;
+      margin-bottom: 12px;
+    }
+    .ae-svc ul li {
+      font-size: 14px;
+      color: #6b6b6b;
+      line-height: 1.85;
+      padding-left: 16px;
+      position: relative;
+    }
+    .ae-svc ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: #c12033;
+      font-size: 11px;
+    }
+
+    /* ---------- ETKİNLİKLER (YENİ) — eski sitenin diliyle ---------- */
+    .ae-events-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .ae-events-header > div { flex: 1; min-width: 280px; }
+    .ae-events-link {
+      font-size: 14px;
+      color: #c12033;
+      border-bottom: 1px solid #c12033;
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+    }
+    .ae-events-link:hover { opacity: 0.7; }
+
+    .ae-events-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .ae-event-card {
+      border: 0.5px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 24px 28px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .ae-event-card:hover {
+      border-color: #c12033;
+      transform: translateY(-2px);
+    }
+    .ae-event-date {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .ae-event-day {
+      font-size: 32px;
+      font-weight: 500;
+      color: #c12033;
+      line-height: 1;
+    }
+    .ae-event-month {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #a7a9ab;
+      text-transform: uppercase;
+    }
+    .ae-event-type {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #a7a9ab;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .ae-event-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #414042;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .ae-event-desc {
+      font-size: 13px;
+      color: #6b6b6b;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+    .ae-event-cta {
+      font-size: 13px;
+      color: #414042;
+      border-bottom: 1px solid #414042;
+      padding-bottom: 2px;
+      transition: all 0.2s;
+    }
+    .ae-event-card:hover .ae-event-cta {
+      color: #c12033;
+      border-color: #c12033;
+    }
+
+    .ae-events-past-title {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: #a7a9ab;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      padding-top: 24px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .ae-past-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .ae-past-card {
+      background: #faf9f9;
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .ae-past-thumb {
+      aspect-ratio: 16 / 9;
+      background: #ececec;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #a7a9ab;
+      position: relative;
+    }
+    .ae-past-thumb::after {
+      content: '▶';
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c12033;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .ae-past-meta {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #a7a9ab;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .ae-past-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #414042;
+      line-height: 1.4;
+    }
+
+    /* ---------- KAYNAKLAR (YENİ) — eski sitenin diliyle ---------- */
+    .ae-resources-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .ae-resource-card {
+      border: 0.5px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 28px;
+      transition: all 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      min-height: 240px;
+    }
+    .ae-resource-card:hover {
+      border-color: #c12033;
+      transform: translateY(-2px);
+    }
+    .ae-resource-num {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: #c12033;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+    .ae-resource-title {
+      font-size: 17px;
+      font-weight: 500;
+      color: #414042;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .ae-resource-desc {
+      font-size: 13px;
+      color: #6b6b6b;
+      line-height: 1.7;
+      flex: 1;
+      margin-bottom: 18px;
+    }
+    .ae-resource-count {
+      font-size: 12px;
+      color: #a7a9ab;
+      padding-top: 14px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .ae-resources-cta-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    /* ---------- NEDEN BİZ ---------- */
+    .ae-why {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .ae-why-card {
+      border: 0.5px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 24px 28px;
+    }
+    .ae-why-card h3 {
+      font-size: 15px;
+      font-weight: 500;
+      color: #414042;
+      margin-bottom: 8px;
+    }
+    .ae-why-card p {
+      font-size: 14px;
+      color: #6b6b6b;
+      line-height: 1.65;
+    }
+    .ae-claim {
+      background: #f5f5f4;
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+    }
+    .ae-claim p {
+      font-size: 18px;
+      color: #414042;
+      line-height: 1.75;
+    }
+    .ae-claim strong { color: #c12033; }
+
+    /* ---------- İLETİŞİM ---------- */
+    #ae-iletisim { background: #faf9f9; }
+    .ae-contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .ae-contact-info p {
+      font-size: 15px;
+      color: #6b6b6b;
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+    .ae-contact-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      font-size: 14px;
+      color: #6b6b6b;
+    }
+    .ae-contact-detail a { color: #c12033; }
+
+    .ae-fg { margin-bottom: 14px; }
+    .ae-fg input, .ae-fg textarea {
+      width: 100%;
+      border: 0.5px solid #d4d4d4;
+      border-radius: 6px;
+      padding: 14px 16px;
+      font-size: 15px;
+      color: #414042;
+      font-family: inherit;
+      outline: none;
+      background: #fff;
+    }
+    .ae-fg input:focus, .ae-fg textarea:focus { border-color: #c12033; }
+    .ae-fg textarea { height: 120px; resize: vertical; }
+    .ae-submit {
+      background: #c12033;
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-size: 15px;
+      width: 100%;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    .ae-submit:hover { background: #a81c2b; }
+
+    /* ---------- FOOTER ---------- */
+    .ae-footer {
+      padding: 28px 60px;
+      border-top: 0.5px solid #e8e8e8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+    .ae-footer-links { display: flex; gap: 24px; }
+    .ae-footer-links a {
+      font-size: 13px;
+      color: #a7a9ab;
+      transition: color 0.15s;
+    }
+    .ae-footer-links a:hover { color: #c12033; }
+
+    /* ---------- STICKY (sağ alt) ---------- */
+    .ae-sticky {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .ae-sticky-cta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #c12033;
+      color: #fff;
+      font-size: 14px;
+      padding: 13px 22px;
+      border-radius: 40px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: background 0.2s;
+    }
+    .ae-sticky-cta:hover { background: #a81c2b; }
+    .ae-sticky-up {
+      background: #414042;
+      color: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: background 0.2s;
+    }
+    .ae-sticky-up:hover { background: #2a2a2c; }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 768px) {
+      .ae-nav { padding: 14px 20px; height: 70px; }
+      .ae-nav-brand img { height: 44px; }
+      .ae-nav-links { display: none; }
+      .ae-section { padding: 90px 20px 40px; min-height: auto; }
+      .ae-h1 { font-size: 40px; }
+      .ae-h2 { font-size: 28px; }
+      .ae-values, .ae-why, .ae-contact, .ae-referans-grid { grid-template-columns: 1fr; }
+      .ae-stats { grid-template-columns: repeat(2, 1fr); }
+      .ae-events-grid, .ae-past-grid, .ae-resources-grid { grid-template-columns: 1fr; }
+      .ae-footer { flex-direction: column; gap: 12px; text-align: center; }
+      .ae-svc { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="ae-nav">
+    <a href="#ae-hero" class="ae-nav-brand">
+      <img src="https://atelier-ethos.vercel.app/LogoSS.png" alt="Atelier Ethos" />
+    </a>
+
+    <div class="ae-nav-links">
+      <a href="#ae-yaklasim">Yaklaşımımız</a>
+      <a href="#ae-referanslar">Gerçekleştirdiklerimiz</a>
+      <a href="#ae-hizmetler">Hizmetler</a>
+      <a href="#ae-kaynaklar">Kaynak Kütüphanesi</a>
+      <a href="#ae-neden">Neden Biz?</a>
+    </div>
+
+    <div class="ae-nav-right">
+      <div class="ae-lang">
+        <button class="active">TR</button>
+        <span class="ae-lang-sep"></span>
+        <button>EN</button>
+      </div>
+      <a href="#ae-etkinlikler" class="ae-nav-cta">Etkinlik Takvimi</a>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <section id="ae-hero" class="ae-section">
+    <div class="ae-inner">
+      <span class="ae-label">EST. 2022 · İK Danışmanlık Atölyesi</span>
+      <h1 class="ae-h1">İnsanı merkeze alan<br><em>sistemler</em> kuruyoruz.</h1>
+      <p class="ae-lead">İşe alımdan performansa, çalışan deneyiminden kültüre — insan altyapısını tam entegre sistem olarak tasarlıyor ve hayata geçiriyoruz.</p>
+      <div class="ae-btns">
+        <a href="#ae-iletisim" class="ae-btn-primary">Görüşme Talep Et</a>
+        <a href="#ae-hizmetler" class="ae-btn-outline">Hizmetlerimiz</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ YAKLAŞIM ============ -->
+  <section id="ae-yaklasim" class="ae-section">
+    <div class="ae-inner">
+      <span class="ae-label">Yaklaşımımız</span>
+      <h2 class="ae-h2">Bir İK atölyesiyiz</h2>
+      <p class="ae-lead">Organizasyonunuzda başarmak istediğiniz hedefleri atölyemize alıyor, sizinle birlikte projelendiriyoruz.</p>
+
+      <div class="ae-values">
+        <div class="ae-val">
+          <h3>Çevik</h3>
+          <p>Değişime ve büyümeye hızlı uyum sağlayan, krizlere karşı dirençli yapılar.</p>
+        </div>
+        <div class="ae-val">
+          <h3>Adaptatif</h3>
+          <p>Değişime ve büyümeye hızlı uyum sağlayan süreçler.</p>
+        </div>
+        <div class="ae-val">
+          <h3>Öngörülebilir</h3>
+          <p>Veriye dayalı, tahmin edilebilir operasyonel çıktılar.</p>
+        </div>
+        <div class="ae-val">
+          <h3>Aidiyetli</h3>
+          <p>Kurum kültürüyle bütünleşmiş, bağlılığı yüksek ekipler.</p>
+        </div>
+      </div>
+
+      <div class="ae-quote">
+        <p>İK departmanınızın doğal bir uzantısı gibi, bilfiil projeleri birlikte yapıyoruz. Süreç tasarımı, atölye programları, dijital araçlar — hedefe ulaşmak için ne gerekiyorsa, birlikte hayata geçiriyoruz.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GERÇEKLEŞTİRDİKLERİMİZ ============ -->
+  <section id="ae-referanslar" class="ae-section">
+    <div class="ae-inner">
+      <span class="ae-label">Gerçekleştirdiklerimiz</span>
+      <h2 class="ae-h2">8+ yıl kurumsal uygulama</h2>
+      <p class="ae-lead">Türkiye'nin en hızlı büyüyen mühendislik teknoloji şirketlerinden birinin insan altyapısını sıfırdan kurduk, işlettik ve ölçeklendirdik.</p>
+
+      <div class="ae-stats">
+        <div class="ae-stat">
+          <div class="ae-stat-num">8+</div>
+          <div class="ae-stat-label">Yıl kurumsal uygulama</div>
+        </div>
+        <div class="ae-stat">
+          <div class="ae-stat-num">15→90</div>
+          <div class="ae-stat-label">Kişilik organizasyon</div>
+        </div>
+        <div class="ae-stat">
+          <img src="https://atelier-ethos.vercel.app/gptw.png" alt="Great Place to Work" />
+          <div class="ae-stat-label">Great Place to Work®</div>
+        </div>
+        <div class="ae-stat">
+          <img src="https://atelier-ethos.vercel.app/stevie.png" alt="Stevie Award" />
+          <div class="ae-stat-label">Gold HR Planning</div>
+        </div>
+      </div>
+
+      <div class="ae-referans-grid">
+        <div class="ae-ref-card">
+          <h3>Organizasyon Yapılanması</h3>
+          <ul>
+            <li>Görev tanımları &amp; sorumluluk alanları</li>
+            <li>Unvan yapısı &amp; kariyer seviyeleri</li>
+            <li>Kariyer yolu &amp; geçiş kriterleri</li>
+            <li>Organizasyon şeması &amp; kapasite planlama</li>
+          </ul>
+        </div>
+        <div class="ae-ref-card">
+          <h3>Performans ve Geri Bildirim</h3>
+          <ul>
+            <li>Yetkinlik çerçevesi &amp; OKR yapısı</li>
+            <li>Geri bildirim kültürü &amp; yönetici eğitimleri</li>
+            <li>Terfi yetkinlik envanteri süreçleri</li>
+          </ul>
+        </div>
+        <div class="ae-ref-card">
+          <h3>İşe Alım ve Yetenek Yönetimi</h3>
+          <ul>
+            <li>İşe alım sistemleri &amp; değerlendirme merkezi</li>
+            <li>Kişilik envanterleri &amp; yetkinlik mülakatları</li>
+          </ul>
+        </div>
+        <div class="ae-ref-card">
+          <h3>Çalışan Deneyimi ve Kültür</h3>
+          <ul>
+            <li>Çalışan deneyimi &amp; yan hak yapıları</li>
+            <li>Great Place to Work® sertifikasyonu</li>
+            <li>Değer elçisi programı &amp; iç iletişim</li>
+            <li>HR Playbook &amp; Çalışan El Kitabı</li>
+            <li>Employer Branding &amp; EVP çalışmaları</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HİZMETLER ============ -->
+  <section id="ae-hizmetler" class="ae-section">
+    <div class="ae-inner">
+      <span class="ae-label">Hizmetler</span>
+      <h2 class="ae-h2">Üç temel enstrüman</h2>
+      <p class="ae-lead">Atölye sürecinde belirlenen hedefe göre tek başına ya da entegre sistem olarak.</p>
+
+      <div class="ae-services">
+        <div class="ae-svc">
+          <div class="ae-svc-num">01</div>
+          <div>
+            <h3>İnsan Sistemi Kurulumu</h3>
+            <ul>
+              <li>İşe alım &amp; değerlendirme süreçleri</li>
+              <li>Performans yönetimi &amp; OKR sistemleri</li>
+              <li>Kariyer &amp; liderlik yolları tasarımı</li>
+              <li>Oryantasyon &amp; çalışan deneyimi tasarımı</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ae-svc">
+          <div class="ae-svc-num">02</div>
+          <div>
+            <h3>Ethos Akademi</h3>
+            <ul>
+              <li>Ortak tasarım atölye mimarisi</li>
+              <li>Atölyelerden sonra takip görüşmeleri</li>
+              <li>Mentorluk &amp; koçluk süreçleri</li>
+              <li>Gerekirse eğitim tekrarı (ücretsiz)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ae-svc">
+          <div class="ae-svc-num">03</div>
+          <div>
+            <h3>Dijital Altyapı</h3>
+            <ul>
+              <li>LMS — Dijital Akademi platformları</li>
+              <li>İşe alım yönetim sistemleri &amp; ATS</li>
+              <li>Değerlendirme Merkezi araçları</li>
+              <li>Global İstihdam Hizmeti</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ KAYNAKLAR (YENİ) ============ -->
+  <section id="ae-kaynaklar" class="ae-section">
+    <div class="ae-inner">
+      <span class="ae-label">Kaynaklar</span>
+      <h2 class="ae-h2">Açık kaynak kütüphanesi</h2>
+      <p class="ae-lead">Atölye ve webinarlardan damıttığımız kılavuzlar, şablonlar ve değerlendirme araçları — ücretsiz indirebilirsiniz.</p>
+
+      <div class="ae-resources-grid">
+        <div class="ae-resource-card">
+          <p class="ae-resource-num">01 · Performans</p>
+          <h3 class="ae-resource-title">Performans Yönetimi</h3>
+          <p class="ae-resource-desc">Yetkinlik bazlı performans değerlendirme kılavuzu, OKR şablonları, geri bildirim örnekleri.</p>
+          <p class="ae-resource-count">5 doküman →</p>
+        </div>
+        <div class="ae-resource-card">
+          <p class="ae-resource-num">02 · İyilik Hali</p>
+          <h3 class="ae-resource-title">Stres &amp; İyilik Hali</h3>
+          <p class="ae-resource-desc">Çalışan stres ölçeği (PSS-10), iyilik hali envanteri, intervansiyon önerileri.</p>
+          <p class="ae-resource-count">3 doküman →</p>
+        </div>
+        <div class="ae-resource-card">
+          <p class="ae-resource-num">03 · Liderlik</p>
+          <h3 class="ae-resource-title">Liderlik &amp; Kültür</h3>
+          <p class="ae-resource-desc">Yönetici eğitim modülleri, kültür haritalama araçları, değer elçisi programı şablonları.</p>
+          <p class="ae-resource-count">4 doküman →</p>
+        </div>
+      </div>
+
+      <div class="ae-resources-cta-row">
+        <a href="#" class="ae-btn-outline">Tüm kütüphaneye git →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ETKİNLİKLER (YENİ) ============ -->
+  <section id="ae-etkinlikler" class="ae-section">
+    <div class="ae-inner">
+      <div class="ae-events-header">
+        <div>
+          <span class="ae-label">Etkinlik Takvimi</span>
+          <h2 class="ae-h2">Yaklaşan webinar ve atölyeler</h2>
+        </div>
+        <a href="#" class="ae-events-link">Tüm etkinlikler →</a>
+      </div>
+
+      <div class="ae-events-grid">
+        <article class="ae-event-card">
+          <div class="ae-event-date">
+            <span class="ae-event-day">06</span>
+            <span class="ae-event-month">May 2026</span>
+          </div>
+          <p class="ae-event-type">Webinar · Ücretsiz</p>
+          <h3 class="ae-event-title">[Etkinlik başlığı buraya gelecek]</h3>
+          <p class="ae-event-desc">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
+          <a href="#" class="ae-event-cta">Kayıt ol →</a>
+        </article>
+
+        <article class="ae-event-card">
+          <div class="ae-event-date">
+            <span class="ae-event-day">19</span>
+            <span class="ae-event-month">May 2026</span>
+          </div>
+          <p class="ae-event-type">Atölye · Yüz yüze</p>
+          <h3 class="ae-event-title">[Etkinlik başlığı buraya gelecek]</h3>
+          <p class="ae-event-desc">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
+          <a href="#" class="ae-event-cta">Kayıt ol →</a>
+        </article>
+
+        <article class="ae-event-card">
+          <div class="ae-event-date">
+            <span class="ae-event-day">03</span>
+            <span class="ae-event-month">Haz 2026</span>
+          </div>
+          <p class="ae-event-type">Webinar · Ücretsiz</p>
+          <h3 class="ae-event-title">[Etkinlik başlığı buraya gelecek]</h3>
+          <p class="ae-event-desc">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
+          <a href="#" class="ae-event-cta">Kayıt ol →</a>
+        </article>
+      </div>
+
+      <p class="ae-events-past-title">Geçmiş Etkinlik Kayıtları</p>
+      <div class="ae-past-grid">
+        <article class="ae-past-card">
+          <div class="ae-past-thumb">YouTube embed</div>
+          <p class="ae-past-meta">Mart 2026 · Webinar</p>
+          <p class="ae-past-title">Yetkinlik Bazlı Performans Yönetimi</p>
+        </article>
+        <article class="ae-past-card">
+          <div class="ae-past-thumb">YouTube embed</div>
+          <p class="ae-past-meta">Şubat 2026 · Atölye</p>
+          <p class="ae-past-title">Geri Bildirim Kültürü Kurma</p>
+        </article>
+        <article class="ae-past-card">
+          <div class="ae-past-thumb">YouTube embed</div>
+          <p class="ae-past-meta">Ocak 2026 · Webinar</p>
+          <p class="ae-past-title">OKR ile Stratejik Hizalama</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NEDEN BİZ ============ -->
+  <section id="ae-neden" class="ae-section">
+    <div class="ae-inner">
+      <span class="ae-label">Neden Atelier Ethos?</span>
+      <h2 class="ae-h2">Süreç anlatmıyoruz,<br>birlikte kuruyoruz.</h2>
+
+      <div class="ae-why">
+        <div class="ae-why-card">
+          <h3>Bütünsel bakış</h3>
+          <p>Tüm süreçleri ve insan katmanını bir bütün olarak görüyor, uyum içinde çalışır hale getiriyoruz.</p>
+        </div>
+        <div class="ae-why-card">
+          <h3>Teknoloji odaklı</h3>
+          <p>Sadece kağıt üzerinde değil, dijital dünyada yaşayan ölçeklenebilir sistemler kuruyoruz.</p>
+        </div>
+      </div>
+
+      <div class="ae-claim">
+        <p>Organizasyonların kırılgan olması bir <strong>"insan" sorunu</strong> değil,<br>bir <strong>"sistem" sorunudur.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ İLETİŞİM ============ -->
+  <section id="ae-iletisim" class="ae-section">
+    <div class="ae-inner">
+      <div class="ae-contact">
+        <div class="ae-contact-info">
+          <span class="ae-label">İletişim</span>
+          <h2 class="ae-h2">Görüşme talep edin</h2>
+          <p>Hedeflerinizi anlatın, birlikte projelendirelim.</p>
+          <div class="ae-contact-detail">
+            <span>Mail: <a href="mailto:info@atelierethos.com">info@atelierethos.com</a></span>
+            <span>Telefon: <a href="tel:+905304746948">+90 530 474 69 48</a></span>
+            <span>Instagram: <a href="https://instagram.com/atelier_ethos">@atelier_ethos</a></span>
+            <span>WhatsApp: <a href="https://whatsapp.com/channel/0029Vb7WEBVElagsIAnvuT3y">Atelier Ethos WhatsApp Kanalı</a></span>
+          </div>
+        </div>
+        <form>
+          <div class="ae-fg"><input type="text" placeholder="Adınız Soyadınız" /></div>
+          <div class="ae-fg"><input type="email" placeholder="Mail adresiniz" /></div>
+          <div class="ae-fg"><textarea placeholder="Kısaca ihtiyacınızı paylaşır mısınız?"></textarea></div>
+          <button type="button" class="ae-submit">Gönder</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="ae-footer">
+    <span class="ae-footer-copy">© 2026 Atelier Ethos</span>
+    <div class="ae-footer-links">
+      <a href="https://www.linkedin.com/company/atelier-ethos">LinkedIn</a>
+      <a href="https://instagram.com/atelier_ethos">Instagram</a>
+      <a href="https://whatsapp.com/channel/0029Vb7WEBVElagsIAnvuT3y">WhatsApp</a>
+      <a href="mailto:info@atelierethos.com">Mail</a>
+    </div>
+  </footer>
+
+  <!-- ============ STICKY (sağ alt) ============ -->
+  <div class="ae-sticky">
+    <a href="#ae-iletisim" class="ae-sticky-cta">Görüşme Talep Et</a>
+    <a href="#ae-hero" class="ae-sticky-up">↑</a>
+  </div>
+
+</body>
+</html>
