@@ -1,0 +1,96 @@
+---
+// ============================================================
+// StickyCTA.astro
+// Sayfa kaydırıldıkça sağ altta sabit pill CTA.
+// Tasarım rehberi 5. ve 6. bölüm:
+//  - SADECE buradadır pill (40px) radius kullanımı — istisna
+//  - Navbar kaybolduğunda CTA görevini devralır
+//  - Sayfa belirli bir noktayı geçince görünür olur
+// ============================================================
+---
+
+<a href="/#iletisim" class="ae-sticky-cta" data-sticky-cta>
+  Görüşme talep et
+</a>
+
+<style>
+  .ae-sticky-cta {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+
+    background: var(--ae-red);
+    color: var(--ae-white);
+    padding: 14px 28px;
+    border-radius: var(--ae-radius-pill);
+
+    font-size: 14px;
+    font-weight: 500;
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+
+    /* Başta gizli — JS göstereceğinde fade-in */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+  }
+
+  .ae-sticky-cta.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .ae-sticky-cta:hover {
+    background: var(--ae-red-hover);
+  }
+
+  @media (max-width: 480px) {
+    .ae-sticky-cta {
+      bottom: 16px;
+      right: 16px;
+      padding: 12px 22px;
+      font-size: 13px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ae-sticky-cta {
+      transition: opacity 0.1s linear;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  // Sayfa 400px aşağı kaydırıldığında CTA görünür olur
+  const cta = document.querySelector('[data-sticky-cta]');
+  if (cta) {
+    let ticking = false;
+    const threshold = 400;
+
+    function update() {
+      if (window.scrollY > threshold) {
+        cta.classList.add('is-visible');
+      } else {
+        cta.classList.remove('is-visible');
+      }
+      ticking = false;
+    }
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          window.requestAnimationFrame(update);
+          ticking = true;
+        }
+      },
+      { passive: true }
+    );
+
+    update();
+  }
+</script>
