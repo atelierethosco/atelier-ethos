@@ -1,0 +1,17 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "astro",
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/stres-olcegi.html", "destination": "/araclar/stres-olcegi", "permanent": true },
+    { "source": "/ik-pusulasi.html", "destination": "/araclar/ik-pusulasi", "permanent": true },
+    { "source": "/kaynak-kutuphanesi.html", "destination": "/kaynaklar", "permanent": true },
+    { "source": "/dashboard.html", "destination": "/yonetim/dashboard", "permanent": true },
+    { "source": "/webinar-yetkinlik-performans.html", "destination": "/etkinlikler/yetkinlik-performans", "permanent": true },
+    { "source": "/webinar-on-soru.html", "destination": "/etkinlikler/yetkinlik-performans/on-soru", "permanent": true },
+    { "source": "/webinar-yetkinlik-materyalleri.html", "destination": "/etkinlikler/yetkinlik-performans/materyaller", "permanent": true },
+    { "source": "/yetkinlik-bazli-performans-kilavuzu.html", "destination": "/kaynaklar/performans/yetkinlik-bazli-kilavuz", "permanent": true },
+    { "source": "/yetkinlik-bazli-performans-sorulari.html", "destination": "/kaynaklar/performans/yetkinlik-bazli-sorular", "permanent": true }
+  ]
+}
