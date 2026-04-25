@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaynak Kütüphanesi — Atelier Ethos</title>
+  <style>
+    /* ============================================================
+       KAYNAK KÜTÜPHANESİ — Mockup V2
+       Değişiklikler (V1'e göre):
+        - Emoji ikonlar → Lucide SVG (1.5px stroke, ink, 20px)
+        - Sticky filtre + arama çubuğu üstte
+        - Webinar paketinde YouTube embed
+        - Filtre butonu mantığı (basit JS)
+       ============================================================ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #414042;
+      background: #fff;
+    }
+
+    em { font-style: normal; color: #c12033; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; }
+    ul { list-style: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ---------- LUCIDE ICON DEFAULT STYLE ---------- */
+    .lucide {
+      stroke: #414042;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .lucide-sm { width: 14px; height: 14px; }
+    .lucide-lg { width: 24px; height: 24px; }
+
+    /* ---------- NAVBAR ---------- */
+    .ae-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: #fff;
+      border-bottom: 0.5px solid #e8e8e8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 60px;
+      height: 90px;
+    }
+    .ae-nav-brand img { height: 66px; width: auto; }
+    .ae-nav-links { display: flex; gap: 28px; align-items: center; }
+    .ae-nav-links a {
+      font-size: 14px;
+      color: #414042;
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+    .ae-nav-links a:hover { color: #c12033; }
+    .ae-nav-links a.active { color: #c12033; }
+    .ae-nav-right { display: flex; align-items: center; gap: 16px; }
+    .ae-lang { display: flex; align-items: center; gap: 4px; }
+    .ae-lang button {
+      background: none; border: none; padding: 4px 6px;
+      color: #a7a9ab; cursor: pointer;
+      font-family: inherit; font-size: 11px;
+      letter-spacing: 0.18em; font-weight: 500;
+    }
+    .ae-lang button.active { color: #414042; }
+    .ae-lang-sep { width: 1px; height: 12px; background: #e8e8e8; }
+    .ae-nav-cta {
+      background: #c12033; color: #fff !important;
+      font-size: 12px; padding: 7px 14px; border-radius: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ---------- BREADCRUMB ---------- */
+    .ae-breadcrumb {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 110px 60px 0;
+      font-size: 13px;
+      color: #a7a9ab;
+    }
+    .ae-breadcrumb a { color: #a7a9ab; transition: color 0.15s; }
+    .ae-breadcrumb a:hover { color: #c12033; }
+    .ae-breadcrumb-sep { margin: 0 8px; color: #e8e8e8; }
+    .ae-breadcrumb-current { color: #414042; font-weight: 500; }
+
+    /* ---------- PAGE HEADER ---------- */
+    .ae-page-header {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 60px 40px;
+    }
+    .ae-label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: #c12033;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: block;
+      font-weight: 500;
+    }
+    .ae-h1 {
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.15;
+      color: #414042;
+      margin-bottom: 20px;
+      max-width: 720px;
+    }
+    .ae-lead {
+      font-size: 17px;
+      color: #6b6b6b;
+      line-height: 1.7;
+      max-width: 640px;
+    }
+
+    /* ---------- STICKY FİLTRE ÇUBUĞU ---------- */
+    .ae-filter-bar {
+      position: sticky;
+      top: 90px; /* navbar'ın altına yapışsın */
+      background: #fff;
+      border-top: 0.5px solid #e8e8e8;
+      border-bottom: 0.5px solid #e8e8e8;
+      z-index: 100;
+    }
+    .ae-filter-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 60px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .ae-filter-buttons {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .ae-filter-btn {
+      background: none;
+      border: 0.5px solid transparent;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #6b6b6b;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .ae-filter-btn:hover {
+      color: #414042;
+      background: #faf9f9;
+    }
+    .ae-filter-btn.active {
+      color: #c12033;
+      border-color: #c12033;
+      background: #fff;
+      font-weight: 500;
+    }
+    .ae-filter-search {
+      margin-left: auto;
+      position: relative;
+      min-width: 240px;
+      flex: 1;
+      max-width: 320px;
+    }
+    .ae-filter-search input {
+      width: 100%;
+      padding: 8px 14px 8px 36px;
+      border: 0.5px solid #e8e8e8;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #414042;
+      font-family: inherit;
+      outline: none;
+      background: #fafafa;
+      transition: all 0.15s;
+    }
+    .ae-filter-search input:focus {
+      border-color: #c12033;
+      background: #fff;
+    }
+    .ae-filter-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #a7a9ab;
+      pointer-events: none;
+    }
+
+    /* ---------- KATEGORİ BÖLÜMÜ ---------- */
+    .ae-category {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 60px;
+      border-top: 0.5px solid #f0f0f0;
+    }
+    .ae-category:first-of-type { border-top: none; }
+    .ae-category.hidden { display: none; }
+    .ae-cat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .ae-cat-num {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: #c12033;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .ae-cat-title {
+      font-size: 28px;
+      font-weight: 500;
+      color: #414042;
+      line-height: 1.2;
+    }
+    .ae-cat-count {
+      font-size: 13px;
+      color: #a7a9ab;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---------- DOKÜMAN LİSTESİ ---------- */
+    .ae-docs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ae-doc {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 20px;
+      align-items: center;
+      border: 0.5px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 20px 24px;
+      background: #fff;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .ae-doc:hover {
+      border-color: #c12033;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .ae-doc.hidden { display: none; }
+
+    .ae-doc-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: #faf9f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .ae-doc:hover .ae-doc-icon-wrap {
+      background: #fff;
+      border: 0.5px solid #c12033;
+    }
+    .ae-doc:hover .ae-doc-icon-wrap .lucide { stroke: #c12033; }
+
+    .ae-doc-body { min-width: 0; }
+    .ae-doc-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #414042;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .ae-doc-desc {
+      font-size: 13px;
+      color: #6b6b6b;
+      line-height: 1.55;
+      margin-bottom: 8px;
+    }
+    .ae-doc-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+      color: #a7a9ab;
+      letter-spacing: 0.04em;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .ae-doc-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .ae-doc-meta-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #faf9f9;
+      border-radius: 3px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6b6b6b;
+    }
+
+    .ae-doc-cta {
+      flex-shrink: 0;
+      font-size: 13px;
+      font-weight: 500;
+      color: #414042;
+      border: 1px solid #414042;
+      border-radius: 4px;
+      padding: 10px 18px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ae-doc:hover .ae-doc-cta {
+      background: #c12033;
+      color: #fff;
+      border-color: #c12033;
+    }
+    .ae-doc:hover .ae-doc-cta .lucide {
+      stroke: #fff;
+    }
+
+    /* ---------- WEBINAR PAKETİ — özel kart ---------- */
+    .ae-doc-package {
+      grid-template-columns: 1fr;
+      padding: 0;
+      cursor: default;
+    }
+    .ae-doc-package:hover { transform: none; box-shadow: none; }
+
+    .ae-doc-package-content {
+      padding: 24px 28px;
+    }
+    .ae-doc-package-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .ae-doc-package-icon-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .ae-doc-package-meta { padding-top: 6px; }
+
+    /* YouTube embed */
+    .ae-youtube {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      margin: 0;
+      overflow: hidden;
+    }
+    .ae-youtube iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .ae-doc-package-divider {
+      border-top: 0.5px solid #f0f0f0;
+      margin: 0 28px;
+    }
+    .ae-doc-package-includes-title {
+      font-size: 11px;
+      color: #a7a9ab;
+      margin-bottom: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .ae-doc-package-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ae-doc-package-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #414042;
+    }
+    .ae-doc-package-list li .lucide { color: #6b6b6b; stroke: #6b6b6b; }
+
+    .ae-doc-package-cta {
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      background: #c12033;
+      border-radius: 4px;
+      padding: 10px 18px;
+      white-space: nowrap;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ae-doc-package-cta:hover { background: #a81c2b; }
+    .ae-doc-package-cta .lucide { stroke: #fff; }
+
+    /* ---------- BOŞ DURUM ---------- */
+    .ae-empty {
+      text-align: center;
+      padding: 80px 24px;
+      color: #a7a9ab;
+      font-size: 14px;
+      display: none;
+    }
+    .ae-empty.show { display: block; }
+
+    /* ---------- FOOTER ---------- */
+    .ae-footer {
+      padding: 28px 60px;
+      border-top: 0.5px solid #e8e8e8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 80px;
+    }
+    .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+    .ae-footer-links { display: flex; gap: 24px; }
+    .ae-footer-links a {
+      font-size: 13px;
+      color: #a7a9ab;
+      transition: color 0.15s;
+    }
+    .ae-footer-links a:hover { color: #c12033; }
+
+    /* ---------- STICKY ---------- */
+    .ae-sticky {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .ae-sticky-cta {
+      background: #c12033; color: #fff;
+      font-size: 14px; padding: 13px 22px;
+      border-radius: 40px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+    .ae-sticky-up {
+      background: #414042; color: #fff;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 768px) {
+      .ae-nav { padding: 14px 20px; height: 70px; }
+      .ae-nav-brand img { height: 44px; }
+      .ae-nav-links { display: none; }
+      .ae-breadcrumb { padding: 90px 20px 0; }
+      .ae-page-header { padding: 24px 20px 24px; }
+      .ae-h1 { font-size: 32px; }
+      .ae-cat-title { font-size: 22px; }
+      .ae-category { padding: 40px 20px; }
+      .ae-filter-bar { top: 70px; }
+      .ae-filter-inner { padding: 12px 20px; gap: 16px; flex-direction: column; align-items: stretch; }
+      .ae-filter-search { margin-left: 0; max-width: none; }
+      .ae-doc {
+        grid-template-columns: auto 1fr;
+        gap: 14px;
+      }
+      .ae-doc-cta {
+        grid-column: 1 / -1;
+        text-align: center;
+        justify-content: center;
+      }
+      .ae-doc-package-header { flex-direction: column; }
+      .ae-footer { flex-direction: column; gap: 12px; padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="ae-nav">
+    <a href="/" class="ae-nav-brand">
+      <img src="https://atelier-ethos.vercel.app/LogoSS.png" alt="Atelier Ethos" />
+    </a>
+    <div class="ae-nav-links">
+      <a href="/#ae-yaklasim">Yaklaşımımız</a>
+      <a href="/#ae-referanslar">Gerçekleştirdiklerimiz</a>
+      <a href="/#ae-hizmetler">Hizmetler</a>
+      <a href="#" class="active">Kaynak Kütüphanesi</a>
+      <a href="/#ae-neden">Neden Biz?</a>
+    </div>
+    <div class="ae-nav-right">
+      <div class="ae-lang">
+        <button class="active">TR</button>
+        <span class="ae-lang-sep"></span>
+        <button>EN</button>
+      </div>
+      <a href="/#ae-etkinlikler" class="ae-nav-cta">Etkinlik Takvimi</a>
+    </div>
+  </nav>
+
+  <!-- ============ BREADCRUMB ============ -->
+  <nav class="ae-breadcrumb">
+    <a href="/">Ana Sayfa</a>
+    <span class="ae-breadcrumb-sep">/</span>
+    <span class="ae-breadcrumb-current">Kaynak Kütüphanesi</span>
+  </nav>
+
+  <!-- ============ PAGE HEADER ============ -->
+  <header class="ae-page-header">
+    <span class="ae-label">Kaynak Kütüphanesi</span>
+    <h1 class="ae-h1">Atölyelerden damıttığımız <em>kaynaklar</em></h1>
+    <p class="ae-lead">Webinar ve atölyelerimizden çıkan kılavuzlar, ölçekler ve şablonlar. İndirmek için kısa form doldurmanız yeterli — sizinle iletişime geçebilelim diye.</p>
+  </header>
+
+  <!-- ============ STICKY FİLTRE ============ -->
+  <div class="ae-filter-bar">
+    <div class="ae-filter-inner">
+      <div class="ae-filter-buttons">
+        <button class="ae-filter-btn active" data-filter="all">Tümü</button>
+        <button class="ae-filter-btn" data-filter="olcekler">Ölçekler / Envanterler</button>
+        <button class="ae-filter-btn" data-filter="webinar">Webinar / Atölye Materyalleri</button>
+        <button class="ae-filter-btn" data-filter="kilavuzlar">Kılavuzlar / Hesaplama Araçları</button>
+      </div>
+      <div class="ae-filter-search">
+        <span class="ae-filter-search-icon">
+          <svg class="lucide lucide-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </span>
+        <input type="search" placeholder="Kaynak ara..." id="search-input" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ KATEGORİ 1: ÖLÇEKLER ============ -->
+  <section class="ae-category" data-category="olcekler">
+    <div class="ae-cat-header">
+      <div>
+        <p class="ae-cat-num">01 · İnteraktif</p>
+        <h2 class="ae-cat-title">Ölçekler / Envanterler</h2>
+      </div>
+      <span class="ae-cat-count">2 araç</span>
+    </div>
+
+    <div class="ae-docs">
+      <a href="/ik-pusulasi.html" class="ae-doc" data-search="ik pusulası b2b değerlendirme">
+        <div class="ae-doc-icon-wrap">
+          <!-- Lucide: heart-pulse -->
+          <svg class="lucide" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>
+        </div>
+        <div class="ae-doc-body">
+          <h3 class="ae-doc-title">İK Pusulası</h3>
+          <p class="ae-doc-desc">Kurumunuzun insan altyapısını 6 boyutta değerlendiren tanı aracı. Sonuç: PDF rapor + öneriler.</p>
+          <div class="ae-doc-meta">
+            <span class="ae-doc-meta-tag">B2B</span>
+            <span class="ae-doc-meta-item">
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              8 dakika
+            </span>
+            <span class="ae-doc-meta-item">İnteraktif</span>
+          </div>
+        </div>
+        <span class="ae-doc-cta">
+          Değerlendirmeyi başlat
+          <svg class="lucide lucide-sm" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </a>
+
+      <a href="/stres-olcegi.html" class="ae-doc" data-search="stres ölçeği pss-10 b2c">
+        <div class="ae-doc-icon-wrap">
+          <!-- Lucide: brain -->
+          <svg class="lucide" viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>
+        </div>
+        <div class="ae-doc-body">
+          <h3 class="ae-doc-title">Algılanan Stres Ölçeği (PSS-10)</h3>
+          <p class="ae-doc-desc">Bireysel stres seviyesi değerlendirme aracı. Cohen, Kamarck &amp; Mermelstein (1983) çerçevesinde 10 soru.</p>
+          <div class="ae-doc-meta">
+            <span class="ae-doc-meta-tag">B2C</span>
+            <span class="ae-doc-meta-item">
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              3 dakika
+            </span>
+            <span class="ae-doc-meta-item">İnteraktif</span>
+          </div>
+        </div>
+        <span class="ae-doc-cta">
+          Ölçeği başlat
+          <svg class="lucide lucide-sm" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ KATEGORİ 2: WEBINAR / ATÖLYE ============ -->
+  <section class="ae-category" data-category="webinar">
+    <div class="ae-cat-header">
+      <div>
+        <p class="ae-cat-num">02 · Etkinlik Sonrası</p>
+        <h2 class="ae-cat-title">Webinar / Atölye Materyalleri</h2>
+      </div>
+      <span class="ae-cat-count">1 paket</span>
+    </div>
+
+    <div class="ae-docs">
+      <div class="ae-doc ae-doc-package" data-search="yetkinlik bazlı performans webinar paket">
+
+        <!-- Üst başlık alanı -->
+        <div class="ae-doc-package-content">
+          <div class="ae-doc-package-header">
+            <div class="ae-doc-package-icon-wrap">
+              <div class="ae-doc-icon-wrap">
+                <!-- Lucide: package -->
+                <svg class="lucide" viewBox="0 0 24 24"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
+              <div class="ae-doc-package-meta">
+                <h3 class="ae-doc-title">Yetkinlik Bazlı Performans Sistemi</h3>
+                <p class="ae-doc-desc" style="margin-bottom: 0;">Mart 2026 webinarından çıkan tüm materyaller. Sunum, kılavuzlar ve örnek dokümanlar.</p>
+                <div class="ae-doc-meta" style="margin-top: 8px;">
+                  <span class="ae-doc-meta-tag">Paket</span>
+                  <span class="ae-doc-meta-item">6 doküman</span>
+                </div>
+              </div>
+            </div>
+            <a href="/webinar-yetkinlik-materyalleri.html" class="ae-doc-package-cta">
+              Paketi al
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Doküman listesi -->
+        <div class="ae-doc-package-content">
+          <p class="ae-doc-package-includes-title">Pakette neler var</p>
+          <ul class="ae-doc-package-list">
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Webinar Sunumu (PDF)
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Yetkinlik Kılavuzu (PDF)
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Performans Şablonu (Excel)
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Değerlendirme Soruları (PDF)
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Mavi Yaka Sözlüğü (PDF)
+            </li>
+            <li>
+              <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Bonus Kontrol Listesi (PDF)
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ KATEGORİ 3: KILAVUZLAR ============ -->
+  <section class="ae-category" data-category="kilavuzlar">
+    <div class="ae-cat-header">
+      <div>
+        <p class="ae-cat-num">03 · İndirilebilir</p>
+        <h2 class="ae-cat-title">Kılavuzlar / Hesaplama Araçları</h2>
+      </div>
+      <span class="ae-cat-count">2 doküman</span>
+    </div>
+
+    <div class="ae-docs">
+      <a href="/yetkinlik-bazli-performans-kilavuzu.html" class="ae-doc" data-search="yetkinlik kılavuzu performans">
+        <div class="ae-doc-icon-wrap">
+          <!-- Lucide: file-text -->
+          <svg class="lucide" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+        </div>
+        <div class="ae-doc-body">
+          <h3 class="ae-doc-title">Yetkinlik Bazlı Performans Kılavuzu</h3>
+          <p class="ae-doc-desc">Yetkinlik çerçevesi kurarken referans alabileceğiniz, alanı 4 katmanda tanımlayan kapsamlı kılavuz.</p>
+          <div class="ae-doc-meta">
+            <span class="ae-doc-meta-tag">PDF</span>
+            <span class="ae-doc-meta-item">18 sayfa</span>
+            <span class="ae-doc-meta-item">Performans</span>
+          </div>
+        </div>
+        <span class="ae-doc-cta">
+          İndir
+          <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </span>
+      </a>
+
+      <a href="/yetkinlik-bazli-performans-sorulari.html" class="ae-doc" data-search="yetkinlik soru havuzu performans">
+        <div class="ae-doc-icon-wrap">
+          <!-- Lucide: list-checks -->
+          <svg class="lucide" viewBox="0 0 24 24"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><polyline points="3 6 4 7 6 5"/><polyline points="3 12 4 13 6 11"/><polyline points="3 18 4 19 6 17"/></svg>
+        </div>
+        <div class="ae-doc-body">
+          <h3 class="ae-doc-title">Yetkinlik Bazlı Performans Soruları</h3>
+          <p class="ae-doc-desc">Performans değerlendirme görüşmelerinde kullanabileceğiniz, yetkinlik bazında ayrılmış soru havuzu.</p>
+          <div class="ae-doc-meta">
+            <span class="ae-doc-meta-tag">PDF</span>
+            <span class="ae-doc-meta-item">12 sayfa</span>
+            <span class="ae-doc-meta-item">Performans</span>
+          </div>
+        </div>
+        <span class="ae-doc-cta">
+          İndir
+          <svg class="lucide lucide-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ EMPTY STATE ============ -->
+  <div class="ae-empty" id="empty-state">
+    Aramanıza uyan kaynak bulunamadı.
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="ae-footer">
+    <span class="ae-footer-copy">© 2026 Atelier Ethos</span>
+    <div class="ae-footer-links">
+      <a href="https://www.linkedin.com/company/atelier-ethos">LinkedIn</a>
+      <a href="https://instagram.com/atelier_ethos">Instagram</a>
+      <a href="https://whatsapp.com/channel/0029Vb7WEBVElagsIAnvuT3y">WhatsApp</a>
+      <a href="mailto:info@atelierethos.com">Mail</a>
+    </div>
+  </footer>
+
+  <!-- ============ STICKY ============ -->
+  <div class="ae-sticky">
+    <a href="/#ae-iletisim" class="ae-sticky-cta">Görüşme Talep Et</a>
+    <a href="#" class="ae-sticky-up">↑</a>
+  </div>
+
+  <!-- ============ FİLTRE + ARAMA SCRIPT ============ -->
+  <script>
+    (function() {
+      var filterButtons = document.querySelectorAll('.ae-filter-btn');
+      var categories = document.querySelectorAll('.ae-category');
+      var docs = document.querySelectorAll('.ae-doc');
+      var searchInput = document.getElementById('search-input');
+      var emptyState = document.getElementById('empty-state');
+      var currentFilter = 'all';
+
+      function applyFilters() {
+        var query = searchInput.value.trim().toLowerCase();
+        var anyVisible = false;
+
+        categories.forEach(function(cat) {
+          var catName = cat.getAttribute('data-category');
+          var catVisible = (currentFilter === 'all' || currentFilter === catName);
+          var docsInCat = cat.querySelectorAll('.ae-doc');
+          var visibleInCat = 0;
+
+          docsInCat.forEach(function(doc) {
+            var searchText = doc.getAttribute('data-search') || '';
+            var titleText = (doc.querySelector('.ae-doc-title') || {}).textContent || '';
+            var combined = (searchText + ' ' + titleText).toLowerCase();
+            var matches = (query === '' || combined.indexOf(query) !== -1);
+
+            if (catVisible && matches) {
+              doc.classList.remove('hidden');
+              visibleInCat++;
+              anyVisible = true;
+            } else {
+              doc.classList.add('hidden');
+            }
+          });
+
+          if (catVisible && visibleInCat > 0) {
+            cat.classList.remove('hidden');
+          } else {
+            cat.classList.add('hidden');
+          }
+        });
+
+        if (anyVisible) {
+          emptyState.classList.remove('show');
+        } else {
+          emptyState.classList.add('show');
+        }
+      }
+
+      filterButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          filterButtons.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          currentFilter = btn.getAttribute('data-filter');
+          applyFilters();
+        });
+      });
+
+      searchInput.addEventListener('input', applyFilters);
+    })();
+  </script>
+
+</body>
+</html>
