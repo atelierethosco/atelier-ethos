@@ -10,7 +10,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.0.0",
-    "lucide-astro": "^0.474.0"
+    "astro": "^5.0.0"
   }
 }
