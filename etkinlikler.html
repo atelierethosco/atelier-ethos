@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Etkinlik Takvimi — Atelier Ethos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #414042;
+      background: #fff;
+    }
+
+    em { font-style: normal; color: #c12033; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; }
+    ul { list-style: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ---------- LUCIDE DEFAULT ---------- */
+    .lucide {
+      stroke: #414042;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .lucide-sm { width: 14px; height: 14px; }
+
+    /* ---------- NAVBAR ---------- */
+    .ae-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: #fff;
+      border-bottom: 0.5px solid #e8e8e8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 60px;
+      height: 90px;
+    }
+    .ae-nav-brand img { height: 66px; width: auto; }
+    .ae-nav-links { display: flex; gap: 28px; align-items: center; }
+    .ae-nav-links a {
+      font-size: 14px;
+      color: #414042;
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+    .ae-nav-links a:hover { color: #c12033; }
+    .ae-nav-right { display: flex; align-items: center; gap: 16px; }
+    .ae-lang { display: flex; align-items: center; gap: 0; border: 0.5px solid #e8e8e8; border-radius: 4px; overflow: hidden; }
+    .ae-lang button {
+      background: none; border: none; cursor: pointer;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.5px;
+      padding: 6px 12px; color: #a7a9ab; font-family: inherit;
+      transition: all 0.15s;
+    }
+    .ae-lang button.active { background: #414042; color: #fff; }
+    .ae-lang button:hover:not(.active) { color: #414042; }
+    .ae-lang-divider { width: 0.5px; background: #e8e8e8; height: 28px; }
+    .ae-nav-cta {
+      background: #c12033; color: #fff !important;
+      font-size: 12px; padding: 7px 14px; border-radius: 4px;
+      letter-spacing: 0.02em; transition: background 0.2s;
+    }
+    .ae-nav-cta:hover { background: #a81c2b; }
+    .ae-nav-link-active { color: #c12033 !important; }
+
+    /* ---------- BREADCRUMB ---------- */
+    .ae-breadcrumb {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 110px 60px 0;
+      font-size: 13px;
+      color: #a7a9ab;
+    }
+    .ae-breadcrumb a { color: #a7a9ab; transition: color 0.15s; }
+    .ae-breadcrumb a:hover { color: #c12033; }
+    .ae-breadcrumb-sep { margin: 0 8px; color: #e8e8e8; }
+    .ae-breadcrumb-current { color: #414042; font-weight: 500; }
+
+    /* ---------- PAGE HEADER ---------- */
+    .ae-page-header {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 60px 40px;
+    }
+    .ae-label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: #c12033;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: block;
+      font-weight: 500;
+    }
+    .ae-h1 {
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.15;
+      color: #414042;
+      margin-bottom: 20px;
+      max-width: 720px;
+    }
+    .ae-lead {
+      font-size: 17px;
+      color: #6b6b6b;
+      line-height: 1.7;
+      max-width: 640px;
+    }
+
+    /* ---------- BÖLÜM ---------- */
+    .ae-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 60px;
+      border-top: 0.5px solid #f0f0f0;
+    }
+    .ae-section:first-of-type { border-top: none; padding-top: 20px; }
+
+    .ae-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .ae-section-num {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: #c12033;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .ae-section-title {
+      font-size: 28px;
+      font-weight: 500;
+      color: #414042;
+      line-height: 1.2;
+    }
+    .ae-section-count {
+      font-size: 13px;
+      color: #a7a9ab;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---------- YAKLAŞAN ETKİNLİKLER (kart) ---------- */
+    .ae-events-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .ae-event-card {
+      border: 0.5px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 24px 28px;
+      transition: all 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      background: #fff;
+    }
+    .ae-event-card:hover {
+      border-color: #c12033;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .ae-event-date {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .ae-event-day {
+      font-size: 32px;
+      font-weight: 500;
+      color: #c12033;
+      line-height: 1;
+    }
+    .ae-event-month {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #a7a9ab;
+      text-transform: uppercase;
+    }
+    .ae-event-type {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #a7a9ab;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .ae-event-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #414042;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .ae-event-desc {
+      font-size: 13px;
+      color: #6b6b6b;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+    .ae-event-cta {
+      font-size: 13px;
+      color: #414042;
+      border-bottom: 1px solid #414042;
+      padding-bottom: 2px;
+      transition: all 0.2s;
+    }
+    .ae-event-card:hover .ae-event-cta {
+      color: #c12033;
+      border-color: #c12033;
+    }
+
+    /* ---------- BOŞ DURUM ---------- */
+    .ae-empty {
+      border: 0.5px dashed #e8e8e8;
+      border-radius: 8px;
+      padding: 48px 32px;
+      text-align: center;
+      color: #a7a9ab;
+      font-size: 14px;
+    }
+    .ae-empty p { margin-bottom: 6px; }
+    .ae-empty .ae-empty-hint {
+      font-size: 12px;
+      color: #c4c4c4;
+    }
+
+    /* ---------- GEÇMİŞ ETKİNLİKLER (YouTube thumbnail kart) ---------- */
+    .ae-past-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .ae-past-card {
+      background: #fff;
+      border: 0.5px solid #e8e8e8;
+      border-radius: 8px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: all 0.2s;
+    }
+    .ae-past-card:hover {
+      border-color: #c12033;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .ae-past-thumb {
+      aspect-ratio: 16 / 9;
+      background: #ececec;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .ae-past-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .ae-past-thumb-placeholder {
+      color: #a7a9ab;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .ae-past-play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px;
+      height: 56px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      pointer-events: none;
+    }
+    .ae-past-card:hover .ae-past-play {
+      background: #c12033;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+    .ae-past-play .lucide {
+      stroke: #c12033;
+      fill: #c12033;
+      width: 22px;
+      height: 22px;
+      margin-left: 3px;
+    }
+    .ae-past-card:hover .ae-past-play .lucide {
+      stroke: #fff;
+      fill: #fff;
+    }
+    .ae-past-body {
+      padding: 18px 20px 20px;
+    }
+    .ae-past-meta {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #a7a9ab;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .ae-past-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #414042;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .ae-past-watch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #c12033;
+      letter-spacing: 0.02em;
+    }
+    .ae-past-watch .lucide {
+      width: 12px;
+      height: 12px;
+      stroke: #c12033;
+    }
+
+    /* ---------- FOOTER ---------- */
+    .ae-footer {
+      padding: 28px 60px;
+      border-top: 0.5px solid #e8e8e8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 80px;
+    }
+    .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+    .ae-footer-links { display: flex; gap: 24px; }
+    .ae-footer-links a {
+      font-size: 13px;
+      color: #a7a9ab;
+      transition: color 0.15s;
+    }
+    .ae-footer-links a:hover { color: #c12033; }
+
+    /* ---------- STICKY ---------- */
+    .ae-sticky {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .ae-sticky-cta {
+      background: #c12033; color: #fff;
+      font-size: 14px; padding: 13px 22px;
+      border-radius: 40px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+    .ae-sticky-up {
+      background: #414042; color: #fff;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 768px) {
+      .ae-nav { padding: 14px 20px; height: 70px; }
+      .ae-nav-brand img { height: 44px; }
+      .ae-nav-links { display: none; }
+      .ae-breadcrumb { padding: 90px 20px 0; }
+      .ae-page-header { padding: 24px 20px 24px; }
+      .ae-h1 { font-size: 32px; }
+      .ae-section-title { font-size: 22px; }
+      .ae-section { padding: 40px 20px; }
+      .ae-events-grid, .ae-past-grid { grid-template-columns: 1fr; }
+      .ae-footer { flex-direction: column; gap: 12px; padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="ae-nav">
+    <a href="/" class="ae-nav-brand">
+      <img src="/LogoSS.png" alt="Atelier Ethos" />
+    </a>
+    <div class="ae-nav-links">
+      <a href="/#ae-yaklasim">Yaklaşımımız</a>
+      <a href="/#ae-referanslar">Gerçekleştirdiklerimiz</a>
+      <a href="/#ae-hizmetler">Hizmetler</a>
+      <a href="/kutuphane.html">Kaynak Kütüphanesi</a>
+      <a href="/#ae-neden">Neden Biz?</a>
+    </div>
+    <div class="ae-nav-right">
+      <div class="ae-lang">
+        <button class="active">TR</button>
+        <span class="ae-lang-divider"></span>
+        <button>EN</button>
+      </div>
+      <a href="/etkinlikler.html" class="ae-nav-cta ae-nav-link-active" style="background:#c12033;">Etkinlik Takvimi</a>
+    </div>
+  </nav>
+
+  <!-- ============ BREADCRUMB ============ -->
+  <nav class="ae-breadcrumb">
+    <a href="/">Ana Sayfa</a>
+    <span class="ae-breadcrumb-sep">/</span>
+    <span class="ae-breadcrumb-current">Etkinlik Takvimi</span>
+  </nav>
+
+  <!-- ============ PAGE HEADER ============ -->
+  <header class="ae-page-header">
+    <span class="ae-label">Etkinlik Takvimi</span>
+    <h1 class="ae-h1">Webinar ve <em>atölyelerimiz</em></h1>
+    <p class="ae-lead">İK ve organizasyon meraklıları için ücretsiz webinarlar ve sınırlı kontenjanlı atölyeler. Yaklaşan etkinliklere kayıt olun, geçmiş kayıtlardan da fayda sağlayın.</p>
+  </header>
+
+  <!-- ============ YAKLAŞAN ETKİNLİKLER ============ -->
+  <section class="ae-section" id="yaklasan">
+    <div class="ae-section-header">
+      <div>
+        <p class="ae-section-num">01 · Yaklaşan</p>
+        <h2 class="ae-section-title">Yaklaşan etkinlikler</h2>
+      </div>
+      <span class="ae-section-count">3 etkinlik</span>
+    </div>
+
+    <div class="ae-events-grid">
+      <a href="/#ae-iletisim" class="ae-event-card">
+        <div class="ae-event-date">
+          <span class="ae-event-day">06</span>
+          <span class="ae-event-month">May 2026</span>
+        </div>
+        <p class="ae-event-type">Webinar · Ücretsiz</p>
+        <h3 class="ae-event-title">[Etkinlik başlığı buraya gelecek]</h3>
+        <p class="ae-event-desc">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
+        <span class="ae-event-cta">Kayıt ol →</span>
+      </a>
+
+      <a href="/#ae-iletisim" class="ae-event-card">
+        <div class="ae-event-date">
+          <span class="ae-event-day">19</span>
+          <span class="ae-event-month">May 2026</span>
+        </div>
+        <p class="ae-event-type">Atölye · Yüz yüze</p>
+        <h3 class="ae-event-title">[Etkinlik başlığı buraya gelecek]</h3>
+        <p class="ae-event-desc">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
+        <span class="ae-event-cta">Kayıt ol →</span>
+      </a>
+
+      <a href="/#ae-iletisim" class="ae-event-card">
+        <div class="ae-event-date">
+          <span class="ae-event-day">03</span>
+          <span class="ae-event-month">Haz 2026</span>
+        </div>
+        <p class="ae-event-type">Webinar · Ücretsiz</p>
+        <h3 class="ae-event-title">[Etkinlik başlığı buraya gelecek]</h3>
+        <p class="ae-event-desc">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
+        <span class="ae-event-cta">Kayıt ol →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ GEÇMİŞ ETKİNLİKLER (YouTube link) ============ -->
+  <section class="ae-section" id="gecmis">
+    <div class="ae-section-header">
+      <div>
+        <p class="ae-section-num">02 · Arşiv</p>
+        <h2 class="ae-section-title">Geçmiş etkinlik kayıtları</h2>
+      </div>
+      <span class="ae-section-count">3 kayıt</span>
+    </div>
+
+    <div class="ae-past-grid">
+      <!-- Webinar 1 — Mart 2026 -->
+      <a href="https://youtube.com/@atelierethos" target="_blank" rel="noopener" class="ae-past-card">
+        <div class="ae-past-thumb">
+          <span class="ae-past-thumb-placeholder">YOUTUBE THUMBNAIL</span>
+          <div class="ae-past-play">
+            <svg class="lucide" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div class="ae-past-body">
+          <p class="ae-past-meta">Mart 2026 · Webinar</p>
+          <p class="ae-past-title">Yetkinlik Bazlı Performans Yönetimi</p>
+          <span class="ae-past-watch">
+            YouTube'da izle
+            <svg class="lucide" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Webinar 2 — Şubat 2026 -->
+      <a href="https://youtube.com/@atelierethos" target="_blank" rel="noopener" class="ae-past-card">
+        <div class="ae-past-thumb">
+          <span class="ae-past-thumb-placeholder">YOUTUBE THUMBNAIL</span>
+          <div class="ae-past-play">
+            <svg class="lucide" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div class="ae-past-body">
+          <p class="ae-past-meta">Şubat 2026 · Atölye</p>
+          <p class="ae-past-title">Geri Bildirim Kültürü Kurma</p>
+          <span class="ae-past-watch">
+            YouTube'da izle
+            <svg class="lucide" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Webinar 3 — Ocak 2026 -->
+      <a href="https://youtube.com/@atelierethos" target="_blank" rel="noopener" class="ae-past-card">
+        <div class="ae-past-thumb">
+          <span class="ae-past-thumb-placeholder">YOUTUBE THUMBNAIL</span>
+          <div class="ae-past-play">
+            <svg class="lucide" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div class="ae-past-body">
+          <p class="ae-past-meta">Ocak 2026 · Webinar</p>
+          <p class="ae-past-title">OKR ile Stratejik Hizalama</p>
+          <span class="ae-past-watch">
+            YouTube'da izle
+            <svg class="lucide" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="ae-footer">
+    <span class="ae-footer-copy">© 2026 Atelier Ethos</span>
+    <div class="ae-footer-links">
+      <a href="https://www.linkedin.com/company/atelier-ethos">LinkedIn</a>
+      <a href="https://instagram.com/atelier_ethos">Instagram</a>
+      <a href="https://whatsapp.com/channel/0029Vb7WEBVElagsIAnvuT3y">WhatsApp</a>
+      <a href="mailto:ece.demir@atelierethos.com">Mail</a>
+    </div>
+  </footer>
+
+  <!-- ============ STICKY ============ -->
+  <div class="ae-sticky">
+    <a href="/#ae-iletisim" class="ae-sticky-cta">Görüşme Talep Et</a>
+    <a href="#" class="ae-sticky-up">↑</a>
+  </div>
+
+</body>
+</html>
