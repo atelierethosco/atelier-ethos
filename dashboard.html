@@ -73,23 +73,6 @@
   }
   .ae-section-title:first-child { margin-top: 0; }
 
-  /* KPI GRID */
-  .ae-kpi-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px; margin-bottom: 20px;
-  }
-  .ae-kpi-card {
-    background: #fff; border: 0.5px solid #e8e8e8; border-radius: 10px;
-    padding: 20px 22px; position: relative; overflow: hidden;
-  }
-  .ae-kpi-card::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
-    background: #c12033;
-  }
-  .ae-kpi-label { font-size: 11px; letter-spacing: 1.2px; color: #a7a9ab; text-transform: uppercase; margin-bottom: 10px; }
-  .ae-kpi-value { font-size: 32px; font-weight: 400; color: #414042; line-height: 1.1; }
-  .ae-kpi-unit { font-size: 12px; color: #a7a9ab; margin-top: 4px; }
-
   /* CHARTS GRID */
   .ae-chart-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
@@ -168,8 +151,6 @@
     .ae-dash-nav { padding: 14px 18px; flex-wrap: wrap; gap: 12px; }
     .ae-dash-body { padding: 20px 18px; }
     .ae-chart-grid { grid-template-columns: 1fr; }
-    .ae-kpi-grid { grid-template-columns: repeat(2, 1fr); }
-    .ae-kpi-value { font-size: 24px; }
     .ae-table { font-size: 12px; }
     .ae-table th, .ae-table td { padding: 8px 10px; }
   }
@@ -215,30 +196,6 @@
 
     <div id="data-state" style="display:none;">
 
-      <!-- ÖZET KPI -->
-      <div class="ae-section-title">Özet</div>
-      <div class="ae-kpi-grid" id="kpi-grid"></div>
-
-      <!-- KANAL & TAG DAĞILIMI -->
-      <div class="ae-section-title">Dağılımlar</div>
-      <div class="ae-chart-grid">
-        <div class="ae-chart-card">
-          <h3>İlk Temas Kanalı (tüm kişiler)</h3>
-          <div class="ae-chart-wrap"><canvas id="chart-firsttouch"></canvas></div>
-        </div>
-        <div class="ae-chart-card">
-          <h3>İlgi Alanları (tag dağılımı)</h3>
-          <div class="ae-chart-wrap"><canvas id="chart-tags"></canvas></div>
-        </div>
-      </div>
-
-      <!-- ZAMAN TRENDİ -->
-      <div class="ae-section-title">Son 30 Gün</div>
-      <div class="ae-chart-card" style="margin-bottom:20px;">
-        <h3>Günlük Event Trendi</h3>
-        <div class="ae-chart-wrap-tall"><canvas id="chart-daily"></canvas></div>
-      </div>
-
       <!-- WEBINAR DETAY -->
       <div class="ae-section-title">Webinarlar</div>
       <div class="ae-webinar-list" id="webinar-list"></div>
@@ -254,6 +211,13 @@
           <h3>En Çok İndirilen Tool'lar</h3>
           <div class="ae-chart-wrap"><canvas id="chart-tools"></canvas></div>
         </div>
+      </div>
+
+      <!-- TOOL DOWNLOADS DAILY TREND -->
+      <div class="ae-section-title" style="margin-top:28px;">Tool İndirmeleri — Günlük Trend</div>
+      <div class="ae-chart-card" style="margin-bottom:20px;">
+        <h3>Başlangıçtan Bugüne Günlük Tool İndirme Sayıları</h3>
+        <div class="ae-chart-wrap-tall"><canvas id="chart-tool-daily"></canvas></div>
       </div>
 
       <!-- RECENT EVENTS -->
@@ -358,131 +322,40 @@
     document.getElementById('last-updated').textContent =
       'Son güncelleme: ' + updatedAt.toLocaleString('tr-TR');
 
-    renderKPI(data.kpi);
-    renderFirstTouch(data.firstTouchChannels);
-    renderTags(data.tags);
-    renderDaily(data.dailyTrend);
     renderWebinars(data.webinarBreakdown);
     renderEventTypes(data.eventTypes);
     renderTools(data.toolDownloads);
+    renderToolDaily(data.recentEvents);
     renderRecent(data.recentEvents);
-  }
-
-  function renderKPI(kpi) {
-    var cards = [
-      { label: 'Toplam Kişi', value: kpi.totalContacts, unit: 'contact' },
-      { label: 'Toplam Event', value: kpi.totalEvents, unit: 'işlem' },
-      { label: 'Bu Ay Yeni', value: kpi.thisMonthContacts, unit: 'kişi' },
-      { label: 'Bugün', value: kpi.todayEvents, unit: 'işlem' },
-      { label: 'Tool İndirme', value: kpi.toolDownloads, unit: 'indirme' },
-      { label: 'Webinar Kaydı', value: kpi.webinarRegistrations, unit: 'kayıt' },
-      { label: 'Stres Anketi', value: kpi.stresCompletions, unit: 'tamamlandı' },
-      { label: 'Gönderilen Mail', value: kpi.mailsSent, unit: 'mail' }
-    ];
-
-    var html = cards.map(function(c) {
-      return '<div class="ae-kpi-card">' +
-               '<div class="ae-kpi-label">' + c.label + '</div>' +
-               '<div class="ae-kpi-value">' + c.value.toLocaleString('tr-TR') + '</div>' +
-               '<div class="ae-kpi-unit">' + c.unit + '</div>' +
-             '</div>';
-    }).join('');
-
-    document.getElementById('kpi-grid').innerHTML = html;
   }
 
   function destroyChart(key) {
     if (charts[key]) { charts[key].destroy(); delete charts[key]; }
   }
 
-  function renderFirstTouch(obj) {
-    destroyChart('firsttouch');
-    var entries = Object.entries(obj).sort(function(a,b){ return b[1]-a[1]; });
-    var labels = entries.map(function(e){ return e[0]; });
-    var values = entries.map(function(e){ return e[1]; });
-
-    var ctx = document.getElementById('chart-firsttouch').getContext('2d');
-    charts['firsttouch'] = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: labels,
-        datasets: [{ data: values, backgroundColor: PALETTE, borderWidth: 0 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'right', labels: { font: { size: 12 }, color: DARK, padding: 10 } }
-        },
-        cutout: '60%'
-      }
-    });
-  }
-
-  function renderTags(obj) {
-    destroyChart('tags');
-    var entries = Object.entries(obj).sort(function(a,b){ return b[1]-a[1]; }).slice(0, 8);
-    var labels = entries.map(function(e){ return e[0]; });
-    var values = entries.map(function(e){ return e[1]; });
-
-    var ctx = document.getElementById('chart-tags').getContext('2d');
-    charts['tags'] = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{ data: values, backgroundColor: RED, borderRadius: 4 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        indexAxis: 'y',
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 11 } } },
-          y: { grid: { display: false }, ticks: { color: DARK, font: { size: 12 } } }
-        }
-      }
-    });
-  }
-
-  function renderDaily(obj) {
-    destroyChart('daily');
-    // Son 30 günü sıralı göster
-    var keys = Object.keys(obj).sort();
-    var values = keys.map(function(k){ return obj[k]; });
-    var labels = keys.map(function(k){
-      var d = new Date(k);
-      return d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' });
-    });
-
-    if (keys.length === 0) {
-      document.getElementById('chart-daily').parentElement.innerHTML = '<div class="ae-empty">Son 30 günde event yok.</div>';
-      return;
-    }
-
-    var ctx = document.getElementById('chart-daily').getContext('2d');
-    charts['daily'] = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          data: values,
-          borderColor: RED,
-          backgroundColor: 'rgba(193, 32, 51, 0.08)',
-          fill: true,
-          tension: 0.35,
-          pointBackgroundColor: RED,
-          pointRadius: 3,
-          borderWidth: 2
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 10 }, maxRotation: 0 } },
-          y: { grid: { color: '#f5f5f5' }, ticks: { color: LIGHT, font: { size: 11 } }, beginAtZero: true }
-        }
-      }
-    });
+  // Tool / event type label kısaltma
+  function prettyLabel(s) {
+    if (!s) return '';
+    var map = {
+      'tool_download': 'Tool İndirme',
+      'webinar_registered': 'Webinar Kayıt',
+      'webinar_pre_question': 'Webinar Ön Soru',
+      'webinar_attended': 'Webinar Katılım',
+      'contact_form': 'İletişim Formu',
+      'stres_anketi': 'Stres Anketi',
+      'mail_sent': 'Mail Gönderim',
+      'yetkinlik_bazli_performans_kilavuzu': 'Performans Kılavuzu',
+      'yetkinlik_bazli_performans_sorulari': 'Mülakat Soruları',
+      'kaynak_kutuphanesi': 'Kaynak Kütüphanesi',
+      'ik_pusulasi': 'İK Pusulası',
+      'W001_yetkinlik_performans': 'W001 — Yetkinlik Performans'
+    };
+    if (map[s]) return map[s];
+    // Fallback: snake_case → Title Case
+    var words = s.replace(/[_-]/g, ' ').split(' ');
+    return words.map(function(w){
+      return w.length > 0 ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '';
+    }).join(' ');
   }
 
   function renderWebinars(breakdown) {
@@ -517,7 +390,7 @@
   function renderEventTypes(obj) {
     destroyChart('eventtypes');
     var entries = Object.entries(obj).sort(function(a,b){ return b[1]-a[1]; });
-    var labels = entries.map(function(e){ return e[0]; });
+    var labels = entries.map(function(e){ return prettyLabel(e[0]); });
     var values = entries.map(function(e){ return e[1]; });
 
     var ctx = document.getElementById('chart-eventtypes').getContext('2d');
@@ -548,7 +421,10 @@
       return;
     }
 
-    var labels = entries.map(function(e){ return e[0].length > 30 ? e[0].substring(0, 28) + '…' : e[0]; });
+    var labels = entries.map(function(e){
+      var pretty = prettyLabel(e[0]);
+      return pretty.length > 30 ? pretty.substring(0, 28) + '…' : pretty;
+    });
     var values = entries.map(function(e){ return e[1]; });
 
     var ctx = document.getElementById('chart-tools').getContext('2d');
@@ -565,6 +441,61 @@
         scales: {
           x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 11 } } },
           y: { grid: { display: false }, ticks: { color: DARK, font: { size: 11 } } }
+        }
+      }
+    });
+  }
+
+  function renderToolDaily(recentEvents) {
+    destroyChart('tooldaily');
+    var canvas = document.getElementById('chart-tool-daily');
+    if (!canvas) return;
+
+    // recentEvents son 20 event — tool indirme trendi için yetersiz olabilir.
+    // Backend'den gelen dailyTrend'i tool_download'a filtre etme şansımız yok şu an,
+    // bu yüzden recentEvents içinden gün-gün tool indirmelerini sayıyoruz.
+    // Backend'e toolDownloadDaily eklenince bu mantık güncellenecek.
+
+    var byDay = {};
+    (recentEvents || []).forEach(function(e) {
+      if (e.type === 'tool_downloaded' || e.type === 'tool_download') {
+        var d = (e.date || '').split('T')[0].split(' ')[0]; // YYYY-MM-DD veya DD.MM.YYYY
+        if (!d) return;
+        byDay[d] = (byDay[d] || 0) + 1;
+      }
+    });
+
+    var days = Object.keys(byDay).sort();
+
+    if (days.length === 0) {
+      canvas.parentElement.innerHTML = '<div class="ae-empty">Henüz tool indirme verisi yok. (Backend güncellenince tüm geçmiş gösterilecek.)</div>';
+      return;
+    }
+
+    var values = days.map(function(d){ return byDay[d]; });
+
+    var ctx = canvas.getContext('2d');
+    charts['tooldaily'] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: days,
+        datasets: [{
+          label: 'Günlük İndirme',
+          data: values,
+          borderColor: RED,
+          backgroundColor: 'rgba(193, 32, 51, 0.08)',
+          tension: 0.3,
+          fill: true,
+          pointRadius: 4,
+          pointBackgroundColor: RED
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 11 } } },
+          y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { color: LIGHT, font: { size: 11 }, stepSize: 1 } }
         }
       }
     });
