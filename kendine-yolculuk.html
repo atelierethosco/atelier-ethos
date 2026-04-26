@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kendine Yolculuk — Atelier Ethos</title>
+<meta name="description" content="İki seansta kendi stres haritanı çıkar, sana özel araçlarla donan. 2×60 dk birebir online program.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #4A2F1C;
+    background: #F1EADD;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  :root {
+    --bg: #F1EADD;
+    --bg-deep: #E8DFCD;
+    --bg-card: #FAF5EB;
+    --ink: #2D1F10;
+    --ink-soft: #4A2F1C;
+    --ink-mute: #7A6650;
+    --toprak: #8B5A3C;
+    --toprak-deep: #6B4328;
+    --toprak-light: #B88666;
+    --hairline: rgba(45, 31, 16, 0.12);
+  }
+
+  /* Scroll progress bar — sayfa ilerleme göstergesi */
+  .progress {
+    position: fixed; top: 0; left: 0;
+    width: 0%; height: 3px;
+    background: var(--toprak);
+    z-index: 200;
+    transition: width 0.1s ease-out;
+  }
+
+  /* Nav */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(241, 234, 221, 0.92);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--hairline);
+    height: 90px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 60px;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 16px; text-decoration: none; }
+  .nav-brand img { height: 66px; width: auto; display: block; }
+  .nav-brand-name {
+    font-family: 'Fraunces', serif;
+    font-size: 16px; font-style: italic; font-weight: 300;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+  .nav-back {
+    font-family: 'Inter', sans-serif; font-size: 14px;
+    color: var(--ink-soft); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--toprak); }
+  .nav-back::before { content: "← "; }
+
+  /* Section */
+  .section {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 130px 60px 80px;
+    border-bottom: 0.5px solid var(--hairline);
+    position: relative;
+  }
+  .section-inner { width: 100%; max-width: 900px; text-align: center; }
+  .section-label {
+    font-family: 'Inter', sans-serif; font-size: 11px;
+    letter-spacing: 0.28em; color: var(--toprak);
+    text-transform: uppercase; font-weight: 500;
+    margin-bottom: 32px; display: block;
+  }
+
+  /* Tipografi */
+  .display {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(48px, 6.5vw, 88px); line-height: 1.05;
+    letter-spacing: -0.025em; color: var(--ink);
+    margin-bottom: 32px;
+  }
+  .display em { font-style: italic; font-weight: 400; color: var(--toprak); }
+  .h2 {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(36px, 4.5vw, 56px); line-height: 1.1;
+    letter-spacing: -0.02em; color: var(--ink); margin-bottom: 24px;
+  }
+  .h2 em { font-style: italic; font-weight: 400; color: var(--toprak); }
+  .lede {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: clamp(18px, 2vw, 22px); line-height: 1.55;
+    color: var(--ink-soft); max-width: 580px; margin: 0 auto 48px;
+  }
+
+  /* Butonlar */
+  .btn-primary {
+    display: inline-block; padding: 15px 32px;
+    background: var(--toprak); color: var(--bg);
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+    border-radius: 999px; text-decoration: none; letter-spacing: 0.02em;
+    transition: background 0.25s, transform 0.25s;
+    border: none; cursor: pointer;
+  }
+  .btn-primary:hover { background: var(--toprak-deep); transform: translateY(-1px); }
+  .btn-ghost {
+    display: inline-block; padding: 15px 32px;
+    border: 0.5px solid var(--ink-mute);
+    color: var(--ink-soft); background: transparent;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+    border-radius: 999px; text-decoration: none; letter-spacing: 0.02em;
+    transition: all 0.25s;
+  }
+  .btn-ghost:hover { border-color: var(--toprak); color: var(--toprak); }
+
+  /* Akış butonu — bölüm sonu */
+  .section-cta {
+    display: flex; gap: 14px; justify-content: center;
+    flex-wrap: wrap; margin-top: 56px;
+  }
+
+  /* 1. Hero */
+  .hero-status {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Inter', sans-serif; font-size: 11px;
+    letter-spacing: 0.28em; color: var(--toprak);
+    text-transform: uppercase; font-weight: 500; margin-bottom: 40px;
+  }
+  .hero-status::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--toprak); animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  .hero-meta {
+    display: flex; justify-content: center; gap: 56px;
+    margin: 0 auto; padding: 28px 0;
+    border-top: 0.5px solid var(--hairline);
+    border-bottom: 0.5px solid var(--hairline);
+    max-width: 680px; flex-wrap: wrap;
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+  .meta-label {
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    letter-spacing: 0.22em; color: var(--ink-mute); text-transform: uppercase;
+  }
+  .meta-value { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 400; color: var(--ink); }
+  .meta-value em { font-style: italic; color: var(--toprak); }
+
+  /* Kimler için */
+  .kimler-section { background: var(--bg-deep); }
+  .kimler-text {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(26px, 3.5vw, 40px); line-height: 1.4;
+    letter-spacing: -0.015em; color: var(--ink);
+    max-width: 800px; margin: 0 auto;
+  }
+  .kimler-text em { font-style: italic; font-weight: 400; color: var(--toprak); }
+
+  /* Seans bölümleri */
+  .seans-badge {
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-weight: 300; font-size: 72px; line-height: 1;
+    color: var(--toprak); margin-bottom: 16px; letter-spacing: -0.02em;
+  }
+  .seans-duration {
+    font-family: 'Inter', sans-serif; font-size: 11px;
+    letter-spacing: 0.28em; color: var(--ink-mute);
+    text-transform: uppercase; font-weight: 500; margin-bottom: 40px;
+  }
+  .seans-items {
+    list-style: none; display: flex; flex-wrap: wrap;
+    justify-content: center; gap: 12px 24px;
+    margin: 40px auto; max-width: 720px;
+  }
+  .seans-items li {
+    font-family: 'Fraunces', serif; font-size: 16px;
+    color: var(--ink-soft); font-weight: 300;
+    padding-left: 18px; position: relative; line-height: 1.4;
+  }
+  .seans-items li::before {
+    content: "❋"; position: absolute; left: 0;
+    color: var(--toprak); font-size: 10px; top: 4px;
+  }
+  .seans-outcome {
+    max-width: 520px; margin: 48px auto 0;
+    padding: 24px 32px; background: var(--bg-card);
+    border-left: 2px solid var(--toprak);
+    border-radius: 0 12px 12px 0; text-align: left;
+  }
+  .seans-outcome-label {
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    letter-spacing: 0.28em; color: var(--toprak);
+    text-transform: uppercase; font-weight: 500; margin-bottom: 8px;
+  }
+  .seans-outcome-text {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 17px; color: var(--ink); line-height: 1.55;
+  }
+
+  /* Aralık notu — Seans 1 altında */
+  .aralik-note {
+    max-width: 520px; margin: 24px auto 0;
+    padding: 20px 32px;
+    text-align: left;
+    border-top: 0.5px dashed var(--hairline);
+  }
+  .aralik-note-label {
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    letter-spacing: 0.28em; color: var(--ink-mute);
+    text-transform: uppercase; font-weight: 500; margin-bottom: 8px;
+  }
+  .aralik-note-text {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 16px; color: var(--ink-soft); line-height: 1.55;
+  }
+
+  /* Ücret */
+  .ucret-flourish {
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 16px; color: var(--toprak);
+    letter-spacing: 0.4em; opacity: 0.6; margin-bottom: 40px;
+  }
+  .ucret-price {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(72px, 10vw, 144px); line-height: 1;
+    color: var(--toprak); letter-spacing: -0.03em; margin-bottom: 24px;
+  }
+  .ucret-detay {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 18px; color: var(--ink-soft); line-height: 1.6;
+    max-width: 460px; margin: 0 auto;
+  }
+
+  /* SSS */
+  .sss-section { background: var(--bg-deep); }
+  .sss-list {
+    max-width: 720px; margin: 0 auto;
+    text-align: left;
+  }
+  .sss-item {
+    border-bottom: 0.5px solid var(--hairline);
+    padding: 20px 0;
+  }
+  .sss-item:first-child { border-top: 0.5px solid var(--hairline); }
+  .sss-q {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 19px; color: var(--ink);
+    cursor: pointer; padding: 8px 0;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 16px;
+    list-style: none;
+    line-height: 1.4;
+  }
+  .sss-q::-webkit-details-marker { display: none; }
+  .sss-q::after {
+    content: "+"; font-size: 22px; color: var(--toprak);
+    font-weight: 300; transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  details[open] .sss-q::after { transform: rotate(45deg); }
+  .sss-a {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 16px; color: var(--ink-soft);
+    line-height: 1.7; padding: 12px 0 8px;
+  }
+
+  /* Kayıt formu */
+  .kayit-section { background: var(--toprak); color: var(--bg); }
+  .kayit-section .section-label { color: rgba(241, 234, 221, 0.7); }
+  .kayit-section .h2, .kayit-section .h2 em { color: var(--bg); }
+  .kayit-section .lede { color: rgba(241, 234, 221, 0.85); }
+
+  .kayit-form {
+    max-width: 560px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 20px; text-align: left;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
+  .form-field label {
+    font-family: 'Inter', sans-serif; font-size: 11px;
+    letter-spacing: 0.22em; color: rgba(241, 234, 221, 0.85);
+    text-transform: uppercase; font-weight: 500;
+  }
+  .form-field input, .form-field textarea, .form-field select {
+    background: rgba(241, 234, 221, 0.95);
+    border: 0.5px solid rgba(241, 234, 221, 0.4);
+    border-radius: 12px; padding: 14px 16px;
+    font-family: 'Inter', sans-serif; font-size: 15px;
+    color: var(--ink); font-weight: 400;
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%; outline: none;
+  }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+    background: var(--bg);
+    border-color: var(--bg);
+  }
+  .form-field textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+  .form-field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%238B5A3C' fill='none' stroke-width='1'/></svg>");
+    background-repeat: no-repeat; background-position: right 16px center;
+    padding-right: 40px; cursor: pointer;
+  }
+  .form-submit {
+    margin-top: 12px; align-self: center;
+    background: var(--bg);
+    color: var(--toprak);
+  }
+  .form-submit:hover {
+    background: var(--bg-card);
+    color: var(--toprak-deep);
+  }
+  .form-submit:disabled {
+    opacity: 0.6; cursor: not-allowed;
+  }
+  .form-note {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 13px; color: rgba(241, 234, 221, 0.7);
+    text-align: center; margin-top: 4px;
+  }
+  .form-success {
+    display: none; max-width: 560px; margin: 0 auto;
+    background: rgba(241, 234, 221, 0.12);
+    border: 0.5px solid rgba(241, 234, 221, 0.3);
+    border-left: 3px solid var(--bg);
+    border-radius: 12px; padding: 32px 36px; text-align: left;
+  }
+  .form-success h4 {
+    font-family: 'Fraunces', serif; font-weight: 400; font-size: 22px;
+    color: var(--bg); margin-bottom: 12px;
+  }
+  .form-success p {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 16px; color: rgba(241, 234, 221, 0.9); line-height: 1.55;
+  }
+  .form-error {
+    display: none; max-width: 560px; margin: 0 auto 16px;
+    background: rgba(255, 240, 240, 0.95);
+    border-left: 3px solid #c12033;
+    border-radius: 8px; padding: 14px 18px;
+    font-family: 'Inter', sans-serif; font-size: 14px; color: #c12033;
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--ink); color: var(--bg); padding: 32px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-copy {
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    color: var(--bg-deep); opacity: 0.75;
+  }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    color: var(--bg-deep); text-decoration: none; opacity: 0.75;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .footer-links a:hover { opacity: 1; color: var(--toprak-light); }
+
+  /* Sticky CTA */
+  .sticky-cta {
+    position: fixed; bottom: 28px; right: 28px;
+    display: flex; flex-direction: column;
+    gap: 12px; align-items: flex-end; z-index: 50;
+  }
+  .sticky-cta-main {
+    background: var(--toprak); color: var(--bg);
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+    padding: 13px 24px; border-radius: 999px; text-decoration: none;
+    box-shadow: 0 8px 24px rgba(139, 90, 60, 0.25);
+    transition: background 0.25s;
+  }
+  .sticky-cta-main:hover { background: var(--toprak-deep); }
+  .sticky-cta-up {
+    background: var(--ink); color: var(--bg);
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; text-decoration: none;
+    box-shadow: 0 4px 16px rgba(45, 31, 16, 0.2);
+  }
+
+  @media (max-width: 900px) {
+    .nav { padding: 10px 20px; height: 70px; }
+    .nav-brand img { height: 44px; }
+    .nav-brand-name { display: none; }
+    .section { padding: 100px 20px 60px; }
+    .hero-meta { gap: 32px; }
+    .seans-badge { font-size: 56px; }
+    .seans-items { gap: 10px 16px; }
+    .seans-outcome, .aralik-note { padding: 20px 24px; }
+    .form-row { grid-template-columns: 1fr; gap: 20px; }
+    .footer { flex-direction: column; gap: 16px; padding: 32px 20px; text-align: center; }
+    .sticky-cta { bottom: 20px; right: 20px; }
+    .sticky-cta-main { font-size: 13px; padding: 11px 20px; }
+    .section-cta { gap: 10px; }
+    .btn-primary, .btn-ghost { padding: 13px 24px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<nav class="nav">
+  <a href="/bireysel.html" class="nav-brand">
+    <img src="/atelier_ethos_terracotta.svg" alt="Atelier Ethos" />
+    <span class="nav-brand-name">— kendinle bir alan</span>
+  </a>
+  <a href="/bireysel.html" class="nav-back">Bireysel</a>
+</nav>
+
+<!-- 1. Hero -->
+<section class="section" id="hero">
+  <div class="section-inner">
+    <div class="hero-status">şu an kayıt açık</div>
+    <h1 class="display">Kendine<br><em>Yolculuk</em>.</h1>
+    <p class="lede">İki seansta kendi stres haritanı çıkar, sana özel araçlarla donan.</p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Format</span>
+        <span class="meta-value">2 × 60 dk <em>online</em></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Süre</span>
+        <span class="meta-value">1–2 <em>hafta</em></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Ücret</span>
+        <span class="meta-value">2.000 ₺</span>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a href="#kimler" class="btn-primary" data-track="cta_kimler">Kimler için</a>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Kimler için -->
+<section class="section kimler-section" id="kimler">
+  <div class="section-inner">
+    <span class="section-label">— Kimler için</span>
+    <p class="kimler-text">
+      Gündelik hayatın yoğunluğunda kendini kaybettiğini hisseden, zihinsel yükü artık taşımakta zorlanan, ama terapi sürecine girmeden önce <em>kendine ufak bir alan</em> açmak isteyenler için.
+    </p>
+    <div class="section-cta">
+      <a href="#seans-1" class="btn-primary" data-track="cta_seans1">İlk seans</a>
+      <a href="#hero" class="btn-ghost" data-track="cta_basa_don">↑ Başa dön</a>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Seans 01 (+ Aralık notu inline) -->
+<section class="section" id="seans-1">
+  <div class="section-inner">
+    <div class="seans-badge">01</div>
+    <div class="seans-duration">İlk Seans · 60 dk · Online</div>
+    <h2 class="h2">Haritalama</h2>
+    <p class="lede">Kendini bir aynadan seyretmek gibi. Değerlendirme araçlarıyla zihinsel yükünü görünür kılıyor, kendinle <em>farklı bir temas</em> kuruyoruz.</p>
+    <ul class="seans-items">
+      <li>Algılanan Stres Ölçeği (PSS)</li>
+      <li>Yaşam Alanları Matrisi</li>
+      <li>Stres Tetikleyici Envanteri</li>
+      <li>Başa Çıkma Stili Değerlendirmesi</li>
+      <li>Beden Taraması</li>
+      <li>Değerler Çalışması</li>
+      <li>İç Ses Gözlemi</li>
+      <li>Kendini Tanıma Soruları</li>
+    </ul>
+    <div class="seans-outcome">
+      <div class="seans-outcome-label">— Kalan çıktı</div>
+      <div class="seans-outcome-text">Kişiselleştirilmiş stres profili raporun. Seans, sana uyan bir farkındalık nefesi pratiğiyle kapanır.</div>
+    </div>
+    <div class="aralik-note">
+      <div class="aralik-note-label">— Aralık · 1–2 hafta</div>
+      <div class="aralik-note-text">Sana özel ödevlerle farkındalığın yerleşiyor. İkinci seansta birlikte çalışacağımız materyal bu dönemde oluşuyor.</div>
+    </div>
+    <div class="section-cta">
+      <a href="#seans-2" class="btn-primary" data-track="cta_seans2">İkinci seans</a>
+      <a href="#hero" class="btn-ghost" data-track="cta_basa_don">↑ Başa dön</a>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Seans 02 -->
+<section class="section" id="seans-2">
+  <div class="section-inner">
+    <div class="seans-badge">02</div>
+    <div class="seans-duration">İkinci Seans · 60 dk · Online</div>
+    <h2 class="h2">Araç <em>Kutusu</em></h2>
+    <p class="lede">Bilmek başka, yapabilmek başka — bu seans <em>yapma</em> seansı. Profiline göre seçtiğimiz pratikleri birlikte deneyimliyoruz.</p>
+    <ul class="seans-items">
+      <li>Nefes teknikleri</li>
+      <li>Bilişsel yeniden çerçeveleme</li>
+      <li>Mikro-mola ritüelleri</li>
+      <li>Sınır koyma pratiği</li>
+      <li>Topraklanma egzersizleri</li>
+    </ul>
+    <div class="seans-outcome">
+      <div class="seans-outcome-label">— Kalan çıktı</div>
+      <div class="seans-outcome-text">Günlük hayata entegre edilmiş araçlar + sadece senin için derlenmiş dijital Başa Çıkma Menün. Sıkıştığın anlarda açıp kullanacağın kişisel bir rehber.</div>
+    </div>
+    <div class="section-cta">
+      <a href="#ucret" class="btn-primary" data-track="cta_ucret">Fiyat bilgisi</a>
+      <a href="#hero" class="btn-ghost" data-track="cta_basa_don">↑ Başa dön</a>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Ücret -->
+<section class="section" id="ucret">
+  <div class="section-inner">
+    <div class="ucret-flourish">✿ ❋ ✿</div>
+    <span class="section-label">— Program Ücreti · Tek Sefer</span>
+    <div class="ucret-price">2.000 ₺</div>
+    <p class="ucret-detay">İki birebir online seans · kişiselleştirilmiş stres profili raporu · dijital başa çıkma menüsü.</p>
+    <div class="section-cta">
+      <a href="#sss" class="btn-primary" data-track="cta_sss">Sıkça sorulanlar</a>
+      <a href="#hero" class="btn-ghost" data-track="cta_basa_don">↑ Başa dön</a>
+    </div>
+  </div>
+</section>
+
+<!-- 6. SSS -->
+<section class="section sss-section" id="sss">
+  <div class="section-inner">
+    <span class="section-label">— Sıkça sorulanlar</span>
+    <h2 class="h2">Aklındaki <em>sorular</em>.</h2>
+    <p class="lede">Yola çıkmadan önce bilmek isteyebileceklerin.</p>
+    <div class="sss-list">
+      <details class="sss-item">
+        <summary class="sss-q">Bu bir terapi mi?</summary>
+        <div class="sss-a">Hayır. Terapi değil, performans koçluğu da değil. Bir farkındalık ve beceri atölyesi. Klinik destek ihtiyacı varsa, uygun uzmana yönlendirme yaparız.</div>
+      </details>
+      <details class="sss-item">
+        <summary class="sss-q">Seanslar ne zaman yapılıyor?</summary>
+        <div class="sss-a">Birebir online ve esnek. Kayıt sonrası birlikte sana uygun bir zaman planlıyoruz. Hafta içi akşam veya hafta sonu seçenekleri var.</div>
+      </details>
+      <details class="sss-item">
+        <summary class="sss-q">Ne zaman başlayabilirim?</summary>
+        <div class="sss-a">Kayıt aldıkça başlıyoruz. Formu doldurduktan sonra birkaç gün içinde sana dönüş yapıyoruz.</div>
+      </details>
+      <details class="sss-item">
+        <summary class="sss-q">Ödeme nasıl?</summary>
+        <div class="sss-a">Program başlamadan önce, tek seferde. Banka havalesi veya kredi kartı seçeneklerinden birini birlikte konuşuyoruz.</div>
+      </details>
+      <details class="sss-item">
+        <summary class="sss-q">Seans iptal edersem?</summary>
+        <div class="sss-a">24 saat önceden haber verirsen ücretsiz erteleriz. Hayat oluyor, anlıyoruz.</div>
+      </details>
+      <details class="sss-item">
+        <summary class="sss-q">Bilgilerim gizli mi?</summary>
+        <div class="sss-a">Evet, kesinlikle. Seans içeriği ve raporun yalnızca seninle paylaşılır. KVKK kapsamında saklanır.</div>
+      </details>
+    </div>
+    <div class="section-cta">
+      <a href="#kayit" class="btn-primary" data-track="cta_kayit_sss">Kayıt ol</a>
+      <a href="#hero" class="btn-ghost" data-track="cta_basa_don">↑ Başa dön</a>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Kayıt -->
+<section class="section kayit-section" id="kayit">
+  <div class="section-inner">
+    <span class="section-label">— Kayıt</span>
+    <h2 class="h2">Yazışalım, <em>başlayalım</em>.</h2>
+    <p class="lede">Formu doldur, birkaç gün içinde geri dönelim.</p>
+
+    <div class="form-error" id="ae-form-error">Gönderilemedi. Lütfen tekrar deneyin veya doğrudan destek@atelierethos.com adresine mail atın.</div>
+
+    <form class="kayit-form" id="ae-form" action="https://formspree.io/f/mvzdngrk" method="POST">
+      <input type="hidden" name="_subject" value="Bireysel Kayıt — Kendine Yolculuk">
+      <input type="hidden" name="_kaynak" value="kendine-yolculuk.html">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="ad">— Adın</label>
+          <input type="text" id="ad" name="ad" required>
+        </div>
+        <div class="form-field">
+          <label for="eposta">— E-postan</label>
+          <input type="email" id="eposta" name="eposta" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="telefon">— Telefon</label>
+          <input type="tel" id="telefon" name="telefon" placeholder="+90">
+        </div>
+        <div class="form-field">
+          <label for="zaman">— Başlama zamanı</label>
+          <select id="zaman" name="zaman">
+            <option value="">Seç</option>
+            <option value="bu-hafta">Bu hafta</option>
+            <option value="onumuzdeki-hafta">Önümüzdeki hafta</option>
+            <option value="bu-ay">Bu ay içinde</option>
+            <option value="esnek">Esneğim, birlikte bakalım</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="not">— Neyi çalışmak istersin?</label>
+        <textarea id="not" name="not" placeholder="Seni buraya getiren ne? Kısaca yazabilirsin — istersen boş da bırakabilirsin."></textarea>
+      </div>
+      <button type="submit" class="btn-primary form-submit" id="ae-submit-btn" data-track="form_submit">Kaydımı gönder</button>
+      <p class="form-note">bilgilerin gizli tutulur, sadece programla ilgili sana dönmek için kullanılır</p>
+    </form>
+
+    <div class="form-success" id="ae-form-success">
+      <h4>Teşekkürler, kaydın alındı.</h4>
+      <p>Birkaç gün içinde sana dönüş yapacağız. İlk seans için sana uygun bir zaman birlikte bulalım.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <span class="footer-copy">© 2026 Atelier Ethos · kendinle bir alan</span>
+  <div class="footer-links">
+    <a href="/bireysel.html">Bireysel anasayfa</a>
+    <a href="https://atelierethos.com" target="_blank">Kurumsal →</a>
+    <a href="https://instagram.com/atelier_ethos" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+<div class="sticky-cta">
+  <a href="#kayit" class="sticky-cta-main" data-track="cta_sticky_kayit">Kayıt ol</a>
+  <a href="#hero" class="sticky-cta-up">↑</a>
+</div>
+
+<script>
+  // Vercel Analytics — custom events için va() helper
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+
+  // Form submit handler
+  var aeForm = document.getElementById('ae-form');
+  var aeSuccess = document.getElementById('ae-form-success');
+  var aeError = document.getElementById('ae-form-error');
+  var aeBtn = document.getElementById('ae-submit-btn');
+  var formStartedTracked = false;
+
+  // form_start — ilk inputa odaklanınca
+  aeForm.addEventListener('focusin', function() {
+    if (!formStartedTracked) {
+      formStartedTracked = true;
+      window.va('event', { name: 'form_start' });
+    }
+  });
+
+  aeForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    aeError.style.display = 'none';
+    aeBtn.disabled = true;
+    aeBtn.textContent = 'Gönderiliyor...';
+
+    var data = new FormData(aeForm);
+
+    fetch(aeForm.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    }).then(function(response) {
+      if (response.ok) {
+        aeForm.style.display = 'none';
+        aeSuccess.style.display = 'block';
+        window.va('event', { name: 'form_submit_success' });
+      } else {
+        aeError.style.display = 'block';
+        aeBtn.disabled = false;
+        aeBtn.textContent = 'Kaydımı gönder';
+        window.va('event', { name: 'form_submit_error' });
+      }
+    }).catch(function() {
+      aeError.style.display = 'block';
+      aeBtn.disabled = false;
+      aeBtn.textContent = 'Kaydımı gönder';
+      window.va('event', { name: 'form_submit_error' });
+    });
+  });
+
+  // Buton tıklama tracking — data-track attribute olan tüm linkler
+  document.querySelectorAll('[data-track]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      window.va('event', { name: el.dataset.track });
+    });
+  });
+
+  // Scroll progress + scroll milestones
+  var progress = document.getElementById('progress');
+  var scrolled25 = false, scrolled50 = false, scrolled75 = false, scrolled90 = false;
+
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = (scrollTop / docHeight) * 100;
+    progress.style.width = pct + '%';
+
+    if (!scrolled25 && pct >= 25) { scrolled25 = true; window.va('event', { name: 'scroll_25' }); }
+    if (!scrolled50 && pct >= 50) { scrolled50 = true; window.va('event', { name: 'scroll_50' }); }
+    if (!scrolled75 && pct >= 75) { scrolled75 = true; window.va('event', { name: 'scroll_75' }); }
+    if (!scrolled90 && pct >= 90) { scrolled90 = true; window.va('event', { name: 'scroll_90' }); }
+  }, { passive: true });
+
+  // Section view tracking — kullanıcı bölüme geldiğinde
+  if ('IntersectionObserver' in window) {
+    var sectionObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && !entry.target.dataset.viewed) {
+          entry.target.dataset.viewed = '1';
+          window.va('event', { name: 'view_' + entry.target.id });
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.section[id]').forEach(function(s) {
+      sectionObserver.observe(s);
+    });
+  }
+
+  // SSS açma tracking
+  document.querySelectorAll('.sss-item').forEach(function(item) {
+    item.addEventListener('toggle', function() {
+      if (item.open) {
+        var q = item.querySelector('.sss-q').textContent.trim();
+        window.va('event', { name: 'sss_acildi', data: { soru: q } });
+      }
+    });
+  });
+</script>
+
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
