@@ -72,14 +72,18 @@
     text-decoration: none;
     font-weight: 400;
     white-space: nowrap;
+    transition: color 0.2s;
   }
+  .nav-links a:hover { color: var(--toprak); }
   .nav-cta {
     padding: 10px 22px;
     background: var(--toprak);
     color: var(--bg) !important;
     border-radius: 999px;
     font-size: 14px !important;
+    transition: background 0.25s;
   }
+  .nav-cta:hover { background: var(--toprak-deep); color: var(--bg) !important; }
 
   /* Section */
   .section {
@@ -155,7 +159,9 @@
     border-radius: 999px;
     text-decoration: none;
     letter-spacing: 0.02em;
+    transition: background 0.25s, transform 0.25s;
   }
+  .btn-primary:hover { background: var(--toprak-deep); transform: translateY(-1px); }
   .btn-outline {
     display: inline-block;
     padding: 15px 32px;
@@ -167,7 +173,9 @@
     border-radius: 999px;
     text-decoration: none;
     letter-spacing: 0.02em;
+    transition: all 0.25s;
   }
+  .btn-outline:hover { border-color: var(--toprak); color: var(--toprak); }
 
   .hero-flourish {
     font-family: 'Fraunces', serif;
@@ -207,7 +215,13 @@
     text-decoration: none;
     color: inherit;
     text-align: left;
+    transition: transform 0.3s, border-color 0.3s;
   }
+  .atolye-active:hover {
+    transform: translateY(-4px);
+    border-color: var(--toprak);
+  }
+  .atolye-active:hover .atolye-cta { gap: 16px; }
   .atolye-status {
     display: inline-flex;
     align-items: center;
@@ -289,6 +303,7 @@
     font-size: 14px;
     font-weight: 500;
     color: var(--toprak);
+    transition: gap 0.25s;
   }
   .atolye-cta::after { content: "→"; }
 
@@ -408,7 +423,9 @@
     color: var(--bg-deep);
     text-decoration: none;
     opacity: 0.75;
+    transition: opacity 0.2s, color 0.2s;
   }
+  .footer-links a:hover { opacity: 1; color: var(--toprak-light); }
 
   .sticky-cta {
     position: fixed;
@@ -427,7 +444,9 @@
     border-radius: 999px;
     text-decoration: none;
     box-shadow: 0 8px 24px rgba(139, 90, 60, 0.25);
+    transition: background 0.25s;
   }
+  .sticky-cta-main:hover { background: var(--toprak-deep); }
   .sticky-cta-up {
     background: var(--ink);
     color: var(--bg);
@@ -465,10 +484,10 @@
     <span class="nav-brand-name">— kendinle bir alan</span>
   </a>
   <div class="nav-links">
-    <a href="#" class="dead">Hikaye</a>
-    <a href="#" class="dead">Atölyeler</a>
-    <a href="#" class="dead">Yaklaşım</a>
-    <a href="#" class="nav-cta dead">Kayıt</a>
+    <a href="#manifesto">Hikaye</a>
+    <a href="#atolye">Atölyeler</a>
+    <a href="#yaklasim">Yaklaşım</a>
+    <a href="/kendine-yolculuk.html" class="nav-cta">Kayıt</a>
   </div>
 </nav>
 
@@ -482,8 +501,8 @@
       Terapi değil, performans koçluğu da değil. Yoğun bir hayatın içinde sana ait küçük bir alan.
     </p>
     <div class="btns">
-      <a href="#" class="btn-primary dead">Başlayalım</a>
-      <a href="#" class="btn-outline dead">Atölyelere bak</a>
+      <a href="/kendine-yolculuk.html" class="btn-primary">Başlayalım</a>
+      <a href="#atolye" class="btn-outline">Atölyelere bak</a>
     </div>
   </div>
 </section>
@@ -505,7 +524,7 @@
       Küçük ve yavaş bir atölye. Bir başlıyoruz, birlikte yürüyoruz.
     </p>
 
-    <a href="#" class="atolye-active dead">
+    <a href="/kendine-yolculuk.html" class="atolye-active">
       <div class="atolye-status">kayıt açık</div>
       <h3>Kendine<br><em>Yolculuk</em></h3>
       <p class="atolye-lede">
@@ -596,7 +615,7 @@
       Süreç anlatmıyoruz, birlikte kuruyoruz.
     </p>
     <div class="btns">
-      <a href="#" class="btn-primary dead">Başlayalım</a>
+      <a href="/kendine-yolculuk.html" class="btn-primary">Başlayalım</a>
     </div>
   </div>
 </section>
@@ -604,14 +623,14 @@
 <footer class="footer">
   <span class="footer-copy">© 2026 Atelier Ethos · kendinle bir alan</span>
   <div class="footer-links">
-    <a href="#" class="dead">Kendine Yolculuk</a>
-    <a href="#" class="dead">Kurumsal →</a>
-    <a href="#" class="dead">Instagram</a>
+    <a href="/kendine-yolculuk.html">Kendine Yolculuk</a>
+    <a href="https://atelierethos.com" target="_blank">Kurumsal →</a>
+    <a href="https://instagram.com/atelier_ethos" target="_blank">Instagram</a>
   </div>
 </footer>
 
 <div class="sticky-cta">
-  <a href="#" class="sticky-cta-main dead">Kayıt ol</a>
+  <a href="/kendine-yolculuk.html" class="sticky-cta-main">Kayıt ol</a>
   <a href="#hero" class="sticky-cta-up">↑</a>
 </div>
 
