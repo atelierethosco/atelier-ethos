@@ -213,12 +213,9 @@
         </div>
       </div>
 
-      <!-- TOOL DOWNLOADS DAILY TREND -->
+      <!-- TOOL DOWNLOADS DAILY TREND - HER TOOL İÇİN AYRI -->
       <div class="ae-section-title" style="margin-top:28px;">Tool İndirmeleri — Günlük Trend</div>
-      <div class="ae-chart-card" style="margin-bottom:20px;">
-        <h3>Başlangıçtan Bugüne Günlük Tool İndirme Sayıları</h3>
-        <div class="ae-chart-wrap-tall"><canvas id="chart-tool-daily"></canvas></div>
-      </div>
+      <div id="tool-daily-list"></div>
 
       <!-- RECENT EVENTS -->
       <div class="ae-section-title" style="margin-top:28px;">Son Aktiviteler</div>
@@ -447,57 +444,87 @@
   }
 
   function renderToolDaily(recentEvents) {
-    destroyChart('tooldaily');
-    var canvas = document.getElementById('chart-tool-daily');
-    if (!canvas) return;
+    var container = document.getElementById('tool-daily-list');
+    if (!container) return;
 
-    // recentEvents son 20 event — tool indirme trendi için yetersiz olabilir.
-    // Backend'den gelen dailyTrend'i tool_download'a filtre etme şansımız yok şu an,
-    // bu yüzden recentEvents içinden gün-gün tool indirmelerini sayıyoruz.
-    // Backend'e toolDownloadDaily eklenince bu mantık güncellenecek.
-
-    var byDay = {};
-    (recentEvents || []).forEach(function(e) {
-      if (e.type === 'tool_downloaded' || e.type === 'tool_download') {
-        var d = (e.date || '').split('T')[0].split(' ')[0]; // YYYY-MM-DD veya DD.MM.YYYY
-        if (!d) return;
-        byDay[d] = (byDay[d] || 0) + 1;
-      }
+    // Önce eski chart'ları yok et
+    Object.keys(charts).forEach(function(k){
+      if (k.indexOf('tooldaily-') === 0) destroyChart(k);
     });
 
-    var days = Object.keys(byDay).sort();
+    // Tool bazında gün gün topla
+    // Yapı: { toolRef: { 'YYYY-MM-DD': count } }
+    var byTool = {};
+    (recentEvents || []).forEach(function(e) {
+      if (e.type !== 'tool_downloaded' && e.type !== 'tool_download') return;
+      var ref = e.reference || 'unknown';
+      var d = (e.date || '').split('T')[0].split(' ')[0];
+      if (!d) return;
+      if (!byTool[ref]) byTool[ref] = {};
+      byTool[ref][d] = (byTool[ref][d] || 0) + 1;
+    });
 
-    if (days.length === 0) {
-      canvas.parentElement.innerHTML = '<div class="ae-empty">Henüz tool indirme verisi yok. (Backend güncellenince tüm geçmiş gösterilecek.)</div>';
+    var tools = Object.keys(byTool);
+    if (tools.length === 0) {
+      container.innerHTML = '<div class="ae-chart-card"><div class="ae-empty">Henüz tool indirme verisi yok. (Backend güncellenince tüm geçmiş gösterilecek.)</div></div>';
       return;
     }
 
-    var values = days.map(function(d){ return byDay[d]; });
+    // Her tool için bir kart + canvas oluştur
+    var html = tools.map(function(tool, idx) {
+      var totalDownloads = Object.values(byTool[tool]).reduce(function(a,b){ return a+b; }, 0);
+      return '<div class="ae-chart-card" style="margin-bottom:16px;">' +
+               '<h3>' + escapeHtml(prettyLabel(tool)) +
+                 ' <span style="color:#a7a9ab; font-weight:400; font-size:12px; margin-left:8px;">' +
+                 totalDownloads + ' indirme</span>' +
+               '</h3>' +
+               '<div class="ae-chart-wrap"><canvas id="chart-tooldaily-' + idx + '"></canvas></div>' +
+             '</div>';
+    }).join('');
 
-    var ctx = canvas.getContext('2d');
-    charts['tooldaily'] = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: days,
-        datasets: [{
-          label: 'Günlük İndirme',
-          data: values,
-          borderColor: RED,
-          backgroundColor: 'rgba(193, 32, 51, 0.08)',
-          tension: 0.3,
-          fill: true,
-          pointRadius: 4,
-          pointBackgroundColor: RED
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 11 } } },
-          y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { color: LIGHT, font: { size: 11 }, stepSize: 1 } }
+    container.innerHTML = html;
+
+    // Her tool için chart çiz
+    tools.forEach(function(tool, idx) {
+      var byDay = byTool[tool];
+      var days = Object.keys(byDay).sort();
+      var values = days.map(function(d){ return byDay[d]; });
+      var labels = days.map(function(d){
+        var parts = d.split('-');
+        if (parts.length === 3) {
+          return parts[2] + '.' + parts[1];
         }
-      }
+        return d;
+      });
+
+      var canvas = document.getElementById('chart-tooldaily-' + idx);
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      charts['tooldaily-' + idx] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Günlük İndirme',
+            data: values,
+            borderColor: RED,
+            backgroundColor: 'rgba(193, 32, 51, 0.08)',
+            tension: 0.3,
+            fill: true,
+            pointRadius: 4,
+            pointBackgroundColor: RED,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: LIGHT, font: { size: 11 }, maxRotation: 0 } },
+            y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { color: LIGHT, font: { size: 11 }, stepSize: 1 } }
+          }
+        }
+      });
     });
   }
 
