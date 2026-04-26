@@ -227,19 +227,72 @@
       border-color: #c12033;
     }
 
-    /* ---------- BOŞ DURUM ---------- */
+    /* ---------- BOŞ DURUM / YAKINDA ---------- */
     .ae-empty {
-      border: 0.5px dashed #e8e8e8;
+      border: 0.5px solid #e8e8e8;
       border-radius: 8px;
-      padding: 48px 32px;
+      padding: 64px 48px;
       text-align: center;
-      color: #a7a9ab;
-      font-size: 14px;
+      background: #faf9f9;
     }
-    .ae-empty p { margin-bottom: 6px; }
-    .ae-empty .ae-empty-hint {
-      font-size: 12px;
-      color: #c4c4c4;
+    .ae-empty-icon {
+      width: 32px;
+      height: 32px;
+      stroke: #c12033;
+      stroke-width: 1.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      margin: 0 auto 20px;
+      display: block;
+    }
+    .ae-empty-title {
+      font-size: 26px;
+      font-weight: 500;
+      color: #414042;
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+    .ae-empty-title em { color: #c12033; font-style: normal; }
+    .ae-empty-desc {
+      font-size: 15px;
+      color: #6b6b6b;
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 28px;
+    }
+    .ae-empty-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .ae-empty-btn-primary {
+      background: #c12033;
+      color: #fff;
+      font-size: 14px;
+      padding: 12px 24px;
+      border-radius: 4px;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ae-empty-btn-primary:hover { background: #a81c2b; }
+    .ae-empty-btn-outline {
+      border: 1px solid #414042;
+      color: #414042;
+      font-size: 14px;
+      padding: 12px 24px;
+      border-radius: 4px;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ae-empty-btn-outline:hover {
+      border-color: #c12033;
+      color: #c12033;
     }
 
     /* ---------- GEÇMİŞ ETKİNLİKLER (YouTube thumbnail kart) ---------- */
@@ -397,6 +450,9 @@
       .ae-section-title { font-size: 22px; }
       .ae-section { padding: 40px 20px; }
       .ae-events-grid, .ae-past-grid { grid-template-columns: 1fr; }
+      .ae-empty { padding: 48px 24px; }
+      .ae-empty-title { font-size: 22px; }
+      .ae-empty-desc { font-size: 14px; }
       .ae-footer { flex-direction: column; gap: 12px; padding: 24px 20px; }
     }
   </style>
@@ -446,42 +502,23 @@
         <p class="ae-section-num">01 · Yaklaşan</p>
         <h2 class="ae-section-title">Yaklaşan etkinlikler</h2>
       </div>
-      <span class="ae-section-count">3 etkinlik</span>
+      <span class="ae-section-count">Yakında</span>
     </div>
 
-    <div class="ae-events-grid">
-      <a href="/#ae-iletisim" class="ae-event-card">
-        <div class="ae-event-date">
-          <span class="ae-event-day">06</span>
-          <span class="ae-event-month">May 2026</span>
-        </div>
-        <p class="ae-event-type">Webinar · Ücretsiz</p>
-        <h3 class="ae-event-title">[Etkinlik başlığı buraya gelecek]</h3>
-        <p class="ae-event-desc">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
-        <span class="ae-event-cta">Kayıt ol →</span>
-      </a>
-
-      <a href="/#ae-iletisim" class="ae-event-card">
-        <div class="ae-event-date">
-          <span class="ae-event-day">19</span>
-          <span class="ae-event-month">May 2026</span>
-        </div>
-        <p class="ae-event-type">Atölye · Yüz yüze</p>
-        <h3 class="ae-event-title">[Etkinlik başlığı buraya gelecek]</h3>
-        <p class="ae-event-desc">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
-        <span class="ae-event-cta">Kayıt ol →</span>
-      </a>
-
-      <a href="/#ae-iletisim" class="ae-event-card">
-        <div class="ae-event-date">
-          <span class="ae-event-day">03</span>
-          <span class="ae-event-month">Haz 2026</span>
-        </div>
-        <p class="ae-event-type">Webinar · Ücretsiz</p>
-        <h3 class="ae-event-title">[Etkinlik başlığı buraya gelecek]</h3>
-        <p class="ae-event-desc">Kısa açıklama. Hangi sorulara cevap verileceği, kimin için olduğu, kimin sunacağı.</p>
-        <span class="ae-event-cta">Kayıt ol →</span>
-      </a>
+    <div class="ae-empty">
+      <svg class="ae-empty-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <h3 class="ae-empty-title">Yeni programlarımız <em>şekilleniyor</em>.</h3>
+      <p class="ae-empty-desc">Yeni dönemin webinar ve atölye takvimini hazırlıyoruz. İlk haberdar olmak isterseniz WhatsApp kanalımıza katılabilir veya bize yazabilirsiniz — takvim açıldığında size haber veriyoruz.</p>
+      <div class="ae-empty-actions">
+        <a href="https://whatsapp.com/channel/0029Vb7WEBVElagsIAnvuT3y" target="_blank" rel="noopener" class="ae-empty-btn-primary">
+          WhatsApp Kanalı
+          <svg class="lucide lucide-sm" viewBox="0 0 24 24" style="stroke:#fff;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+        <a href="/#ae-iletisim" class="ae-empty-btn-outline">
+          Bize Yazın
+          <svg class="lucide lucide-sm" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
     </div>
   </section>
 
