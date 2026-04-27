@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Performans Geri Bildirim Görüşmeleri Akış Rehberi — Atelier Ethos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #B22234;
+      --dark: #1a1a1a;
+      --light: #f7f5f2;
+      --mid: #e8e4df;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      background: var(--light);
+      border-bottom: 1px solid var(--mid);
+    }
+    nav img { height: 36px; }
+    nav a.btn-nav {
+      background: var(--red);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 2rem;
+    }
+
+    .hero {
+      text-align: center;
+      max-width: 680px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--red);
+    }
+
+    .desc {
+      font-size: 1rem;
+      font-weight: 300;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--red);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.9rem 2rem;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s;
+    }
+    .btn-download:hover { opacity: 0.88; }
+
+    .meta {
+      margin-top: 0.85rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      letter-spacing: 0.04em;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.78rem;
+      color: #bbb;
+      border-top: 1px solid var(--mid);
+    }
+    footer a { color: #999; text-decoration: none; margin: 0 0.5rem; }
+    footer a:hover { color: var(--red); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="https://atelier-ethos.vercel.app/">
+      <img src="https://atelier-ethos.vercel.app/LogoSS.png" alt="Atelier Ethos" />
+    </a>
+    <a href="https://atelier-ethos.vercel.app/" class="btn-nav">Ana Sayfa</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <span class="tag">Performans ve Geri Bildirim</span>
+      <h1>Performans Geri Bildirim<br /><em>Görüşmeleri</em> Akış Rehberi</h1>
+      <p class="desc">
+        Görüşmeyi kaçınılan bir an'dan fark yaratan bir buluşmaya çevirmek için
+        6 adım, 60 dakika, net bir ritim. İK & Yönetici Rehberi.
+      </p>
+      <a href="#" class="btn-download" id="downloadBtn">
+        PDF'i İndir
+      </a>
+      <p class="meta">PDF · Ücretsiz</p>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Atelier Ethos &nbsp;·&nbsp;
+    <a href="https://atelier-ethos.vercel.app/">Ana Sayfa</a>
+    <a href="mailto:ece.demir@atelierethos.com">Mail</a>
+    <a href="https://instagram.com/atelier_ethos">Instagram</a>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const e = params.get('e');
+    const btn = document.getElementById('downloadBtn');
+    const FILE_URL = 'DOSYA_URL_BURAYA';
+    btn.addEventListener('click', function(ev) {
+      ev.preventDefault();
+      if (FILE_URL !== 'DOSYA_URL_BURAYA') {
+        window.location.href = FILE_URL;
+      }
+    });
+  </script>
+</body>
+</html>
