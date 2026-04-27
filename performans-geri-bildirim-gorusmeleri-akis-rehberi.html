@@ -1,175 +1,152 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Performans Geri Bildirim Görüşmeleri Akış Rehberi — Atelier Ethos</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --red: #B22234;
-      --dark: #1a1a1a;
-      --light: #f7f5f2;
-      --mid: #e8e4df;
-    }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--light);
-      color: var(--dark);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.25rem 2.5rem;
-      background: var(--light);
-      border-bottom: 1px solid var(--mid);
-    }
-    nav img { height: 36px; }
-    nav a.btn-nav {
-      background: var(--red);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 500;
-      padding: 0.5rem 1.25rem;
-      border-radius: 4px;
-      letter-spacing: 0.02em;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 5rem 2rem;
-    }
-
-    .hero {
-      text-align: center;
-      max-width: 680px;
-    }
-
-    .tag {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--red);
-      margin-bottom: 1.5rem;
-    }
-
-    h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.4rem, 5vw, 3.6rem);
-      font-weight: 600;
-      line-height: 1.15;
-      color: var(--dark);
-      margin-bottom: 1.5rem;
-    }
-
-    h1 em {
-      font-style: italic;
-      color: var(--red);
-    }
-
-    .desc {
-      font-size: 1rem;
-      font-weight: 300;
-      color: #555;
-      line-height: 1.7;
-      margin-bottom: 2.5rem;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .btn-download {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--red);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 500;
-      padding: 0.9rem 2rem;
-      border-radius: 4px;
-      letter-spacing: 0.02em;
-      transition: opacity 0.2s;
-    }
-    .btn-download:hover { opacity: 0.88; }
-
-    .meta {
-      margin-top: 0.85rem;
-      font-size: 0.8rem;
-      color: #aaa;
-      letter-spacing: 0.04em;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.78rem;
-      color: #bbb;
-      border-top: 1px solid var(--mid);
-    }
-    footer a { color: #999; text-decoration: none; margin: 0 0.5rem; }
-    footer a:hover { color: var(--red); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performans Geri Bildirim Görüşmeleri Akış Rehberi — Atelier Ethos</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #414042; background: #fff; overflow-x: hidden;
+  min-height: 100vh; display: flex; flex-direction: column;
+}
+.ae-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: #fff; border-bottom: 0.5px solid #e8e8e8;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 60px; height: 90px;
+}
+.ae-nav img { height: 66px; width: auto; }
+.ae-nav-cta {
+  background: #c12033; color: #fff !important; font-size: 14px;
+  padding: 10px 24px; border-radius: 4px; text-decoration: none;
+  transition: background 0.15s;
+}
+.ae-nav-cta:hover { background: #a81c2b; }
+.ae-main {
+  flex: 1; padding: 130px 60px 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, #faf9f9 0%, #fff 100%);
+}
+.ae-hero { text-align: center; max-width: 680px; }
+.ae-label {
+  font-size: 11px; letter-spacing: 2.5px; color: #c12033;
+  text-transform: uppercase; margin-bottom: 16px; display: block; font-weight: 500;
+}
+.ae-h1 { font-size: 44px; font-weight: 500; line-height: 1.15; color: #414042; margin-bottom: 20px; }
+.ae-h1 em { font-style: normal; color: #c12033; }
+.ae-lead { font-size: 17px; color: #6b6b6b; line-height: 1.7; max-width: 580px; margin: 0 auto 36px; }
+.ae-download-btn {
+  background: #c12033; color: #fff; border: none;
+  padding: 18px 40px; border-radius: 6px; font-size: 16px;
+  font-weight: 500; font-family: inherit; cursor: pointer;
+  text-decoration: none; display: inline-block; transition: background 0.15s, transform 0.1s;
+}
+.ae-download-btn:hover { background: #a81c2b; }
+.ae-download-btn:active { transform: scale(0.98); }
+.ae-download-btn:disabled { background: #a7a9ab; cursor: not-allowed; }
+.ae-meta { font-size: 13px; color: #a7a9ab; margin-top: 18px; letter-spacing: 0.3px; }
+.ae-status { margin-top: 24px; padding: 12px 18px; border-radius: 6px; font-size: 14px; display: none; }
+.ae-status.ok { background: #faf9f9; border-left: 3px solid #c12033; color: #414042; text-align: left; }
+.ae-footer {
+  padding: 24px 60px; border-top: 0.5px solid #e8e8e8;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+.ae-footer-links { display: flex; gap: 24px; }
+.ae-footer-links a { font-size: 13px; color: #a7a9ab; text-decoration: none; transition: color 0.15s; }
+.ae-footer-links a:hover { color: #c12033; }
+@media (max-width: 768px) {
+  .ae-nav { padding: 14px 20px; height: auto; }
+  .ae-nav img { height: 48px; }
+  .ae-main { padding: 100px 20px 30px; }
+  .ae-h1 { font-size: 30px; }
+  .ae-lead { font-size: 15px; }
+  .ae-download-btn { padding: 16px 32px; font-size: 15px; width: 100%; max-width: 320px; }
+  .ae-footer { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
+}
+</style>
 </head>
 <body>
 
-  <nav>
-    <a href="https://atelier-ethos.vercel.app/">
-      <img src="https://atelier-ethos.vercel.app/LogoSS.png" alt="Atelier Ethos" />
+<nav class="ae-nav">
+  <a href="/"><img src="/LogoSS.png" alt="Atelier Ethos" /></a>
+  <a href="/" class="ae-nav-cta">Ana Sayfa</a>
+</nav>
+
+<main class="ae-main">
+  <div class="ae-hero">
+    <span class="ae-label">Performans ve Geri Bildirim</span>
+    <h1 class="ae-h1">Performans Geri Bildirim <em>Görüşmeleri</em> Akış Rehberi</h1>
+    <p class="ae-lead">
+      Görüşmeyi kaçınılan bir an'dan fark yaratan bir buluşmaya çevirmek için
+      6 adım, 60 dakika, net bir ritim. İK & Yönetici Rehberi.
+    </p>
+    <a href="#" id="downloadBtn" class="ae-download-btn" onclick="handleDownload(event)">
+      PDF'i İndir
     </a>
-    <a href="https://atelier-ethos.vercel.app/" class="btn-nav">Ana Sayfa</a>
-  </nav>
+    <div class="ae-meta">PDF · Ücretsiz</div>
+    <div id="status" class="ae-status"></div>
+  </div>
+</main>
 
-  <main>
-    <div class="hero">
-      <span class="tag">Performans ve Geri Bildirim</span>
-      <h1>Performans Geri Bildirim<br /><em>Görüşmeleri</em> Akış Rehberi</h1>
-      <p class="desc">
-        Görüşmeyi kaçınılan bir an'dan fark yaratan bir buluşmaya çevirmek için
-        6 adım, 60 dakika, net bir ritim. İK & Yönetici Rehberi.
-      </p>
-      <a href="#" class="btn-download" id="downloadBtn">
-        PDF'i İndir
-      </a>
-      <p class="meta">PDF · Ücretsiz</p>
-    </div>
-  </main>
-
-  <footer>
-    © 2026 Atelier Ethos &nbsp;·&nbsp;
-    <a href="https://atelier-ethos.vercel.app/">Ana Sayfa</a>
+<footer class="ae-footer">
+  <span class="ae-footer-copy">© 2026 Atelier Ethos</span>
+  <div class="ae-footer-links">
+    <a href="/">Ana Sayfa</a>
     <a href="mailto:ece.demir@atelierethos.com">Mail</a>
-    <a href="https://instagram.com/atelier_ethos">Instagram</a>
-  </footer>
+    <a href="https://instagram.com/atelier_ethos" target="_blank" rel="noopener">Instagram</a>
+  </div>
+</footer>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const e = params.get('e');
-    const btn = document.getElementById('downloadBtn');
-    const FILE_URL = 'DOSYA_URL_BURAYA';
-    btn.addEventListener('click', function(ev) {
-      ev.preventDefault();
-      if (FILE_URL !== 'DOSYA_URL_BURAYA') {
-        window.location.href = FILE_URL;
-      }
+<script>
+var TOOL_ID = "P006";
+var TOOL_NAME = "performans-geri-bildirim-gorusmeleri-akis-rehberi";
+var DRIVE_FILE_URL = "https://drive.google.com/uc?export=download&id=1kvZccA1o_zUdPnkY2auoId3-pzL2da2G";
+var LOG_ENDPOINT = "https://script.google.com/macros/s/AKfycbzKYUsVdVd7VojPuqKEvMoftjJcH-Z8BzBZbUmeLEA-NqTMVY14vXklAanjDQuj3T8I/exec";
+
+var urlParams = new URLSearchParams(window.location.search);
+var encodedEmail = urlParams.get("e") || "";
+var userEmail = "";
+if (encodedEmail) {
+  try { userEmail = atob(encodedEmail.replace(/-/g, '+').replace(/_/g, '/')); }
+  catch (e) { userEmail = encodedEmail; }
+}
+var utmSource = urlParams.get("utm_source") || "";
+var utmMedium = urlParams.get("utm_medium") || "";
+var utmCampaign = urlParams.get("utm_campaign") || "";
+var utmContent = urlParams.get("utm_content") || "";
+
+function handleDownload(event) {
+  event.preventDefault();
+  var btn = document.getElementById("downloadBtn");
+  var status = document.getElementById("status");
+  btn.disabled = true;
+  btn.textContent = "Hazırlanıyor...";
+  try {
+    fetch(LOG_ENDPOINT, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        tip: "tool_download", tool_id: TOOL_ID, tool_name: TOOL_NAME,
+        email: userEmail, utm_source: utmSource, utm_medium: utmMedium,
+        utm_campaign: utmCampaign, utm_content: utmContent,
+        timestamp: new Date().toISOString(), user_agent: navigator.userAgent
+      })
     });
-  </script>
+  } catch (e) { console.error("Log error:", e); }
+  setTimeout(function() {
+    window.location.href = DRIVE_FILE_URL;
+    btn.disabled = false;
+    btn.textContent = "PDF'i İndir";
+    status.className = "ae-status ok";
+    status.innerHTML = "İndirme başladı. Geri bildiriminiz için: <a href='mailto:ece.demir@atelierethos.com' style='color:#c12033;'>ece.demir@atelierethos.com</a>";
+    status.style.display = "block";
+  }, 400);
+}
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
