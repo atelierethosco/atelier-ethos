@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>BAGEN · Anket Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --ink: #1a1614;
+    --ink-soft: #4a423d;
+    --ink-mute: #857c75;
+    --line: #e8e2d8;
+    --line-strong: #d4cdc1;
+    --burgundy: #7B1F2C;
+    --burgundy-dark: #5a1620;
+    --burgundy-soft: #f4e8ea;
+    --teal: #2f6b5c;
+    --amber: #b8902e;
+    --err: #8a2a2a;
+    --shadow: 0 1px 2px rgba(26, 22, 20, 0.04), 0 8px 24px -8px rgba(26, 22, 20, 0.08);
+    --radius: 6px;
+    --radius-lg: 12px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .serif { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+  /* ---------- LOGIN ---------- */
+  .login-wrap {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .login-card {
+    width: 100%; max-width: 420px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .login-card .head {
+    padding: 32px 32px 22px;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+  .login-card .head .eyebrow {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--burgundy); font-weight: 500; margin-bottom: 12px;
+  }
+  .login-card .head h1 { margin: 0; font-size: 24px; font-weight: 500; line-height: 1.2; }
+  .login-card .head .sub { margin: 8px 0 0; font-size: 13px; color: var(--ink-mute); }
+  .login-card .body { padding: 24px 32px 30px; }
+
+  label.field { display: block; font-size: 13px; color: var(--ink-soft); margin-bottom: 8px; font-weight: 500; }
+  input[type="password"], select {
+    width: 100%; font-family: inherit; font-size: 15px; color: var(--ink);
+    background: var(--bg); border: 1px solid var(--line-strong);
+    border-radius: var(--radius); padding: 11px 14px;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus {
+    outline: none; border-color: var(--burgundy);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(123, 31, 44, 0.1);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: inherit; font-size: 14px; font-weight: 500;
+    border-radius: var(--radius); padding: 11px 22px;
+    cursor: pointer; border: 1px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.05s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--burgundy); color: white; }
+  .btn-primary:hover { background: var(--burgundy-dark); }
+  .btn-primary:disabled { background: var(--line-strong); color: var(--ink-mute); cursor: not-allowed; }
+  .btn-block { width: 100%; }
+
+  .err-msg {
+    margin-top: 14px; color: var(--err); font-size: 13px;
+    background: #fef0f0; border: 1px solid #f4d4d4;
+    border-radius: var(--radius); padding: 10px 12px; display: none;
+  }
+  .err-msg.show { display: block; }
+
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  .spinner-dark {
+    border-color: rgba(0,0,0,0.15);
+    border-top-color: var(--burgundy);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- DASHBOARD ---------- */
+  .top-bar {
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    padding: 16px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
+  .top-bar .brand { display: flex; align-items: center; gap: 10px; }
+  .top-bar .brand .dot { width: 8px; height: 8px; background: var(--burgundy); border-radius: 50%; }
+  .top-bar .brand .title { font-size: 15px; font-weight: 500; color: var(--ink); }
+  .top-bar .brand .subtitle { font-size: 12px; color: var(--ink-mute); }
+  .top-bar .actions-bar { display: flex; align-items: center; gap: 14px; }
+  .top-bar select.dept-filter {
+    width: auto; min-width: 220px; padding: 8px 14px; font-size: 13px;
+  }
+  .btn-icon {
+    background: transparent; border: 1px solid var(--line-strong); color: var(--ink-soft);
+    padding: 8px 14px; font-size: 12px; border-radius: var(--radius);
+    cursor: pointer; font-family: inherit;
+  }
+  .btn-icon:hover { background: var(--bg); border-color: var(--ink-mute); color: var(--ink); }
+
+  .container {
+    max-width: 1200px; margin: 0 auto;
+    padding: 32px 32px 80px;
+  }
+
+  .page-head {
+    margin-bottom: 28px;
+  }
+  .page-head h1 { margin: 0 0 6px; font-size: 32px; font-weight: 500; }
+  .page-head .meta {
+    color: var(--ink-mute); font-size: 13px;
+    display: flex; gap: 20px; flex-wrap: wrap;
+  }
+  .page-head .meta .dot-sep { color: var(--line-strong); }
+
+  /* KPI cards */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin-bottom: 28px;
+  }
+  .kpi {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); padding: 20px 22px;
+  }
+  .kpi .label {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-mute); font-weight: 500; margin-bottom: 10px;
+  }
+  .kpi .value {
+    font-family: 'Fraunces', serif; font-size: 32px; font-weight: 500;
+    color: var(--ink); line-height: 1; letter-spacing: -0.02em;
+  }
+  .kpi .sub {
+    font-size: 12px; color: var(--ink-mute); margin-top: 8px;
+  }
+  .kpi.accent .value { color: var(--burgundy); }
+  .kpi.warn .value { color: var(--amber); }
+  .kpi.ok .value { color: var(--teal); }
+
+  /* Section card with chart */
+  .panel {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); padding: 24px 28px;
+    margin-bottom: 18px;
+  }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 18px; gap: 16px;
+  }
+  .panel-head h2 {
+    margin: 0; font-size: 18px; font-weight: 500;
+  }
+  .panel-head .panel-meta {
+    font-size: 12px; color: var(--ink-mute);
+  }
+
+  .chart-host { position: relative; height: 480px; }
+  .chart-host-small { position: relative; height: 280px; }
+
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+  }
+
+  /* Department list */
+  .dept-list {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .dept-row {
+    display: grid; grid-template-columns: 1fr auto auto;
+    gap: 12px; align-items: center;
+    padding: 10px 12px; border-radius: var(--radius);
+    background: var(--bg);
+    font-size: 13.5px;
+  }
+  .dept-row .name { color: var(--ink); }
+  .dept-row .bar {
+    width: 110px; height: 6px; background: var(--line); border-radius: 3px;
+    overflow: hidden; position: relative;
+  }
+  .dept-row .bar > div {
+    height: 100%; background: var(--burgundy); border-radius: 3px;
+  }
+  .dept-row .num { font-variant-numeric: tabular-nums; color: var(--ink-soft); font-weight: 500; min-width: 28px; text-align: right; }
+
+  /* Tenure pills */
+  .tenure-list {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .tenure-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; border-radius: var(--radius);
+    background: var(--bg);
+    font-size: 13.5px;
+  }
+  .tenure-row .label { color: var(--ink); }
+  .tenure-row .val { font-variant-numeric: tabular-nums; color: var(--burgundy); font-weight: 500; }
+
+  /* Empty / loading state */
+  .state-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); padding: 80px 40px;
+    text-align: center; color: var(--ink-mute);
+  }
+  .state-card .icon-circ {
+    width: 56px; height: 56px; margin: 0 auto 18px;
+    border-radius: 50%; background: var(--burgundy-soft);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .state-card .icon-circ svg { width: 26px; height: 26px; stroke: var(--burgundy); }
+  .state-card h3 { margin: 0 0 6px; font-size: 18px; font-weight: 500; color: var(--ink); }
+  .state-card p { margin: 0; font-size: 13.5px; max-width: 40ch; margin-left: auto; margin-right: auto; line-height: 1.6; }
+
+  /* Disclaimer */
+  .disclaimer {
+    margin-top: 28px; padding: 18px 22px;
+    background: var(--burgundy-soft); border-radius: var(--radius-lg);
+    color: var(--ink-soft); font-size: 13px; line-height: 1.6;
+  }
+  .disclaimer strong { color: var(--burgundy); }
+
+  /* Footer */
+  .foot {
+    border-top: 1px solid var(--line); background: var(--surface);
+    padding: 16px 32px; text-align: center;
+    font-size: 11.5px; color: var(--ink-mute); letter-spacing: 0.04em;
+  }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .container { padding: 24px 18px 60px; }
+    .top-bar { padding: 14px 18px; flex-direction: column; align-items: stretch; gap: 12px; }
+    .top-bar .actions-bar { justify-content: space-between; flex-wrap: wrap; }
+    .top-bar select.dept-filter { min-width: 0; flex: 1; }
+    .page-head h1 { font-size: 26px; }
+    .panel { padding: 18px 18px; }
+    .chart-host { height: 380px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== LOGIN SCREEN ============== -->
+<div id="screen-login" class="login-wrap">
+  <div class="login-card">
+    <div class="head">
+      <div class="eyebrow">BAGEN · Yönetim Paneli</div>
+      <h1 class="serif">Anket Sonuçları Dashboard</h1>
+      <p class="sub">Yetkili personel girişi</p>
+    </div>
+    <div class="body">
+      <label class="field" for="pw">Dashboard Şifresi</label>
+      <input id="pw" type="password" autocomplete="off" placeholder="Yönetim şifresini girin">
+      <div id="login-err" class="err-msg">Şifre hatalı.</div>
+      <button id="btn-login" class="btn btn-primary btn-block" style="margin-top: 18px;">
+        Giriş yap
+      </button>
+      <p style="margin: 18px 0 0; font-size: 12px; color: var(--ink-mute); text-align: center;">
+        <strong>Atelier Ethos İK Danışmanlık A.Ş.</strong>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ============== DASHBOARD SCREEN ============== -->
+<div id="screen-dashboard" class="hidden">
+  <div class="top-bar">
+    <div class="brand">
+      <span class="dot"></span>
+      <div>
+        <div class="title">BAGEN · Çalışan Bağlılığı Dashboard</div>
+        <div class="subtitle">Beyaz Yaka · Atelier Ethos İK Danışmanlık</div>
+      </div>
+    </div>
+    <div class="actions-bar">
+      <select id="dept-filter" class="dept-filter">
+        <option value="__ALL__">Tüm departmanlar</option>
+      </select>
+      <button id="btn-refresh" class="btn-icon">↻ Yenile</button>
+      <button id="btn-logout" class="btn-icon">Çıkış</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-head">
+      <h1 class="serif" id="page-title">Genel sonuçlar</h1>
+      <div class="meta" id="page-meta">
+        <span>—</span>
+      </div>
+    </div>
+
+    <div id="dash-content">
+      <div class="state-card">
+        <div class="icon-circ">
+          <div class="spinner spinner-dark"></div>
+        </div>
+        <h3>Veriler yükleniyor</h3>
+        <p>Supabase'den anket sonuçları çekiliyor…</p>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Not.</strong> Bu dashboard temel metrikleri gösterir: bölüm bazında ortalama
+      katılım puanları (1–5) ve katılımcı dağılımı. Kelime bulutu, açık uçlu yanıt
+      analizi, kıyaslama (benchmark), aksiyon planı ve kapsamlı raporlama için
+      <strong>Atelier Ethos</strong> ücretli danışmanlık modülünü dilediğiniz zaman
+      ekleyebilirsiniz.
+    </div>
+  </div>
+
+  <div class="foot">
+    Atelier Ethos İK Danışmanlık A.Ş. · atelier-ethos.vercel.app
+  </div>
+</div>
+
+<!-- ============== Chart.js (CDN) ============== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+/* =====================================================================
+   KONFİGÜRASYON — DAĞITIMDAN ÖNCE GÜNCELLENECEK
+   ===================================================================== */
+const CONFIG = {
+  // Edge function URL — Supabase project ref ile değişir
+  // Format: https://{project-ref}.supabase.co/functions/v1/dashboard-stats
+  EDGE_FUNCTION_URL: "https://semukowxbnsxtncuhvqq.supabase.co/functions/v1/dashboard-stats",
+
+  // Edge function jwt-checki kapatılı; ama Supabase yine de bir anon key isteyebiliyor
+  // Bu key publishable (public) — sızsa zarar yok, function şifre ile korunuyor
+  SUPABASE_ANON: "sb_publishable_Wg01HpvgzrBSiPWWXDagng_M4Kp8ACg",
+};
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+let state = {
+  password: null,
+  data: null,
+  selectedDept: "__ALL__",
+  chart: null,
+};
+
+const $ = (id) => document.getElementById(id);
+
+/* =====================================================================
+   LOGIN
+   ===================================================================== */
+$("btn-login").addEventListener("click", login);
+$("pw").addEventListener("keydown", (e) => { if (e.key === "Enter") login(); });
+
+async function login() {
+  const pw = $("pw").value.trim();
+  if (!pw) return;
+  $("login-err").classList.remove("show");
+
+  const $btn = $("btn-login");
+  $btn.disabled = true;
+  $btn.innerHTML = '<span class="spinner"></span> Doğrulanıyor…';
+
+  try {
+    const data = await fetchStats(pw, "__ALL__");
+    state.password = pw;
+    state.data = data;
+    $("screen-login").classList.add("hidden");
+    $("screen-dashboard").classList.remove("hidden");
+    populateDeptFilter();
+    render();
+  } catch (e) {
+    if (e.code === 401) {
+      $("login-err").textContent = "Şifre hatalı.";
+    } else {
+      $("login-err").textContent = "Hata: " + e.message;
+    }
+    $("login-err").classList.add("show");
+  } finally {
+    $btn.disabled = false;
+    $btn.innerHTML = "Giriş yap";
+  }
+}
+
+/* =====================================================================
+   FETCH
+   ===================================================================== */
+async function fetchStats(password, department) {
+  const headers = { "Content-Type": "application/json" };
+  if (CONFIG.SUPABASE_ANON) {
+    headers["Authorization"] = `Bearer ${CONFIG.SUPABASE_ANON}`;
+    headers["apikey"] = CONFIG.SUPABASE_ANON;
+  }
+
+  const resp = await fetch(CONFIG.EDGE_FUNCTION_URL, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ password, department }),
+  });
+
+  if (!resp.ok) {
+    const err = new Error(`HTTP ${resp.status}`);
+    err.code = resp.status;
+    try {
+      const j = await resp.json();
+      if (j.error) err.message = j.error;
+    } catch (_) {}
+    throw err;
+  }
+  return await resp.json();
+}
+
+async function reloadData() {
+  $("dash-content").innerHTML = `
+    <div class="state-card">
+      <div class="icon-circ"><div class="spinner spinner-dark"></div></div>
+      <h3>Yenileniyor</h3>
+      <p>Veriler güncelleniyor…</p>
+    </div>`;
+  try {
+    state.data = await fetchStats(state.password, state.selectedDept);
+    render();
+  } catch (e) {
+    $("dash-content").innerHTML = `
+      <div class="state-card">
+        <h3 style="color: var(--err);">Hata</h3>
+        <p>${escapeHtml(e.message)}</p>
+      </div>`;
+  }
+}
+
+/* =====================================================================
+   FILTER & EVENTS
+   ===================================================================== */
+function populateDeptFilter() {
+  const $sel = $("dept-filter");
+  $sel.innerHTML = '<option value="__ALL__">Tüm departmanlar</option>' +
+    state.data.departments.map(d =>
+      `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`
+    ).join("");
+  $sel.value = state.selectedDept;
+  $sel.addEventListener("change", () => {
+    state.selectedDept = $sel.value;
+    reloadData();
+  });
+}
+
+$("btn-refresh").addEventListener("click", reloadData);
+$("btn-logout").addEventListener("click", () => {
+  state = { password: null, data: null, selectedDept: "__ALL__", chart: null };
+  $("screen-dashboard").classList.add("hidden");
+  $("screen-login").classList.remove("hidden");
+  $("pw").value = "";
+});
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+}
+function fmt(n, decimals = 2) {
+  if (n === null || n === undefined || isNaN(n)) return "—";
+  return Number(n).toFixed(decimals);
+}
+function formatDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function render() {
+  const d = state.data;
+  if (!d) return;
+
+  // Empty state
+  if (d.meta.total_responses === 0) {
+    $("page-title").textContent = "Henüz katılım yok";
+    $("page-meta").innerHTML = "<span>Anket gönderildikçe veriler burada görünecek.</span>";
+    $("dash-content").innerHTML = `
+      <div class="state-card">
+        <div class="icon-circ">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <h3>Veri henüz yok</h3>
+        <p>Anket linki çalışanlara ulaştırıldıktan sonra ilk yanıtlar geldiğinde
+        bu sayfa otomatik olarak güncellenir.</p>
+      </div>`;
+    return;
+  }
+
+  const isFiltered = d.meta.filter_dept !== "__ALL__";
+  $("page-title").textContent = isFiltered
+    ? `${d.meta.filter_dept} sonuçları`
+    : "Genel sonuçlar";
+
+  $("page-meta").innerHTML = `
+    <span>${d.meta.filtered_responses} yanıt${isFiltered ? ` (toplam ${d.meta.total_responses})` : ""}</span>
+    <span class="dot-sep">•</span>
+    <span>İlk yanıt: ${formatDate(d.meta.first_response)}</span>
+    <span class="dot-sep">•</span>
+    <span>Son yanıt: ${formatDate(d.meta.last_response)}</span>
+  `;
+
+  // Bölüm ortalamalarından en yüksek/en düşük
+  const validSections = d.section_averages.filter(s => s.avg !== null);
+  let highest = null, lowest = null;
+  if (validSections.length > 0) {
+    highest = validSections.reduce((a, b) => a.avg > b.avg ? a : b);
+    lowest  = validSections.reduce((a, b) => a.avg < b.avg ? a : b);
+  }
+
+  $("dash-content").innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="label">Toplam Yanıt</div>
+        <div class="value">${d.meta.filtered_responses}</div>
+        <div class="sub">${isFiltered ? d.meta.filter_dept : "tüm departmanlar"}</div>
+      </div>
+      <div class="kpi accent">
+        <div class="label">Genel Ortalama</div>
+        <div class="value">${fmt(d.overall_avg)}</div>
+        <div class="sub">5 üzerinden Likert puanı</div>
+      </div>
+      <div class="kpi ok">
+        <div class="label">En Yüksek Bölüm</div>
+        <div class="value">${highest ? fmt(highest.avg) : "—"}</div>
+        <div class="sub">${highest ? escapeHtml(highest.title) : "—"}</div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">En Düşük Bölüm</div>
+        <div class="value">${lowest ? fmt(lowest.avg) : "—"}</div>
+        <div class="sub">${lowest ? escapeHtml(lowest.title) : "—"}</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Bölüm bazında ortalamalar</h2>
+        <div class="panel-meta">5 üzerinden · ${isFiltered ? d.meta.filter_dept : "tümü"}</div>
+      </div>
+      <div class="chart-host"><canvas id="chart-sections"></canvas></div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Departman dağılımı</h2>
+          <div class="panel-meta">${d.department_distribution.length} departman</div>
+        </div>
+        <div class="dept-list">
+          ${renderDeptList(d.department_distribution)}
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Çalışma süresi</h2>
+          <div class="panel-meta">tüm yanıtlar</div>
+        </div>
+        <div class="tenure-list">
+          ${renderTenureList(d.tenure_distribution)}
+        </div>
+      </div>
+    </div>
+  `;
+
+  drawSectionChart(d.section_averages);
+}
+
+function renderDeptList(dist) {
+  if (!dist.length) return "<p style='color: var(--ink-mute); font-size: 13px;'>Henüz veri yok.</p>";
+  const max = Math.max(...dist.map(d => d.n));
+  return dist.map(({ dept, n }) => `
+    <div class="dept-row">
+      <span class="name">${escapeHtml(dept)}</span>
+      <span class="bar"><div style="width: ${Math.round((n / max) * 100)}%"></div></span>
+      <span class="num">${n}</span>
+    </div>
+  `).join("");
+}
+
+function renderTenureList(t) {
+  // İstenen sıra
+  const order = ["1 yıldan az", "1–3 yıl", "3–5 yıl", "5–10 yıl", "10 yıl üzeri"];
+  const rows = order
+    .filter(k => t[k] !== undefined)
+    .map(k => `
+      <div class="tenure-row">
+        <span class="label">${escapeHtml(k)}</span>
+        <span class="val">${t[k]}</span>
+      </div>
+    `).join("");
+  // Order dışındaki bilinmeyen değerler varsa onları da ekle
+  const extra = Object.keys(t).filter(k => !order.includes(k))
+    .map(k => `
+      <div class="tenure-row">
+        <span class="label">${escapeHtml(k)}</span>
+        <span class="val">${t[k]}</span>
+      </div>
+    `).join("");
+  return rows + extra || "<p style='color: var(--ink-mute); font-size: 13px;'>Henüz veri yok.</p>";
+}
+
+function drawSectionChart(sections) {
+  const ctx = document.getElementById("chart-sections");
+  if (!ctx) return;
+  if (state.chart) { state.chart.destroy(); state.chart = null; }
+
+  const labels = sections.map(s => `${s.num}. ${s.title}`);
+  const values = sections.map(s => s.avg);
+
+  // Renk: ortalamaya göre
+  const colors = values.map(v => {
+    if (v === null) return "#e8e2d8";
+    if (v >= 4)   return "#2f6b5c";  // teal — yüksek
+    if (v >= 3)   return "#b8902e";  // amber — orta
+    return "#7B1F2C";                // bordo — düşük
+  });
+
+  state.chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Ortalama (1-5)",
+        data: values,
+        backgroundColor: colors,
+        borderRadius: 4,
+        borderSkipped: false,
+      }],
+    },
+    options: {
+      indexAxis: "y",
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const s = sections[ctx.dataIndex];
+              if (s.avg === null) return "Veri yok";
+              return `Ort: ${s.avg.toFixed(2)} (n=${s.n_responses})`;
+            },
+          },
+          backgroundColor: "#1a1614",
+          padding: 10,
+          titleFont: { family: "Inter", size: 12, weight: "500" },
+          bodyFont: { family: "Inter", size: 12 },
+          cornerRadius: 6,
+        },
+      },
+      scales: {
+        x: {
+          min: 1, max: 5,
+          ticks: {
+            stepSize: 1,
+            font: { family: "Inter", size: 11 },
+            color: "#857c75",
+          },
+          grid: { color: "#e8e2d8" },
+          border: { display: false },
+        },
+        y: {
+          ticks: {
+            font: { family: "Inter", size: 12 },
+            color: "#1a1614",
+            crossAlign: "far",
+          },
+          grid: { display: false },
+          border: { display: false },
+        },
+      },
+    },
+  });
+}
+</script>
+</body>
+</html>
