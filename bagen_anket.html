@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>BAGEN · Çalışan Bağlılığı & Memnuniyet Anketi</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --ink: #1a1614;
+    --ink-soft: #4a423d;
+    --ink-mute: #857c75;
+    --line: #e8e2d8;
+    --line-strong: #d4cdc1;
+    --burgundy: #7B1F2C;
+    --burgundy-dark: #5a1620;
+    --burgundy-soft: #f4e8ea;
+    --accent: #b8902e;
+    --ok: #2f6b3a;
+    --err: #8a2a2a;
+    --shadow: 0 1px 2px rgba(26, 22, 20, 0.04), 0 8px 24px -8px rgba(26, 22, 20, 0.08);
+    --radius: 6px;
+    --radius-lg: 12px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .serif { font-family: 'Fraunces', Georgia, serif; font-feature-settings: "ss01"; letter-spacing: -0.01em; }
+
+  /* ---------- LAYOUT ---------- */
+  .page { min-height: 100vh; display: flex; flex-direction: column; }
+  .top-bar {
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .top-bar .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--ink-soft); letter-spacing: 0.02em;
+  }
+  .top-bar .brand .dot {
+    width: 8px; height: 8px; background: var(--burgundy); border-radius: 50%;
+  }
+  .top-bar .progress-meta {
+    font-size: 12px; color: var(--ink-mute); font-variant-numeric: tabular-nums;
+  }
+
+  .progress-track {
+    height: 2px; background: var(--line); position: relative;
+  }
+  .progress-fill {
+    height: 100%; background: var(--burgundy);
+    width: 0%; transition: width 0.4s cubic-bezier(.2,.7,.2,1);
+  }
+
+  .container {
+    width: 100%; max-width: 760px; margin: 0 auto;
+    padding: 48px 28px 120px;
+    flex: 1;
+  }
+
+  /* ---------- LOGIN SCREEN ---------- */
+  .login-wrap {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .login-card {
+    width: 100%; max-width: 440px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .login-card .head {
+    padding: 36px 36px 24px;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+  .login-card .head .eyebrow {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--burgundy); font-weight: 500; margin-bottom: 14px;
+  }
+  .login-card .head h1 {
+    margin: 0; font-size: 28px; font-weight: 500; line-height: 1.2;
+  }
+  .login-card .head .sub {
+    margin: 8px 0 0; font-size: 14px; color: var(--ink-mute);
+  }
+  .login-card .body {
+    padding: 28px 36px 32px;
+  }
+  .login-card .body p.intro {
+    margin: 0 0 22px; font-size: 14px; color: var(--ink-soft); line-height: 1.6;
+  }
+
+  label.field {
+    display: block; font-size: 13px; color: var(--ink-soft);
+    margin-bottom: 8px; font-weight: 500;
+  }
+  input[type="password"], input[type="text"], select, textarea {
+    width: 100%;
+    font-family: inherit; font-size: 15px; color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 11px 14px;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--burgundy);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(123, 31, 44, 0.1);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px;
+    font-family: inherit; font-size: 14px; font-weight: 500;
+    border-radius: var(--radius);
+    padding: 11px 22px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.05s;
+    user-select: none;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--burgundy); color: white;
+  }
+  .btn-primary:hover { background: var(--burgundy-dark); }
+  .btn-primary:disabled {
+    background: var(--line-strong); color: var(--ink-mute); cursor: not-allowed;
+  }
+  .btn-ghost {
+    background: transparent; color: var(--ink-soft);
+    border-color: var(--line-strong);
+  }
+  .btn-ghost:hover {
+    background: var(--surface); border-color: var(--ink-mute); color: var(--ink);
+  }
+  .btn-block { width: 100%; }
+
+  .err-msg {
+    margin-top: 14px;
+    color: var(--err);
+    font-size: 13px;
+    background: #fef0f0;
+    border: 1px solid #f4d4d4;
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    display: none;
+  }
+  .err-msg.show { display: block; }
+
+  /* ---------- INTRO STEP (within survey flow) ---------- */
+  .intro-block { text-align: center; padding: 16px 0 8px; }
+  .intro-block .eyebrow {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--burgundy); font-weight: 500;
+  }
+  .intro-block h1 {
+    font-size: 38px; margin: 14px 0 10px; font-weight: 500; line-height: 1.15;
+  }
+  .intro-block .lead {
+    font-size: 16px; color: var(--ink-soft); max-width: 56ch; margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .scale-card {
+    margin: 36px auto 32px;
+    max-width: 540px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+  }
+  .scale-card .scale-title {
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--burgundy); font-weight: 500;
+    text-align: center; margin-bottom: 14px;
+  }
+  .scale-list {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+    text-align: center;
+  }
+  .scale-list .pip {
+    font-size: 11px; color: var(--ink-mute); line-height: 1.35;
+  }
+  .scale-list .pip .num {
+    display: inline-flex; width: 26px; height: 26px;
+    align-items: center; justify-content: center;
+    border-radius: 50%; background: var(--burgundy-soft);
+    color: var(--burgundy); font-weight: 600;
+    margin-bottom: 6px; font-family: 'Fraunces', serif;
+  }
+
+  .demo-form-block {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 28px 30px;
+    margin-top: 12px;
+  }
+  .demo-form-block .row { margin-bottom: 18px; }
+  .demo-form-block .row:last-child { margin-bottom: 0; }
+  .demo-form-block .help {
+    font-size: 12px; color: var(--ink-mute); margin-top: 6px;
+  }
+
+  .actions {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 36px; gap: 12px;
+  }
+  .actions .left, .actions .right {
+    display: flex; gap: 10px;
+  }
+
+  /* ---------- SECTION ---------- */
+  .section-head {
+    display: flex; align-items: baseline; gap: 14px; margin-bottom: 4px;
+  }
+  .section-num {
+    font-family: 'Fraunces', serif;
+    font-size: 14px; color: var(--burgundy);
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .section-step {
+    font-size: 11px; color: var(--ink-mute); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+  .section-title {
+    font-size: 30px; font-weight: 500; line-height: 1.2;
+    margin: 6px 0 8px;
+  }
+  .section-sub {
+    color: var(--ink-mute); font-size: 14px; margin: 0 0 28px;
+  }
+
+  /* ---------- QUESTION ---------- */
+  .q-list { display: flex; flex-direction: column; gap: 14px; }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .q-card.answered { border-color: #d8e3da; }
+  .q-card.unanswered-flag {
+    border-color: var(--err);
+    background: #fff8f8;
+    box-shadow: 0 0 0 3px #fdebeb;
+  }
+  .q-card.unanswered-flag .q-text .q-idx {
+    color: var(--err);
+    font-weight: 600;
+  }
+  .q-card .q-flag {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    color: var(--err);
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #f4d4d4;
+  }
+  .q-card.unanswered-flag .q-flag { display: flex; }
+  .q-card .q-flag::before {
+    content: "⚠";
+    display: inline-block;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--err);
+    color: white;
+    font-size: 11px;
+    text-align: center;
+    line-height: 18px;
+  }
+  .q-text {
+    font-size: 15.5px; line-height: 1.5;
+    margin: 0 0 14px;
+    display: flex; gap: 10px;
+  }
+  .q-text .q-idx {
+    color: var(--ink-mute); font-variant-numeric: tabular-nums;
+    flex-shrink: 0; font-size: 13px; padding-top: 2px;
+  }
+
+  .likert {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .likert label {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 10px 6px; cursor: pointer;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    transition: all 0.12s;
+    text-align: center;
+    font-size: 11px; color: var(--ink-mute);
+    line-height: 1.3;
+    min-height: 70px;
+    justify-content: center;
+  }
+  .likert label:hover {
+    border-color: var(--burgundy);
+    color: var(--ink);
+  }
+  .likert label .v {
+    font-family: 'Fraunces', serif;
+    font-size: 18px; font-weight: 500; color: var(--ink);
+  }
+  .likert input[type="radio"] {
+    position: absolute; opacity: 0; pointer-events: none;
+  }
+  .likert input[type="radio"]:checked + label,
+  .likert label.checked {
+    background: var(--burgundy);
+    border-color: var(--burgundy);
+    color: white;
+  }
+  .likert input[type="radio"]:checked + label .v,
+  .likert label.checked .v {
+    color: white;
+  }
+
+  /* Open-ended textarea */
+  textarea {
+    min-height: 96px; resize: vertical;
+    font-family: inherit; line-height: 1.55;
+  }
+  .q-card.open .q-text { margin-bottom: 12px; }
+
+  /* ---------- DEMOGRAFI / FINAL ---------- */
+  .review-grid {
+    display: grid; gap: 12px;
+    margin-top: 18px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+  }
+  .review-grid .row {
+    display: flex; justify-content: space-between; gap: 16px;
+    font-size: 13.5px; padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .review-grid .row:last-child { border-bottom: 0; }
+  .review-grid .row .k { color: var(--ink-mute); }
+  .review-grid .row .v { font-weight: 500; }
+  .consent {
+    margin-top: 22px; font-size: 13px; color: var(--ink-soft);
+    background: var(--burgundy-soft);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    line-height: 1.55;
+  }
+
+  /* ---------- FINISHED SCREEN ---------- */
+  .done-wrap {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+  }
+  .done-card {
+    max-width: 460px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 50px 40px;
+    box-shadow: var(--shadow);
+  }
+  .done-card .check {
+    width: 56px; height: 56px; margin: 0 auto 22px;
+    border-radius: 50%; background: var(--burgundy-soft);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .done-card .check svg { width: 26px; height: 26px; stroke: var(--burgundy); }
+  .done-card h1 { margin: 0 0 12px; font-size: 28px; font-weight: 500; }
+  .done-card p { margin: 0; color: var(--ink-soft); font-size: 14.5px; line-height: 1.6; }
+
+  /* ---------- FOOTER ---------- */
+  .foot {
+    border-top: 1px solid var(--line);
+    background: var(--surface);
+    padding: 16px 28px;
+    text-align: center;
+    font-size: 11.5px; color: var(--ink-mute); letter-spacing: 0.04em;
+  }
+
+  /* ---------- HELPERS ---------- */
+  .hidden { display: none !important; }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Smooth section transition */
+  .step-content {
+    animation: fadeUp 0.35s cubic-bezier(.2,.7,.2,1);
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .container { padding: 28px 14px 100px; }
+    .top-bar { padding: 12px 16px; gap: 8px; }
+    .top-bar .brand { font-size: 12px; }
+    .top-bar .progress-meta { font-size: 11px; }
+    .intro-block h1 { font-size: 28px; }
+    .section-title { font-size: 22px; }
+    .q-card { padding: 14px 12px; }
+    .q-text { font-size: 14px; }
+    .q-text .q-idx { font-size: 12px; }
+    .likert { gap: 4px; }
+    .likert label {
+      padding: 8px 2px;
+      min-height: 56px;
+      font-size: 9px;
+      line-height: 1.2;
+      border-radius: 5px;
+    }
+    .likert label .v { font-size: 15px; }
+    .likert label > span:not(.v) {
+      /* uzun etiketleri gizle, sadece numara kalır */
+      display: none;
+    }
+    /* Mobilde sadece numara göster — etiketler intro'daki ölçek kartında zaten var */
+    .likert label { min-height: 44px; padding: 10px 4px; }
+
+    .login-card .head { padding: 28px 22px 18px; }
+    .login-card .head h1 { font-size: 24px; }
+    .login-card .body { padding: 22px 22px 26px; }
+    .demo-form-block { padding: 20px 18px; }
+    .scale-card { padding: 16px 14px; }
+    .scale-list { gap: 4px; }
+    .scale-list .pip { font-size: 10px; }
+    .scale-list .pip .num { width: 22px; height: 22px; font-size: 12px; }
+    .actions { flex-direction: column-reverse; gap: 10px; }
+    .actions .left, .actions .right { width: 100%; }
+    .actions .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================== LOGIN SCREEN ======================== -->
+<div id="screen-login" class="login-wrap">
+  <div class="login-card">
+    <div class="head">
+      <div class="eyebrow">BAGEN · 2026</div>
+      <h1 class="serif">Çalışan Bağlılığı &<br>Memnuniyet Anketi</h1>
+      <p class="sub">Beyaz Yaka · Anonim Katılım</p>
+    </div>
+    <div class="body">
+      <p class="intro">
+        Bu anket; çalışma deneyiminizi anlamak ve iyileştirme alanlarını birlikte keşfetmek
+        amacıyla yapılmaktadır. Cevaplarınız <strong>anonimdir</strong>; kimliğinizi tanımlayan
+        hiçbir bilgi kaydedilmez. Yaklaşık 12–15 dakika sürer.
+      </p>
+      <label class="field" for="pw">Erişim Şifresi</label>
+      <input id="pw" type="password" autocomplete="off" placeholder="Şirket içinde duyurulan şifreyi girin">
+      <div id="login-err" class="err-msg">Şifre hatalı. Lütfen tekrar deneyin.</div>
+      <button id="btn-login" class="btn btn-primary btn-block" style="margin-top: 18px;">
+        Ankete Başla
+      </button>
+      <p style="margin: 18px 0 0; font-size: 12px; color: var(--ink-mute); text-align: center;">
+        Bu çalışma <strong>Atelier Ethos İK Danışmanlık A.Ş.</strong> tarafından yürütülmektedir.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== SURVEY SCREEN ======================== -->
+<div id="screen-survey" class="page hidden">
+  <div class="top-bar">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>BAGEN · Çalışan Bağlılığı Anketi</span>
+    </div>
+    <div class="progress-meta" id="progress-meta">Adım 1 / —</div>
+  </div>
+  <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+
+  <div class="container">
+    <div id="step-content" class="step-content"></div>
+
+    <div class="actions">
+      <div class="left">
+        <button id="btn-prev" class="btn btn-ghost">← Geri</button>
+      </div>
+      <div class="right">
+        <button id="btn-next" class="btn btn-primary">Devam →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Atelier Ethos İK Danışmanlık A.Ş. · atelier-ethos.vercel.app
+  </div>
+</div>
+
+<!-- ======================== DONE SCREEN ======================== -->
+<div id="screen-done" class="done-wrap hidden">
+  <div class="done-card">
+    <div class="check">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 12 10 18 20 6"></polyline>
+      </svg>
+    </div>
+    <h1 class="serif">Teşekkür ederiz</h1>
+    <p>
+      Cevaplarınız başarıyla kaydedildi. Geri bildirimleriniz, çalışma ortamımızı
+      birlikte iyileştirmek için kullanılacaktır.
+    </p>
+  </div>
+</div>
+
+<!-- ============================ SCRIPTS ============================ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* =====================================================================
+   KONFİGÜRASYON — DAĞITIMDAN ÖNCE GÜNCELLENECEK
+   ===================================================================== */
+const CONFIG = {
+  // Supabase — Atelier Ethos / bagen-anket projesi
+  SUPABASE_URL:    "https://semukowxbnsxtncuhvqq.supabase.co",
+  SUPABASE_ANON:   "sb_publishable_Wg01HpvgzrBSiPWWXDagng_M4Kp8ACg",
+  SUPABASE_TABLE:  "bagen_beyaz_yaka_responses",
+
+  // Ortak erişim şifresi (müşteri ile birlikte belirlenip duyurulacak)
+  ACCESS_PASSWORD: "BAGEN2026",
+
+  // Demografi: çalışma süresi
+  TENURE: ["1 yıldan az", "1–3 yıl", "3–5 yıl", "5–10 yıl", "10 yıl üzeri"],
+
+  // Departman listesi — TEMSİLİ. Müşteri review sonrası güncellenecek.
+  DEPARTMANLAR: [
+    "İnsan Kaynakları",
+    "Mali İşler / Muhasebe",
+    "Üretim Yönetimi",
+    "Üretim Planlama",
+    "Kalite Güvence",
+    "Kalite Kontrol",
+    "Ar-Ge / Mühendislik",
+    "Satın Alma",
+    "Lojistik / Sevkiyat",
+    "Bakım Onarım",
+    "Bilgi Teknolojileri",
+    "Satış",
+    "Pazarlama",
+    "İSG (İş Sağlığı ve Güvenliği)",
+    "Yönetim / Üst Yönetim",
+    "Diğer"
+  ],
+};
+
+/* =====================================================================
+   ANKET İÇERİĞİ — BEYAZ YAKA (REVİZE)
+   Müşteri talebi: 13. Bölüm (Maaş & Sosyal Haklar) kaldırıldı.
+   ===================================================================== */
+const SECTIONS = [
+  { num: "01", title: "Genel Bağlılık & Motivasyon", sub: "Şirkete aidiyet, tavsiye etme eğilimi, işe gelme isteği",
+    questions: [
+      "Şirketimde çalışmaktan memnunum.",
+      "Şirketimi çalışılacak bir yer olarak tanıdıklarıma tavsiye ederim.",
+      "Kendimi çalıştığım şirket ailesinin bir ferdi olarak görüyorum.",
+      "Yeniden işe girecek olsam tekrar bu şirketi tercih ederdim.",
+      "İşimi yüksek motivasyonla yapıyorum.",
+      "İşe zevkle geliyorum.",
+      "Önümüzdeki 12 ay içinde burada çalışmaya devam etmeyi planlıyorum.",
+    ]},
+  { num: "02", title: "İş Arkadaşlarım", sub: "Kendi bölümündeki iş arkadaşları",
+    questions: [
+      "İş arkadaşlarım ihtiyaç duyduğumda yardımcı olur.",
+      "İş arkadaşlarımla rahat bir çalışma ilişkim var.",
+      "İş arkadaşlarım mesleki açıdan bilgili ve yetkindir.",
+      "İş arkadaşlarım açık ve dürüst davranır.",
+      "Bölümümüz içinde güçlü bir takım anlayışı ve dayanışma var.",
+      "Görüş ve önerilerimi herhangi bir yaptırımla karşılaşma korkusu olmadan dile getirebiliyorum.",
+      "Hata yaptığımda bunu yöneticimle veya ekibimle rahatlıkla paylaşabilirim.",
+      "Genel olarak kendi bölümümdeki iletişim ve iş birliğinden memnunum.",
+    ]},
+  { num: "03", title: "Diğer Bölümlerdeki Çalışanlar", sub: "Bölümler arası koordinasyon ve iş birliği",
+    questions: [
+      "Diğer bölümlerdeki çalışanlar ihtiyaç duyduğumda yardımcı olur.",
+      "Diğer bölümlerdeki çalışanlarla rahat bir çalışma ilişkim var.",
+      "Diğer bölümlerdeki çalışanlar mesleki açıdan bilgili ve yetkindir.",
+      "Diğer bölümlerdeki çalışanlar açık ve dürüst davranır.",
+      "Diğer bölümlerle aramızda güçlü bir iş birliği ve dayanışma var.",
+      "İşim için gerekli olan bilgileri diğer bölümlerden rahatlıkla alabiliyorum.",
+      "Genel olarak diğer bölümlerle iş birliğinden memnunum.",
+    ]},
+  { num: "04", title: "Yöneticim (İlk Amir)", sub: "Geri bildirim, güven, adalet, gelişim desteği",
+    questions: [
+      "İlk amirim adil ve dürüst davranır.",
+      "Benden ne istediğini bilirim.",
+      "Benim için vakit ayırır ve destek olur.",
+      "Baskıcı değildir.",
+      "Mesleki bilgisi yeterlidir.",
+      "Davranışlarıyla örnek teşkil eder.",
+      "Başarılarımda beni takdir eder.",
+      "Kolaylıkla ulaşılabilir.",
+      "Yanlışlıklara karşı ölçülü tepki gösterir, öğreticidir.",
+      "Yenilikçi düşünce ve önerilerimi sunmam için beni teşvik eder.",
+      "İşleri uygun ve dengeli bir şekilde ekibe dağıtır.",
+      "Beni etkileyecek kararlarda görüşlerimi alır.",
+      "Görüş ve beklentilerimi ilk amirime rahatlıkla iletebiliyorum.",
+      "Genel olarak ilk amirimden memnunum.",
+    ]},
+  { num: "05", title: "İşimin Kendisi & Sorumluluk", sub: "İşin anlamlılığı, yetki netliği, beceri uyumu",
+    questions: [
+      "İşim sıkıcı değildir.",
+      "İşim katma değer yaratır.",
+      "Yeteneklerimi kullanırım.",
+      "Fikirlerimi etkin bir şekilde işime yansıtabilirim.",
+      "Bölümümün hedeflerini bilirim.",
+      "Yeterli yetkiye sahibim.",
+      "İşimle ilgili gerekli bilgilere ulaşabilirim.",
+      "İş yüküm normaldir.",
+      "İşimle ilgili güncel bilgilere sahibim.",
+      "İşimle ilgili sorunlarımı kendim çözerim.",
+      "Yetki ve sorumluluklarım açık olarak tanımlanmıştır.",
+      "Görevimi yerine getirirken inisiyatif kullanmama olanak tanınır.",
+      "Yaptığım işin şirketin iş sonuçlarına katkı sağladığını düşünüyorum.",
+      "Genel olarak şirketimde yaptığım işin kendisini anlamlı buluyorum.",
+    ]},
+  { num: "06", title: "Başarma Duygusu & Takdir", sub: "Katkının fark edilmesi, ödüllendirme",
+    questions: [
+      "Yaptığım işte kendimi başarılı hissediyorum.",
+      "Şirketimde yaptığım işe önem ve değer verilir.",
+      "İş hedeflerimin belirlenmesinde görüşlerim dikkate alınır.",
+      "İşimde gösterdiğim başarılar zamanında fark edilir ve takdir edilir.",
+      "Sonuçlara yansımasına bakılmadan gösterdiğim çaba fark edilir ve takdir edilir.",
+      "Üstün başarılarım ödüllendirilir.",
+      "Genel olarak şirketimdeki takdir uygulamalarından memnunum.",
+    ]},
+  { num: "07", title: "Gelişme Olanakları & Kariyer", sub: "Eğitim, terfi, yetkinlik yönetimi",
+    questions: [
+      "Gelişme olanakları beklentilerime uygundur.",
+      "Gelişmem konusunda cesaretlendiriliyorum.",
+      "Gelişmem performansıma bağlıdır.",
+      "Gelişmem eğitimlerle desteklenmektedir.",
+      "Başarılarımda ödüllendiriliyorum.",
+      "Yeterli terfi fırsatları vardır.",
+      "İşim için gerekli mesleki eğitimleri alabiliyorum.",
+      "Aldığım eğitimler günlük işime somut katkı sağlıyor.",
+      "Yetkinliklerimin düzenli değerlendirilip kayıt altına alındığını biliyorum.",
+      "Potansiyelimin tümünü işimde kullanabiliyorum.",
+      "İçeriden yükselme ve yetişme fırsatlarının varlığını biliyorum.",
+      "Genel olarak şirketimdeki gelişim imkânlarından memnunum.",
+    ]},
+  { num: "08", title: "Üst Yönetim & Şirket Politikaları", sub: "Liderlik, şeffaflık, adalet",
+    questions: [
+      "Üst yönetim yeniliklere açık ve değişime uyum sağlar.",
+      "Üst yönetim çalışanlarla samimi ve erişilebilir bir ilişki kurar.",
+      "Üst yönetim ekip çalışmasını destekler ve teşvik eder.",
+      "Şirketimin hedef ve stratejilerini biliyorum.",
+      "Şirketimin performansı ve gelişimiyle ilgili bilgilerden haberdarım.",
+      "Üst yönetimin karar ve uygulamalarına güvenirim.",
+      "Şirketimde işler politika ve prosedürlere göre yürütülür; keyfi müdahale yoktur.",
+      "Şirketimde çalışma kuralları tutarlı ve adil biçimde uygulanır.",
+      "Şirketimde diğer çalışanlarla eşit fırsatlara sahip olduğumu düşünüyorum.",
+      "Kalite ve süreç standartlarına uyum konusunda yönetimin kararlılığını hissediyorum.",
+      "Görüş ve beklentilerimi şirket üst yönetimine rahatlıkla iletebiliyorum.",
+      "Genel olarak şirket yönetimi ve politikalarından memnunum.",
+    ]},
+  { num: "09", title: "İş Yeri & Çalışma Koşulları", sub: "Fiziksel ortam, araç-gereç yeterliliği",
+    questions: [
+      "Çalışma ortamım temizdir.",
+      "Çalışma ortamım gürültüsüzdür.",
+      "Kullanım alanı yeterlidir.",
+      "Çalışma ortamım sağlığa zararlı değildir.",
+      "İşimle ilgili araç ve gereçlerim yeterlidir.",
+      "Aydınlatma yeterlidir.",
+      "Rahatsız edici koku yoktur.",
+      "Isıtma yeterlidir.",
+      "Soğutma yeterlidir.",
+      "Mola zamanlarında rahatlamak için uygun ortamlar mevcuttur.",
+      "Genel olarak şirketimdeki çalışma koşullarından memnunum.",
+    ]},
+  { num: "10", title: "İş Güvenliği & İSG", sub: "Önleyici tedbirler, KKD, acil durum, eğitim",
+    questions: [
+      "İş kazalarını önleyici tedbirler alınır.",
+      "Şirketim iyi günde kötü günde yanımdadır.",
+      "Koruyucu malzeme ve araç-gereçleri vardır.",
+      "Acil durumlarda herkes ne yapacağını bilir.",
+      "İş emniyeti konularında eğitimler verilir.",
+      "İşimi güvenli yapabiliyorum; risk altında çalışmak zorunda kalmıyorum.",
+      "İSG konusundaki endişelerimi rahatlıkla iletebiliyorum.",
+      "Şirketimizde çalışan sağlığı ve iş güvenliği uygulamaları etkin biçimde yürütülür.",
+      "Genel olarak iş güvenliği uygulamalarından memnunum.",
+    ]},
+  { num: "11", title: "Sağlık, Sosyal & Kültürel Olanaklar", sub: "Sağlık hizmetleri, yemekhane, servis, çay ocağı, temizlik",
+    questions: [
+      "İşyerinde sağlanan sağlık hizmetleri yeterlidir.",
+      "İşyeri hekimi ilgilidir.",
+      "Anlaşmalı sağlık kurumu hizmeti yeterlidir.",
+      "Yemekler lezzetli, doyurucu ve sağlığa uygundur.",
+      "Yemekhane düzenli ve temizdir.",
+      "Sosyal alanlar (bahçe, dinlenme alanları, tuvalet) yeterli ve temizdir.",
+      "Servisler düzenli, temiz ve rahattır.",
+      "Servis şoförleri kurallara uyar.",
+      "Çay servisleri zamanında ve kaliteli yapılır.",
+      "Ofis temizlikleri düzenli yapılır.",
+      "Genel olarak sağlık ve sosyal hizmetlerden memnunum.",
+    ]},
+  { num: "12", title: "İş Güvencesi & Yasal Haklar", sub: "Sözleşme güvencesi, hakların korunması",
+    questions: [
+      "Kurallara uygun davrandığım ve işimde başarılı olduğum sürece iş sürekliliğim sağlanmaktadır.",
+      "Şirketimde haklarım çeşitli kural ve politikalarla güvence altına alınmıştır.",
+      "Genel olarak şirketimin iş güvencesi ve yasal haklar politikalarından memnunum.",
+    ]},
+  // 13. Bölüm (Maaş & Sosyal Haklar) MÜŞTERİ TALEBİYLE KALDIRILDI
+  { num: "13", title: "İş – Özel Yaşam Dengesi", sub: "İş yükü, izin kullanımı, tükenmişlik",
+    questions: [
+      "Zaman zaman iş tempom değişse de genel olarak makul bir iş yükü altında çalışıyorum.",
+      "Yıllık izin hakkımı istediğim gibi kullanabiliyorum.",
+      "Gerektiğinde mazeret izni alabiliyorum.",
+      "İş hayatım özel hayatıma vakit ayırmamı engellemiyor.",
+      "Çalışma saatleri dışında işle ilgili baskı hissetmiyorum.",
+      "Genel olarak iş ve özel yaşamım arasında makul bir denge kurabiliyorum.",
+    ]},
+];
+
+const OPEN_QUESTIONS = [
+  { id: "open_1", q: "Bu şirkette çalışmaktan en çok neyi seviyorsunuz?" },
+  { id: "open_2", q: "Hangi konuda iyileştirme yapılmasını en çok istersiniz?" },
+  { id: "open_3", q: "Yöneticinize veya İK'ya iletmek istediğiniz ama fırsat bulamadığınız bir şey var mı?" },
+  { id: "open_4", q: "Bu araştırmada yer almayan, dikkate alınmasını uygun gördüğünüz başka konular var mı?" },
+];
+
+const LIKERT_LABELS = [
+  { v: 1, t: "Kesinlikle\nKatılmıyorum" },
+  { v: 2, t: "Pek\nKatılmıyorum" },
+  { v: 3, t: "Katılıyorum" },
+  { v: 4, t: "Oldukça\nKatılıyorum" },
+  { v: 5, t: "Tamamen\nKatılıyorum" },
+];
+
+/* =====================================================================
+   STATE & NAVIGATION
+   ===================================================================== */
+// Toplam adımlar: intro + N likert bölümü + 1 açık uçlu + 1 demografi/onay
+const STEPS = [
+  { kind: "intro" },
+  ...SECTIONS.map((s, i) => ({ kind: "likert", sectionIdx: i })),
+  { kind: "open" },
+  { kind: "demographics" },
+];
+
+const STORAGE_KEY = "bagen_beyaz_yaka_draft_v1";
+
+const state = {
+  step: 0,
+  answers: {},      // { "s01_q1": 4, ... }
+  open: {},         // { open_1: "..." }
+  demo: { departman: "", tenure: "" },
+  startedAt: null,
+};
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const data = JSON.parse(raw);
+      Object.assign(state, data);
+    }
+  } catch (e) { /* ignore */ }
+}
+function saveDraft() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function clearDraft() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+/* =====================================================================
+   RENDERING
+   ===================================================================== */
+const $content = document.getElementById("step-content");
+const $progress = document.getElementById("progress-fill");
+const $progressMeta = document.getElementById("progress-meta");
+const $btnPrev = document.getElementById("btn-prev");
+const $btnNext = document.getElementById("btn-next");
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+}
+
+function answerKey(sIdx, qIdx) {
+  return `s${SECTIONS[sIdx].num}_q${qIdx + 1}`;
+}
+
+function renderIntro() {
+  return `
+    <div class="intro-block">
+      <div class="eyebrow">Hoş geldiniz</div>
+      <h1 class="serif">Sesinizi duyurun.</h1>
+      <p class="lead">
+        Bu anket; şirketinizdeki çalışma deneyiminizi, ekibinizle ilişkinizi ve
+        iyileştirilmesini önemsediğiniz alanları anlamak için yapılmaktadır.
+        Cevaplarınız <strong>tamamen anonim</strong> tutulur ve toplu olarak değerlendirilir.
+      </p>
+    </div>
+    <div class="scale-card">
+      <div class="scale-title">Likert Ölçeği</div>
+      <div class="scale-list">
+        ${LIKERT_LABELS.map(l => `
+          <div class="pip">
+            <div class="num">${l.v}</div>
+            <div>${l.t.replace(/\n/g, "<br>")}</div>
+          </div>`).join("")}
+      </div>
+    </div>
+    <p style="text-align:center; color: var(--ink-mute); font-size: 13px; max-width: 56ch; margin: 0 auto;">
+      Tahmini süre: 12–15 dakika · Cevaplarınız tarayıcınızda taslak olarak otomatik saklanır.
+    </p>
+  `;
+}
+
+function renderLikert(sIdx) {
+  const s = SECTIONS[sIdx];
+  const stepNo = sIdx + 1;
+  const totalNo = SECTIONS.length;
+  return `
+    <div class="section-head">
+      <div class="section-num">Bölüm ${s.num}</div>
+      <div class="section-step">${stepNo} / ${totalNo}</div>
+    </div>
+    <h2 class="section-title serif">${escapeHtml(s.title)}</h2>
+    <p class="section-sub">${escapeHtml(s.sub)}</p>
+    <div class="q-list">
+      ${s.questions.map((q, qi) => {
+        const key = answerKey(sIdx, qi);
+        const cur = state.answers[key];
+        return `
+          <div class="q-card${cur ? ' answered' : ''}" data-key="${key}">
+            <div class="q-text"><span class="q-idx">${qi + 1}.</span><span>${escapeHtml(q)}</span></div>
+            <div class="likert">
+              ${LIKERT_LABELS.map(l => `
+                <label class="${cur === l.v ? 'checked' : ''}" data-val="${l.v}">
+                  <input type="radio" name="${key}" value="${l.v}" ${cur === l.v ? 'checked' : ''}>
+                  <span class="v">${l.v}</span>
+                  <span>${l.t.replace(/\n/g, '<br>')}</span>
+                </label>`).join("")}
+            </div>
+            <div class="q-flag">Lütfen bu soruyu cevaplayın</div>
+          </div>`;
+      }).join("")}
+    </div>
+  `;
+}
+
+function renderOpen() {
+  return `
+    <div class="section-head">
+      <div class="section-num">Açık Uçlu Sorular</div>
+      <div class="section-step">İsteğe bağlı</div>
+    </div>
+    <h2 class="section-title serif">Kendi sözlerinizle</h2>
+    <p class="section-sub">Aşağıdaki sorulara dilediğiniz kadar — veya hiç — yanıt verebilirsiniz. Zorunlu değildir.</p>
+    <div class="q-list">
+      ${OPEN_QUESTIONS.map((o, i) => `
+        <div class="q-card open" data-open="${o.id}">
+          <div class="q-text"><span class="q-idx">${i + 1}.</span><span>${escapeHtml(o.q)}</span></div>
+          <textarea data-open-id="${o.id}" placeholder="İsteğe bağlı yanıt…">${escapeHtml(state.open[o.id] || "")}</textarea>
+        </div>`).join("")}
+    </div>
+  `;
+}
+
+function renderDemographics() {
+  // Cevap özeti — bölüm bazında
+  const sectionStatus = SECTIONS.map((s, sIdx) => {
+    let total = s.questions.length, answered = 0;
+    s.questions.forEach((_, qi) => {
+      if (state.answers[answerKey(sIdx, qi)]) answered++;
+    });
+    return { sIdx, num: s.num, title: s.title, total, answered, missing: total - answered };
+  });
+  const incomplete = sectionStatus.filter(x => x.missing > 0);
+  const totalMissing = incomplete.reduce((a, x) => a + x.missing, 0);
+
+  const totalQ = SECTIONS.reduce((a, s) => a + s.questions.length, 0);
+  const totalAnswered = totalQ - totalMissing;
+
+  return `
+    <div class="section-head">
+      <div class="section-num">Son Adım</div>
+      <div class="section-step">Demografi & Gönder</div>
+    </div>
+    <h2 class="section-title serif">Birkaç soru daha</h2>
+    <p class="section-sub">
+      Bu bilgiler kimlik tespitinde değil, yalnızca toplu raporlamada kullanılır.
+      Bireysel cevaplar departman içinde de eşleştirilemez.
+    </p>
+
+    <div class="demo-form-block">
+      <div class="row">
+        <label class="field" for="departman">Bölüm / Birim *</label>
+        <select id="departman">
+          <option value="">— Seçiniz —</option>
+          ${CONFIG.DEPARTMANLAR.map(d => `
+            <option value="${escapeHtml(d)}" ${state.demo.departman === d ? 'selected' : ''}>${escapeHtml(d)}</option>
+          `).join("")}
+        </select>
+      </div>
+      <div class="row">
+        <label class="field" for="tenure">Şirketinizdeki çalışma süreniz *</label>
+        <select id="tenure">
+          <option value="">— Seçiniz —</option>
+          ${CONFIG.TENURE.map(t => `
+            <option value="${escapeHtml(t)}" ${state.demo.tenure === t ? 'selected' : ''}>${escapeHtml(t)}</option>
+          `).join("")}
+        </select>
+      </div>
+    </div>
+
+    <div class="review-grid">
+      <div class="row"><span class="k">Toplam Likert sorusu</span><span class="v">${totalQ}</span></div>
+      <div class="row"><span class="k">Cevaplanan</span><span class="v" style="color: ${totalMissing === 0 ? 'var(--ok)' : 'var(--ink)'};">${totalAnswered}</span></div>
+      <div class="row"><span class="k">Cevapsız</span><span class="v" style="color: ${totalMissing > 0 ? 'var(--err)' : 'var(--ok)'};">${totalMissing}</span></div>
+    </div>
+
+    ${totalMissing > 0 ? `
+    <div class="consent" style="background: #fef0f0; color: var(--err);">
+      <strong>${totalMissing} soru cevapsız.</strong> Anketi göndermeden önce aşağıdaki bölümlerdeki
+      eksik soruları tamamlamanız gerekiyor:
+      <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 6px;">
+        ${incomplete.map(x => `
+          <button class="goto-section" data-step="${x.sIdx + 1}"
+            style="text-align: left; background: white; border: 1px solid #f4d4d4;
+                   border-radius: 6px; padding: 10px 14px; cursor: pointer; font: inherit;
+                   color: var(--err); display: flex; justify-content: space-between; align-items: center;">
+            <span><strong>Bölüm ${x.num}</strong> · ${escapeHtml(x.title)}</span>
+            <span style="font-size: 12px; color: var(--err); font-weight: 500;">${x.missing} eksik →</span>
+          </button>`).join("")}
+      </div>
+    </div>` : `
+    <div class="consent">
+      Tüm bölümleri tamamladınız. <strong>"Anketi Gönder"</strong> butonuna tıkladığınızda
+      cevaplarınız anonim olarak kaydedilir ve geri alınamaz.
+    </div>`}
+    <div id="submit-err" class="err-msg" style="margin-top: 14px;"></div>
+  `;
+}
+
+function render() {
+  const step = STEPS[state.step];
+  let html = "";
+  if (step.kind === "intro") html = renderIntro();
+  else if (step.kind === "likert") html = renderLikert(step.sectionIdx);
+  else if (step.kind === "open") html = renderOpen();
+  else if (step.kind === "demographics") html = renderDemographics();
+
+  $content.innerHTML = "";
+  // Force reflow for animation
+  void $content.offsetWidth;
+  $content.innerHTML = html;
+  $content.classList.remove("step-content");
+  void $content.offsetWidth;
+  $content.classList.add("step-content");
+
+  attachStepHandlers();
+
+  // Progress
+  const pct = Math.round((state.step / (STEPS.length - 1)) * 100);
+  $progress.style.width = pct + "%";
+  $progressMeta.textContent = `Adım ${state.step + 1} / ${STEPS.length}`;
+
+  // Buttons
+  $btnPrev.style.visibility = state.step === 0 ? "hidden" : "visible";
+  if (step.kind === "demographics") {
+    $btnNext.innerHTML = "Anketi Gönder ✓";
+    $btnNext.dataset.action = "submit";
+  } else if (state.step === STEPS.length - 2) { // last before demographics is open
+    $btnNext.textContent = "Devam →";
+    $btnNext.dataset.action = "next";
+  } else {
+    $btnNext.textContent = state.step === 0 ? "Ankete Başla →" : "Devam →";
+    $btnNext.dataset.action = "next";
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function attachStepHandlers() {
+  // Likert clicks
+  $content.querySelectorAll(".likert label").forEach(lbl => {
+    lbl.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      const card = lbl.closest(".q-card");
+      const key = card.dataset.key;
+      const v = parseInt(lbl.dataset.val, 10);
+      state.answers[key] = v;
+      // Update UI
+      card.querySelectorAll(".likert label").forEach(l => l.classList.remove("checked"));
+      lbl.classList.add("checked");
+      card.classList.add("answered");
+      card.classList.remove("unanswered-flag");
+      saveDraft();
+    });
+  });
+
+  // Open-ended
+  $content.querySelectorAll("textarea[data-open-id]").forEach(ta => {
+    ta.addEventListener("input", () => {
+      state.open[ta.dataset.openId] = ta.value;
+      saveDraft();
+    });
+  });
+
+  // Demographics
+  const $dept = $content.querySelector("#departman");
+  const $ten = $content.querySelector("#tenure");
+  if ($dept) $dept.addEventListener("change", () => { state.demo.departman = $dept.value; saveDraft(); });
+  if ($ten) $ten.addEventListener("change", () => { state.demo.tenure = $ten.value; saveDraft(); });
+
+  // "Bölüme git" butonları (demografi adımındaki eksik listesi)
+  $content.querySelectorAll(".goto-section").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetStep = parseInt(btn.dataset.step, 10);
+      state.step = targetStep;
+      saveDraft();
+      render();
+      // Render'dan sonra eksikleri flag'le
+      setTimeout(() => {
+        const v = validateCurrentLikertStep();
+        if (!v.ok) flagMissingAndScroll(v.missing);
+      }, 50);
+    });
+  });
+}
+
+/* =====================================================================
+   VALIDATION
+   ===================================================================== */
+function validateCurrentLikertStep() {
+  const step = STEPS[state.step];
+  if (step.kind !== "likert") return { ok: true };
+
+  const s = SECTIONS[step.sectionIdx];
+  const missing = [];
+  s.questions.forEach((_, qi) => {
+    const key = answerKey(step.sectionIdx, qi);
+    if (!state.answers[key]) missing.push(key);
+  });
+
+  return { ok: missing.length === 0, missing };
+}
+
+function flagMissingAndScroll(missingKeys) {
+  // Önce tüm flag'leri temizle
+  $content.querySelectorAll(".q-card.unanswered-flag").forEach(c => {
+    c.classList.remove("unanswered-flag");
+  });
+  // Eksikleri flag'le
+  missingKeys.forEach(k => {
+    const card = $content.querySelector(`.q-card[data-key="${k}"]`);
+    if (card) card.classList.add("unanswered-flag");
+  });
+  // İlk eksiğe scroll
+  if (missingKeys.length > 0) {
+    const first = $content.querySelector(`.q-card[data-key="${missingKeys[0]}"]`);
+    if (first) {
+      first.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+}
+
+/* =====================================================================
+   NAVIGATION
+   ===================================================================== */
+$btnNext.addEventListener("click", async () => {
+  const action = $btnNext.dataset.action;
+
+  // Likert bölümlerinde zorunlu validation
+  const v = validateCurrentLikertStep();
+  if (!v.ok) {
+    flagMissingAndScroll(v.missing);
+    // Buton üzerinde kısa görsel uyarı
+    $btnNext.animate(
+      [{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' },
+       { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }],
+      { duration: 280 }
+    );
+    return;
+  }
+
+  if (action === "submit") {
+    await submitSurvey();
+    return;
+  }
+  state.step = Math.min(state.step + 1, STEPS.length - 1);
+  saveDraft();
+  render();
+});
+
+$btnPrev.addEventListener("click", () => {
+  state.step = Math.max(state.step - 1, 0);
+  saveDraft();
+  render();
+});
+
+/* =====================================================================
+   LOGIN
+   ===================================================================== */
+const $btnLogin = document.getElementById("btn-login");
+const $pw = document.getElementById("pw");
+const $loginErr = document.getElementById("login-err");
+
+function doLogin() {
+  const v = ($pw.value || "").trim();
+  if (v === CONFIG.ACCESS_PASSWORD) {
+    $loginErr.classList.remove("show");
+    document.getElementById("screen-login").classList.add("hidden");
+    document.getElementById("screen-survey").classList.remove("hidden");
+    state.startedAt = state.startedAt || new Date().toISOString();
+    saveDraft();
+    render();
+  } else {
+    $loginErr.classList.add("show");
+    $pw.focus();
+    $pw.select();
+  }
+}
+$btnLogin.addEventListener("click", doLogin);
+$pw.addEventListener("keydown", (e) => { if (e.key === "Enter") doLogin(); });
+
+/* =====================================================================
+   SUBMIT
+   ===================================================================== */
+async function submitSurvey() {
+  const $err = document.getElementById("submit-err");
+  $err.classList.remove("show");
+
+  // Hard validation 1: Tüm Likert soruları cevaplanmış olmalı
+  const totalQ = SECTIONS.reduce((a, s) => a + s.questions.length, 0);
+  const answeredCount = Object.keys(state.answers).length;
+  if (answeredCount < totalQ) {
+    $err.innerHTML = `Anketi gönderebilmek için tüm soruların cevaplanması gerekiyor. <strong>${totalQ - answeredCount} soru</strong> eksik. Lütfen yukarıdaki bölümlerden birine tıklayıp tamamlayın.`;
+    $err.classList.add("show");
+    $err.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+
+  // Hard validation 2: Demografi
+  if (!state.demo.departman || !state.demo.tenure) {
+    $err.textContent = "Lütfen bölüm ve çalışma sürenizi seçin.";
+    $err.classList.add("show");
+    return;
+  }
+
+  $btnNext.disabled = true;
+  $btnNext.innerHTML = '<span class="spinner"></span> Gönderiliyor…';
+
+  // Build payload
+  const payload = {
+    submitted_at: new Date().toISOString(),
+    started_at: state.startedAt,
+    departman: state.demo.departman,
+    tenure: state.demo.tenure,
+    answers: state.answers,
+    open_responses: state.open,
+    meta: {
+      total_questions: SECTIONS.reduce((a, s) => a + s.questions.length, 0),
+      answered_count: Object.keys(state.answers).length,
+      ua: navigator.userAgent,
+      lang: navigator.language,
+    }
+  };
+
+  try {
+    if (CONFIG.SUPABASE_URL.includes("YOUR-PROJECT")) {
+      // Henüz konfigüre edilmemiş — demo modu
+      console.log("[DEMO] Supabase not configured. Payload:", payload);
+      await new Promise(r => setTimeout(r, 700));
+    } else {
+      const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON);
+      const { error } = await sb.from(CONFIG.SUPABASE_TABLE).insert([payload]);
+      if (error) throw error;
+    }
+    // Success
+    clearDraft();
+    document.getElementById("screen-survey").classList.add("hidden");
+    document.getElementById("screen-done").classList.remove("hidden");
+  } catch (e) {
+    console.error(e);
+    $err.textContent = "Gönderim sırasında bir hata oluştu. İnternet bağlantınızı kontrol edip tekrar deneyin. (" + (e.message || "bilinmeyen hata") + ")";
+    $err.classList.add("show");
+    $btnNext.disabled = false;
+    $btnNext.innerHTML = "Anketi Gönder ✓";
+  }
+}
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+loadDraft();
+// Eğer taslak varsa şifreyi atlamayız — anonim olduğundan tekrar şifre istemek doğru
+// Ancak kullanıcı şifreyi geçtiyse devam etmesini sağlamak için startedAt set edilmiştir
+// Yine de güvenlik açısından her sayfa yüklemesinde şifre soralım
+
+</script>
+</body>
+</html>
