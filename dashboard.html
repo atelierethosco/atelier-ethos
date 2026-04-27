@@ -333,12 +333,12 @@
     document.getElementById('last-updated').textContent =
       'Son güncelleme: ' + updatedAt.toLocaleString('tr-TR');
 
-    renderWebinars(data.webinarBreakdown);
-    renderEventTypes(data.eventTypes);
-    renderTools(data.toolDownloads);
-    renderToolDaily(data.toolDailyByName);
-    renderRecent(data.recentEvents);
-    renderActivityPies(data.recentActivity24h, data.recentActivity48h);
+    renderWebinars(data.webinarBreakdown || {});
+    renderEventTypes(data.eventTypes || {});
+    renderTools(data.toolDownloads || {});
+    renderToolDaily(data.toolDailyByName || {});
+    renderRecent(data.recentEvents || []);
+    renderActivityPies(data.recentActivity24h || {}, data.recentActivity48h || {});
   }
 
   function destroyChart(key) {
