@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webinar Anketi — Atelier Ethos</title>
+
+<!-- Google tag (gtag.js) — GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D8TPB7C43F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D8TPB7C43F');
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #414042;
+    background: #faf9f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  em { font-style: normal; color: #c12033; }
+  a { text-decoration: none; color: inherit; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ---------- NAVBAR ---------- */
+  .ae-nav {
+    background: #fff;
+    border-bottom: 0.5px solid #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 40px;
+    height: 80px;
+  }
+  .ae-nav img { height: 56px; width: auto; }
+  .ae-nav-back {
+    font-size: 13px;
+    color: #6b6b6b;
+    transition: color 0.15s;
+  }
+  .ae-nav-back:hover { color: #c12033; }
+
+  /* ---------- ANA İÇERİK ---------- */
+  .ae-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .ae-card {
+    width: 100%;
+    max-width: 640px;
+    background: #fff;
+    border: 0.5px solid #e8e8e8;
+    border-radius: 12px;
+    padding: 48px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  }
+
+  .ae-label {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    color: #c12033;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .ae-h1 {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #414042;
+    margin-bottom: 18px;
+  }
+  .ae-lead {
+    font-size: 15px;
+    color: #6b6b6b;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  /* ---------- OY VERME EKRANI ---------- */
+  .ae-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .ae-option {
+    border: 1.5px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 18px 24px;
+    font-size: 15px;
+    color: #414042;
+    background: #fff;
+    text-align: center;
+    transition: all 0.18s;
+    width: 100%;
+    font-weight: 500;
+  }
+  .ae-option:hover {
+    border-color: #c12033;
+    color: #c12033;
+    background: #faf9f9;
+    transform: translateY(-1px);
+  }
+  .ae-option:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .ae-meta {
+    font-size: 12px;
+    color: #a7a9ab;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .ae-meta strong { color: #414042; font-weight: 500; }
+
+  /* ---------- SONUÇ EKRANI ---------- */
+  .ae-results { display: none; }
+  .ae-results.active { display: block; }
+
+  .ae-success {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0f9f3;
+    border: 0.5px solid #d0e7d8;
+    border-left: 3px solid #2d8a4d;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    font-size: 14px;
+    color: #2d6b3d;
+  }
+  .ae-success svg {
+    width: 18px;
+    height: 18px;
+    stroke: #2d8a4d;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  .ae-results-title {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #a7a9ab;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .ae-bar-row {
+    margin-bottom: 18px;
+  }
+  .ae-bar-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .ae-bar-text {
+    font-size: 14px;
+    color: #414042;
+    font-weight: 500;
+  }
+  .ae-bar-pct {
+    font-size: 14px;
+    color: #c12033;
+    font-weight: 500;
+  }
+  .ae-bar-track {
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .ae-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c12033, #d63848);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .ae-bar-count {
+    font-size: 11px;
+    color: #a7a9ab;
+    margin-top: 4px;
+  }
+
+  .ae-total {
+    font-size: 13px;
+    color: #6b6b6b;
+    text-align: center;
+    padding-top: 20px;
+    margin-top: 24px;
+    border-top: 1px solid #f0f0f0;
+  }
+  .ae-total strong { color: #c12033; font-weight: 500; }
+
+  .ae-cta-row {
+    margin-top: 24px;
+    text-align: center;
+  }
+  .ae-cta-link {
+    font-size: 13px;
+    color: #6b6b6b;
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 2px;
+    transition: all 0.15s;
+  }
+  .ae-cta-link:hover {
+    color: #c12033;
+    border-color: #c12033;
+  }
+
+  /* ---------- LOADING ---------- */
+  .ae-loading {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    font-size: 13px;
+    color: #a7a9ab;
+  }
+  .ae-loading.active { display: block; }
+
+  /* ---------- FOOTER ---------- */
+  .ae-footer {
+    padding: 20px 40px;
+    border-top: 0.5px solid #e8e8e8;
+    background: #fff;
+    text-align: center;
+    font-size: 12px;
+    color: #a7a9ab;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 640px) {
+    .ae-nav { padding: 12px 20px; height: 64px; }
+    .ae-nav img { height: 40px; }
+    .ae-card { padding: 32px 24px; }
+    .ae-h1 { font-size: 24px; }
+    .ae-lead { font-size: 14px; }
+    .ae-option { font-size: 14px; padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="ae-nav">
+  <a href="/">
+    <img src="/LogoSS.png" alt="Atelier Ethos" />
+  </a>
+  <a href="/" class="ae-nav-back">← Ana Sayfa</a>
+</nav>
+
+<!-- ============ ANA İÇERİK ============ -->
+<main class="ae-main">
+  <div class="ae-card">
+
+    <!-- ====== OY VERME EKRANI ====== -->
+    <div id="ae-vote-screen">
+      <p class="ae-label">Hızlı Anket · Webinar</p>
+      <h1 class="ae-h1">Bu Cuma webinarımız için <em>görüşünüz</em> nedir?</h1>
+      <p class="ae-lead">
+        Bu Cuma <strong>"Performans Geri Bildirim Görüşmeleri Nasıl Yapılır?"</strong> webinarı yapmak istiyoruz, ancak 1 Mayıs resmi tatil 🌿 Sizin için hangi tarih daha uygun? Tek tıkla oy verebilirsiniz.
+      </p>
+
+      <div class="ae-options">
+        <button class="ae-option" data-option="A" onclick="vote('A')">
+          1 Mayıs Cuma uygun, katılırım
+        </button>
+        <button class="ae-option" data-option="B" onclick="vote('B')">
+          Tatil olsun, haftaya cumaya yapalım
+        </button>
+      </div>
+
+      <p class="ae-meta">Anonim oylama · 1 hafta sürecek</p>
+
+      <div id="ae-loading" class="ae-loading">Oyunuz gönderiliyor…</div>
+    </div>
+
+    <!-- ====== SONUÇ EKRANI ====== -->
+    <div id="ae-results-screen" class="ae-results">
+      <div class="ae-success">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Oyunuz alındı, teşekkürler!</span>
+      </div>
+
+      <p class="ae-results-title">Mevcut sonuçlar</p>
+
+      <div class="ae-bar-row">
+        <div class="ae-bar-label">
+          <span class="ae-bar-text">1 Mayıs Cuma uygun, katılırım</span>
+          <span class="ae-bar-pct" id="pct-A">0%</span>
+        </div>
+        <div class="ae-bar-track">
+          <div class="ae-bar-fill" id="bar-A"></div>
+        </div>
+        <p class="ae-bar-count" id="count-A">0 oy</p>
+      </div>
+
+      <div class="ae-bar-row">
+        <div class="ae-bar-label">
+          <span class="ae-bar-text">Tatil olsun, haftaya cumaya yapalım</span>
+          <span class="ae-bar-pct" id="pct-B">0%</span>
+        </div>
+        <div class="ae-bar-track">
+          <div class="ae-bar-fill" id="bar-B"></div>
+        </div>
+        <p class="ae-bar-count" id="count-B">0 oy</p>
+      </div>
+
+      <p class="ae-total">Toplam <strong id="total-count">0</strong> oy</p>
+
+      <div class="ae-cta-row">
+        <a href="/" class="ae-cta-link">Atelier Ethos'a dön →</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="ae-footer">
+  © 2026 Atelier Ethos · İK Danışmanlık Atölyesi
+</footer>
+
+<script>
+  // ===== KONFIGURASYON =====
+  // Mevcut Atelier Ethos Contact System backend'ine bağlanır.
+  // Backend.gs'e PollSystem.gs eklendikten ve redeploy yapıldıktan sonra çalışır.
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzKYUsVdVd7VojPuqKEvMoftjJcH-Z8BzBZbUmeLEA-NqTMVY14vXklAanjDQuj3T8I/exec";
+  const POLL_ID = "webinar-tarihi-mayis-2026";
+  const STORAGE_KEY = "ae_voted_" + POLL_ID;
+
+  // ===== UI ELEMENTLERİ =====
+  const voteScreen = document.getElementById('ae-vote-screen');
+  const resultsScreen = document.getElementById('ae-results-screen');
+  const loadingEl = document.getElementById('ae-loading');
+  const buttons = document.querySelectorAll('.ae-option');
+
+  // ===== UTM PARAMETRELERİ =====
+  function getUTMSource() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('utm_source') || 'direct';
+  }
+
+  // ===== ÖNCEDEN OY VERMİŞ Mİ KONTROLÜ =====
+  if (localStorage.getItem(STORAGE_KEY)) {
+    // Kullanıcı zaten oy vermiş → direkt sonuçları göster
+    showResults();
+  }
+
+  // ===== OY VERME =====
+  function vote(option) {
+    // Butonları disable et
+    buttons.forEach(b => b.disabled = true);
+    loadingEl.classList.add('active');
+
+    // GA4 event gönder
+    if (typeof gtag === 'function') {
+      gtag('event', 'poll_vote', {
+        poll_id: POLL_ID,
+        option: option
+      });
+    }
+
+    // Apps Script'e JSON POST (mode: no-cors, fire-and-forget)
+    // Backend.gs'in router'ı tip='anket_oy' parametresine bakar
+    const payload = {
+      tip: 'anket_oy',
+      poll_id: POLL_ID,
+      option: option,
+      utm_source: getUTMSource(),
+      user_agent: navigator.userAgent.substring(0, 200)
+    };
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(() => {
+      localStorage.setItem(STORAGE_KEY, option);
+      localStorage.setItem(STORAGE_KEY + "_time", new Date().toISOString());
+      // Backend yazma işlemi 1-2 sn sürebilir, sonuç çekmeden önce kısa bekle
+      setTimeout(showResults, 800);
+    }).catch((err) => {
+      console.warn('Apps Script POST hatası (göz ardı):', err);
+      localStorage.setItem(STORAGE_KEY, option);
+      showResults();
+    });
+  }
+
+  // ===== SONUÇLARI GÖSTER =====
+  async function showResults() {
+    voteScreen.style.display = 'none';
+    resultsScreen.classList.add('active');
+
+    // Apps Script'ten sonuçları çek
+    // Endpoint: ?action=poll_results&pollId=...
+    try {
+      const url = APPS_SCRIPT_URL +
+        '?action=poll_results&pollId=' + encodeURIComponent(POLL_ID);
+      const res = await fetch(url, { method: 'GET' });
+      const data = await res.json();
+
+      if (data.ok && data.counts) {
+        renderResults(data);
+      } else {
+        console.warn('Backend hata:', data.error);
+        renderFallback();
+      }
+    } catch (err) {
+      console.warn('Sonuç çekilemedi, lokalleri göster:', err);
+      renderFallback();
+    }
+  }
+
+  // ===== Backend erişilemezse — kullanıcının kendi oyunu göster =====
+  function renderFallback() {
+    const myVote = localStorage.getItem(STORAGE_KEY);
+    const fakeData = {
+      counts: {
+        A: myVote === 'A' ? 1 : 0,
+        B: myVote === 'B' ? 1 : 0
+      },
+      total: myVote ? 1 : 0
+    };
+    renderResults(fakeData);
+  }
+
+  // ===== SONUÇLARI ÇİZ =====
+  function renderResults(data) {
+    const a = parseInt(data.counts && data.counts.A) || 0;
+    const b = parseInt(data.counts && data.counts.B) || 0;
+    const total = a + b;
+    const pctA = total === 0 ? 0 : Math.round((a / total) * 100);
+    const pctB = total === 0 ? 0 : 100 - pctA;
+
+    // Sayıları yaz
+    document.getElementById('count-A').textContent = a + ' oy';
+    document.getElementById('count-B').textContent = b + ' oy';
+    document.getElementById('pct-A').textContent = pctA + '%';
+    document.getElementById('pct-B').textContent = pctB + '%';
+    document.getElementById('total-count').textContent = total;
+
+    // Bar animasyonu (kısa gecikmeyle ki transition tetiklensin)
+    setTimeout(() => {
+      document.getElementById('bar-A').style.width = pctA + '%';
+      document.getElementById('bar-B').style.width = pctB + '%';
+    }, 100);
+  }
+</script>
+
+</body>
+</html>
