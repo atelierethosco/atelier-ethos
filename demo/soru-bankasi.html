@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Soru Bankası · Atelier Ethos · Demo</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --ink: #1a1614;
+    --ink-soft: #4a423d;
+    --ink-mute: #857c75;
+    --line: #e8e2d8;
+    --line-strong: #d4cdc1;
+    --burgundy: #7B1F2C;
+    --burgundy-dark: #5a1620;
+    --burgundy-soft: #f4e8ea;
+    --teal: #2f6b5c;
+    --teal-soft: #d9e8e3;
+    --amber: #b8902e;
+    --amber-soft: #f3ebd4;
+    --shadow: 0 1px 2px rgba(26, 22, 20, 0.04), 0 8px 24px -8px rgba(26, 22, 20, 0.08);
+    --radius: 6px;
+    --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    font-size: 15px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .serif { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+  /* TOP BAR */
+  .top-bar {
+    padding: 16px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    position: sticky; top: 0; z-index: 30;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .logo {
+    width: 28px; height: 28px;
+    background: var(--burgundy); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600;
+  }
+  .brand .text { line-height: 1.2; }
+  .brand .name { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+  .brand .sub { font-size: 11px; color: var(--ink-mute); }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--ink-soft); text-decoration: none;
+    padding: 6px 12px; border-radius: var(--radius);
+    transition: background 0.15s;
+  }
+  .back-link:hover { background: var(--bg); color: var(--ink); }
+
+  /* PAGE HEAD */
+  .page-head {
+    max-width: 1280px; margin: 0 auto;
+    padding: 36px 32px 16px;
+  }
+  .page-head .eyebrow {
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--burgundy); font-weight: 600; margin-bottom: 8px;
+  }
+  .page-head h1 {
+    margin: 0 0 6px; font-size: 36px; font-weight: 500;
+  }
+  .page-head .lead {
+    margin: 0; max-width: 60ch;
+    color: var(--ink-soft); font-size: 15px; line-height: 1.55;
+  }
+
+  /* TABS */
+  .tabs {
+    max-width: 1280px; margin: 0 auto;
+    padding: 24px 32px 0;
+    display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line);
+  }
+  .tab {
+    padding: 12px 16px; font-size: 13.5px; font-weight: 500;
+    color: var(--ink-mute); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab:hover { color: var(--ink-soft); }
+  .tab.active { color: var(--burgundy); border-bottom-color: var(--burgundy); }
+  .tab .count {
+    display: inline-block; margin-left: 6px;
+    background: var(--bg); color: var(--ink-mute);
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 500;
+  }
+  .tab.active .count { background: var(--burgundy-soft); color: var(--burgundy); }
+
+  /* LAYOUT */
+  .layout {
+    max-width: 1280px; margin: 0 auto;
+    padding: 24px 32px 80px;
+    display: grid; grid-template-columns: 280px 1fr; gap: 32px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: sticky; top: 88px; align-self: start;
+    height: fit-content;
+  }
+  .sidebar .search-box {
+    position: relative; margin-bottom: 16px;
+  }
+  .sidebar .search-box input {
+    width: 100%; padding: 10px 14px 10px 36px;
+    font-family: inherit; font-size: 13.5px; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .sidebar .search-box input:focus {
+    outline: none; border-color: var(--burgundy);
+    box-shadow: 0 0 0 3px rgba(123, 31, 44, 0.1);
+  }
+  .sidebar .search-box::before {
+    content: ""; position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    background: no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23857c75' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>");
+  }
+  .sidebar .heading {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-mute); font-weight: 600;
+    margin: 0 0 10px; padding: 0 12px;
+  }
+  .sidebar .cat-list { list-style: none; padding: 0; margin: 0; }
+  .sidebar .cat-item {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; padding: 9px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--ink-soft); font-size: 13.5px;
+    transition: background 0.12s, color 0.12s;
+    line-height: 1.3;
+  }
+  .sidebar .cat-item:hover {
+    background: var(--bg); color: var(--ink);
+  }
+  .sidebar .cat-item.active {
+    background: var(--burgundy-soft); color: var(--burgundy);
+    font-weight: 500;
+  }
+  .sidebar .cat-item .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 500; font-size: 12px;
+    color: var(--ink-mute);
+    min-width: 22px; text-align: left;
+  }
+  .sidebar .cat-item.active .num { color: var(--burgundy); }
+  .sidebar .cat-item .lbl { flex: 1; }
+  .sidebar .cat-item .badge {
+    background: var(--bg); color: var(--ink-mute);
+    padding: 2px 7px; border-radius: 999px;
+    font-size: 10.5px; font-weight: 500;
+    flex-shrink: 0;
+  }
+  .sidebar .cat-item.active .badge { background: white; color: var(--burgundy); }
+
+  /* MAIN */
+  .main { min-width: 0; }
+  .results-meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 12px;
+    color: var(--ink-mute); font-size: 13px;
+  }
+  .results-meta .count strong {
+    color: var(--ink); font-weight: 500;
+  }
+
+  .cat-block { margin-bottom: 36px; }
+  .cat-block:last-child { margin-bottom: 0; }
+  .cat-header {
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cat-header .top {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; margin-bottom: 4px;
+  }
+  .cat-header h2 {
+    margin: 0; font-size: 22px; font-weight: 500;
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .cat-header h2 .num {
+    font-family: 'Fraunces', serif;
+    color: var(--burgundy); font-size: 14px; font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .cat-header .meta {
+    font-size: 12px; color: var(--ink-mute); white-space: nowrap;
+  }
+  .cat-header .desc {
+    margin: 0; font-size: 13.5px; color: var(--ink-soft);
+    max-width: 70ch;
+  }
+
+  /* QUESTION CARD */
+  .q-list { display: flex; flex-direction: column; gap: 6px; }
+  .q-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    display: grid; grid-template-columns: auto 1fr auto; gap: 14px;
+    align-items: start;
+    transition: border-color 0.12s, box-shadow 0.12s;
+  }
+  .q-card:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow);
+  }
+  .q-card .qnum {
+    font-family: 'Fraunces', serif;
+    color: var(--ink-mute); font-size: 13px; font-weight: 500;
+    line-height: 1.5; min-width: 22px; text-align: right;
+  }
+  .q-card .qtext {
+    color: var(--ink); font-size: 14.5px; line-height: 1.5;
+  }
+  .q-card .qtags {
+    display: flex; flex-direction: row; gap: 6px;
+    flex-wrap: wrap; align-items: center;
+    margin-top: 1px;
+  }
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 9px; border-radius: 999px;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.02em; white-space: nowrap;
+  }
+  .tag.recommended {
+    background: var(--burgundy-soft); color: var(--burgundy);
+  }
+  .tag.recommended::before { content: "★"; font-size: 11px; }
+  .tag.iatf {
+    background: var(--teal-soft); color: var(--teal);
+  }
+  .tag.likert {
+    background: var(--bg); color: var(--ink-mute);
+  }
+
+  /* EMPTY */
+  .empty {
+    text-align: center; padding: 64px 20px;
+    color: var(--ink-mute);
+  }
+  .empty h3 { color: var(--ink); font-size: 18px; font-weight: 500; margin: 0 0 6px; }
+  .empty p { margin: 0; font-size: 14px; }
+
+  /* FOOT */
+  .foot {
+    border-top: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.4);
+    padding: 20px 32px;
+    text-align: center;
+    font-size: 12px; color: var(--ink-mute);
+  }
+  .foot a { color: var(--burgundy); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+  /* RESPONSIVE */
+  @media (max-width: 920px) {
+    .layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 18px 60px; }
+    .sidebar { position: static; }
+    .sidebar .cat-list {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .sidebar .heading { display: none; }
+    .sidebar .cat-item {
+      padding: 6px 10px; font-size: 12.5px;
+      border: 1px solid var(--line);
+    }
+    .page-head { padding: 24px 18px 8px; }
+    .page-head h1 { font-size: 28px; }
+    .tabs { padding: 16px 18px 0; overflow-x: auto; flex-wrap: nowrap; }
+    .top-bar { padding: 12px 16px; }
+    .q-card { grid-template-columns: auto 1fr; padding: 12px 14px; }
+    .q-card .qtags { grid-column: 1 / -1; margin-top: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand">
+    <div class="logo">Æ</div>
+    <div class="text">
+      <div class="name">Atelier Ethos · Soru Bankası</div>
+      <div class="sub">Demo · Çalışan Memnuniyet Ölçüm Sistemi</div>
+    </div>
+  </div>
+  <a href="index.html" class="back-link">← Tüm modüller</a>
+</div>
+
+<div class="page-head">
+  <div class="eyebrow">03 · Soru Bankası</div>
+  <h1 class="serif">Bilim destekli soru kütüphanesi</h1>
+  <p class="lead">
+    Çalışan bağlılığı ve memnuniyet ölçümünde, BAGEN gibi gerçek müşterilerle
+    test edilmiş soru havuzumuz. 13 kategoride toplam <strong>120+</strong> Likert sorusu;
+    beyaz yaka ve mavi yaka için ayrı varyantlar. <strong>★ önerilen</strong> sorular
+    hızlı kurulum için işaretlidir.
+  </p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-collar="beyaz">
+    Beyaz Yaka <span class="count" id="count-beyaz">—</span>
+  </div>
+  <div class="tab" data-collar="mavi">
+    Mavi Yaka <span class="count" id="count-mavi">—</span>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="search-box">
+      <input type="search" id="search" placeholder="Soru içinde ara…" autocomplete="off">
+    </div>
+    <p class="heading">Kategoriler</p>
+    <ul class="cat-list" id="cat-list"></ul>
+  </aside>
+
+  <main class="main" id="main"></main>
+</div>
+
+<div class="foot">
+  <strong>Atelier Ethos İK Danışmanlık A.Ş.</strong>
+  · <a href="https://atelier-ethos.vercel.app/" target="_blank">atelier-ethos.vercel.app</a>
+  · Demo Sürüm
+</div>
+
+<script>
+const QBANK = {"beyaz": [{"num": "01", "title": "Genel Bağlılık & Motivasyon", "sub": "Şirkete aidiyet, tavsiye etme eğilimi, işe gelme isteği", "count": 7, "questions": [{"text": "Şirketimde çalışmaktan memnunum.", "tags": []}, {"text": "Şirketimi çalışılacak bir yer olarak tanıdıklarıma tavsiye ederim.", "tags": []}, {"text": "Kendimi çalıştığım şirket ailesinin bir ferdi olarak görüyorum.", "tags": []}, {"text": "Yeniden işe girecek olsam tekrar bu şirketi tercih ederdim.", "tags": []}, {"text": "İşimi yüksek motivasyonla yapıyorum.", "tags": []}, {"text": "İşe zevkle geliyorum.", "tags": []}, {"text": "Önümüzdeki 12 ay içinde burada çalışmaya devam etmeyi planlıyorum.", "tags": []}]}, {"num": "02", "title": "İş Arkadaşlarım", "sub": "Kendi bölümündeki iş arkadaşları", "count": 8, "questions": [{"text": "İş arkadaşlarım ihtiyaç duyduğumda yardımcı olur.", "tags": ["recommended"]}, {"text": "İş arkadaşlarımla rahat bir çalışma ilişkim var.", "tags": ["recommended"]}, {"text": "İş arkadaşlarım mesleki açıdan bilgili ve yetkindir.", "tags": ["recommended"]}, {"text": "İş arkadaşlarım açık ve dürüst davranır.", "tags": ["recommended"]}, {"text": "Bölümümüz içinde güçlü bir takım anlayışı ve dayanışma var.", "tags": ["recommended"]}, {"text": "Görüş ve önerilerimi herhangi bir yaptırımla karşılaşma korkusu olmadan dile getirebiliyorum.", "tags": []}, {"text": "Hata yaptığımda bunu yöneticimle veya ekibimle rahatlıkla paylaşabilirim.", "tags": []}, {"text": "Genel olarak kendi bölümümdeki iletişim ve iş birliğinden memnunum.", "tags": []}]}, {"num": "03", "title": "Diğer Bölümlerdeki Çalışanlar", "sub": "Bölümler arası koordinasyon ve iş birliği", "count": 7, "questions": [{"text": "Diğer bölümlerdeki çalışanlar ihtiyaç duyduğumda yardımcı olur.", "tags": ["recommended"]}, {"text": "Diğer bölümlerdeki çalışanlarla rahat bir çalışma ilişkim var.", "tags": ["recommended"]}, {"text": "Diğer bölümlerdeki çalışanlar mesleki açıdan bilgili ve yetkindir.", "tags": ["recommended"]}, {"text": "Diğer bölümlerdeki çalışanlar açık ve dürüst davranır.", "tags": ["recommended"]}, {"text": "Diğer bölümlerle aramızda güçlü bir iş birliği ve dayanışma var.", "tags": ["recommended"]}, {"text": "İşim için gerekli olan bilgileri diğer bölümlerden rahatlıkla alabiliyorum.", "tags": []}, {"text": "Genel olarak diğer bölümlerle iş birliğinden memnunum.", "tags": []}]}, {"num": "04", "title": "Yöneticim (İlk Amir)", "sub": "Geri bildirim, güven, adalet, gelişim desteği", "count": 14, "questions": [{"text": "İlk amirim adil ve dürüst davranır.", "tags": ["recommended"]}, {"text": "Benden ne istediğini bilirim.", "tags": ["recommended"]}, {"text": "Benim için vakit ayırır ve destek olur.", "tags": ["recommended"]}, {"text": "Baskıcı değildir.", "tags": ["recommended"]}, {"text": "Mesleki bilgisi yeterlidir.", "tags": ["recommended"]}, {"text": "Davranışlarıyla örnek teşkil eder.", "tags": ["recommended"]}, {"text": "Başarılarımda beni takdir eder.", "tags": ["recommended"]}, {"text": "Kolaylıkla ulaşılabilir.", "tags": ["recommended"]}, {"text": "Yanlışlıklara karşı ölçülü tepki gösterir, öğreticidir.", "tags": ["recommended"]}, {"text": "Yenilikçi düşünce ve önerilerimi sunmam için beni teşvik eder.", "tags": []}, {"text": "İşleri uygun ve dengeli bir şekilde ekibe dağıtır.", "tags": []}, {"text": "Beni etkileyecek kararlarda görüşlerimi alır.", "tags": []}, {"text": "Görüş ve beklentilerimi ilk amirime rahatlıkla iletebiliyorum.", "tags": []}, {"text": "Genel olarak ilk amirimden memnunum.", "tags": []}]}, {"num": "05", "title": "İşimin Kendisi & Sorumluluk", "sub": "İşin anlamlılığı, yetki netliği, beceri uyumu", "count": 14, "questions": [{"text": "İşim sıkıcı değildir.", "tags": ["recommended"]}, {"text": "İşim katma değer yaratır.", "tags": ["recommended"]}, {"text": "Yeteneklerimi kullanırım.", "tags": ["recommended"]}, {"text": "Fikirlerimi etkin bir şekilde işime yansıtabilirim.", "tags": ["recommended"]}, {"text": "Bölümümün hedeflerini bilirim.", "tags": ["recommended"]}, {"text": "Yeterli yetkiye sahibim.", "tags": ["recommended"]}, {"text": "İşimle ilgili gerekli bilgilere ulaşabilirim.", "tags": ["recommended"]}, {"text": "İş yüküm normaldir.", "tags": ["recommended"]}, {"text": "İşimle ilgili güncel bilgilere sahibim.", "tags": ["recommended"]}, {"text": "İşimle ilgili sorunlarımı kendim çözerim.", "tags": ["recommended"]}, {"text": "Yetki ve sorumluluklarım açık olarak tanımlanmıştır.", "tags": []}, {"text": "Görevimi yerine getirirken inisiyatif kullanmama olanak tanınır.", "tags": []}, {"text": "Yaptığım işin şirketin iş sonuçlarına katkı sağladığını düşünüyorum.", "tags": []}, {"text": "Genel olarak şirketimde yaptığım işin kendisini anlamlı buluyorum.", "tags": []}]}, {"num": "06", "title": "Başarma Duygusu & Takdir", "sub": "Katkının fark edilmesi, ödüllendirme, hedeflere katılım", "count": 7, "questions": [{"text": "Yaptığım işte kendimi başarılı hissediyorum.", "tags": []}, {"text": "Şirketimde yaptığım işe önem ve değer verilir.", "tags": []}, {"text": "İş hedeflerimin belirlenmesinde görüşlerim dikkate alınır.", "tags": []}, {"text": "İşimde gösterdiğim başarılar zamanında fark edilir ve takdir edilir.", "tags": []}, {"text": "Sonuçlara yansımasına bakılmadan gösterdiğim çaba fark edilir ve takdir edilir.", "tags": []}, {"text": "Üstün başarılarım ödüllendirilir.", "tags": []}, {"text": "Genel olarak şirketimdeki takdir uygulamalarından memnunum.", "tags": []}]}, {"num": "07", "title": "Gelişme Olanakları & Kariyer", "sub": "Eğitim, terfi, yetkinlik yönetimi", "count": 12, "questions": [{"text": "Gelişme olanakları beklentilerime uygundur.", "tags": ["recommended"]}, {"text": "Gelişmem konusunda cesaretlendiriliyorum.", "tags": ["recommended"]}, {"text": "Gelişmem performansıma bağlıdır.", "tags": ["recommended"]}, {"text": "Gelişmem eğitimlerle desteklenmektedir.", "tags": ["recommended"]}, {"text": "Başarılarımda ödüllendiriliyorum.", "tags": ["recommended"]}, {"text": "Yeterli terfi fırsatları vardır.", "tags": ["recommended"]}, {"text": "İşim için gerekli mesleki eğitimleri alabiliyorum.", "tags": []}, {"text": "Aldığım eğitimler günlük işime somut katkı sağlıyor.", "tags": []}, {"text": "Yetkinliklerimin düzenli değerlendirilip kayıt altına alındığını biliyorum.", "tags": []}, {"text": "Potansiyelimin tümünü işimde kullanabiliyorum.", "tags": []}, {"text": "İçeriden yükselme ve yetişme fırsatlarının varlığını biliyorum.", "tags": []}, {"text": "Genel olarak şirketimdeki gelişim imkânlarından memnunum.", "tags": []}]}, {"num": "08", "title": "Üst Yönetim & Şirket Politikaları", "sub": "Liderlik, şeffaflık, adalet", "count": 12, "questions": [{"text": "Üst yönetim yeniliklere açık ve değişime uyum sağlar.", "tags": ["recommended"]}, {"text": "Üst yönetim çalışanlarla samimi ve erişilebilir bir ilişki kurar.", "tags": ["recommended"]}, {"text": "Üst yönetim ekip çalışmasını destekler ve teşvik eder.", "tags": ["recommended"]}, {"text": "Şirketimin hedef ve stratejilerini biliyorum.", "tags": []}, {"text": "Şirketimin performansı ve gelişimiyle ilgili bilgilerden haberdarım.", "tags": []}, {"text": "Üst yönetimin karar ve uygulamalarına güvenirim.", "tags": []}, {"text": "Şirketimde işler politika ve prosedürlere göre yürütülür; keyfi müdahale yoktur.", "tags": []}, {"text": "Şirketimde çalışma kuralları tutarlı ve adil biçimde uygulanır.", "tags": []}, {"text": "Şirketimde diğer çalışanlarla eşit fırsatlara sahip olduğumu düşünüyorum.", "tags": []}, {"text": "Kalite ve süreç standartlarına uyum konusunda yönetimin kararlılığını hissediyorum.", "tags": []}, {"text": "Görüş ve beklentilerimi şirket üst yönetimine rahatlıkla iletebiliyorum.", "tags": []}, {"text": "Genel olarak şirket yönetimi ve politikalarından memnunum.", "tags": []}]}, {"num": "09", "title": "İş Yeri & Çalışma Koşulları", "sub": "Fiziksel ortam, araç-gereç yeterliliği", "count": 11, "questions": [{"text": "Çalışma ortamım temizdir.", "tags": ["recommended"]}, {"text": "Çalışma ortamım gürültüsüzdür.", "tags": ["recommended"]}, {"text": "Kullanım alanı yeterlidir.", "tags": ["recommended"]}, {"text": "Çalışma ortamım sağlığa zararlı değildir.", "tags": ["recommended"]}, {"text": "İşimle ilgili araç ve gereçlerim yeterlidir.", "tags": ["recommended"]}, {"text": "Aydınlatma yeterlidir.", "tags": ["recommended"]}, {"text": "Rahatsız edici koku yoktur.", "tags": ["recommended"]}, {"text": "Isıtma yeterlidir.", "tags": ["recommended"]}, {"text": "Soğutma yeterlidir.", "tags": ["recommended"]}, {"text": "Mola zamanlarında rahatlamak için uygun ortamlar mevcuttur.", "tags": []}, {"text": "Genel olarak şirketimdeki çalışma koşullarından memnunum.", "tags": []}]}, {"num": "10", "title": "İş Güvenliği & İSG", "sub": "Önleyici tedbirler, KKD, acil durum, eğitim", "count": 9, "questions": [{"text": "İş kazalarını önleyici tedbirler alınır.", "tags": ["recommended", "iatf"]}, {"text": "Şirketim iyi günde kötü günde yanımdadır.", "tags": ["recommended", "iatf"]}, {"text": "Koruyucu malzeme ve araç-gereçleri vardır.", "tags": ["recommended", "iatf"]}, {"text": "Acil durumlarda herkes ne yapacağını bilir.", "tags": ["recommended", "iatf"]}, {"text": "İş emniyeti konularında eğitimler verilir.", "tags": ["recommended", "iatf"]}, {"text": "İşimi güvenli yapabiliyorum; risk altında çalışmak zorunda kalmıyorum.", "tags": ["iatf"]}, {"text": "İSG konusundaki endişelerimi rahatlıkla iletebiliyorum.", "tags": ["iatf"]}, {"text": "Şirketimizde çalışan sağlığı ve iş güvenliği uygulamaları etkin biçimde yürütülür.", "tags": ["iatf"]}, {"text": "Genel olarak iş güvenliği uygulamalarından memnunum.", "tags": ["iatf"]}]}, {"num": "11", "title": "Sağlık, Sosyal & Kültürel Olanaklar", "sub": "Sağlık hizmetleri, yemekhane, servis, çay ocağı, temizlik", "count": 11, "questions": [{"text": "İşyerinde sağlanan sağlık hizmetleri yeterlidir.", "tags": ["recommended"]}, {"text": "İşyeri hekimi ilgilidir.", "tags": ["recommended"]}, {"text": "Anlaşmalı sağlık kurumu hizmeti yeterlidir.", "tags": ["recommended"]}, {"text": "Yemekler lezzetli, doyurucu ve sağlığa uygundur.", "tags": ["recommended"]}, {"text": "Yemekhane düzenli ve temizdir.", "tags": ["recommended"]}, {"text": "Sosyal alanlar (bahçe, dinlenme alanları, tuvalet) yeterli ve temizdir.", "tags": ["recommended"]}, {"text": "Servisler düzenli, temiz ve rahattır.", "tags": ["recommended"]}, {"text": "Servis şoförleri kurallara uyar.", "tags": ["recommended"]}, {"text": "Çay servisleri zamanında ve kaliteli yapılır.", "tags": ["recommended"]}, {"text": "Ofis temizlikleri düzenli yapılır.", "tags": ["recommended"]}, {"text": "Genel olarak sağlık ve sosyal hizmetlerden memnunum.", "tags": []}]}, {"num": "12", "title": "İş Güvencesi & Yasal Haklar", "sub": "Sözleşme güvencesi, hakların korunması", "count": 3, "questions": [{"text": "Kurallara uygun davrandığım ve işimde başarılı olduğum sürece iş sürekliliğim sağlanmaktadır.", "tags": []}, {"text": "Şirketimde haklarım çeşitli kural ve politikalarla güvence altına alınmıştır.", "tags": []}, {"text": "Genel olarak şirketimin iş güvencesi ve yasal haklar politikalarından memnunum.", "tags": []}]}, {"num": "13", "title": "İş – Özel Yaşam Dengesi", "sub": "İş yükü, izin kullanımı, tükenmişlik", "count": 6, "questions": [{"text": "Zaman zaman iş tempom değişse de genel olarak makul bir iş yükü altında çalışıyorum.", "tags": []}, {"text": "Yıllık izin hakkımı istediğim gibi kullanabiliyorum.", "tags": []}, {"text": "Gerektiğinde mazeret izni alabiliyorum.", "tags": []}, {"text": "İş hayatım özel hayatıma vakit ayırmamı engellemiyor.", "tags": []}, {"text": "Çalışma saatleri dışında işle ilgili baskı hissetmiyorum.", "tags": []}, {"text": "Genel olarak iş ve özel yaşamım arasında makul bir denge kurabiliyorum.", "tags": []}]}], "mavi": [{"num": "01", "title": "Genel Memnuniyet & Bağlılık", "sub": "İşe gelme isteği, şirkete bağlılık, tavsiye etme eğilimi", "count": 5, "questions": [{"text": "Bu şirkette çalışmaktan memnunum.", "tags": []}, {"text": "Sabah işe gelirken istekli hissediyorum.", "tags": []}, {"text": "Bu şirketi tanıdıklarıma iş yeri olarak tavsiye ederim.", "tags": []}, {"text": "Burada çalışmaya devam etmek istiyorum.", "tags": []}, {"text": "Bu şirkette çalışmak benim için iyi bir seçimdi.", "tags": []}]}, {"num": "02", "title": "İş Arkadaşlarım", "sub": "Ekip dayanışması, iletişim", "count": 9, "questions": [{"text": "İş arkadaşlarım ihtiyaç duyduğumda yardımcı olur.", "tags": ["recommended"]}, {"text": "İş arkadaşlarımla rahat bir çalışma ilişkim var.", "tags": ["recommended"]}, {"text": "İş arkadaşlarım işlerini iyi bilir ve yetkindir.", "tags": ["recommended"]}, {"text": "İş arkadaşlarım açık ve dürüst davranır.", "tags": ["recommended"]}, {"text": "Ekibimizde güçlü bir takım anlayışı ve dayanışma var.", "tags": ["recommended"]}, {"text": "İş yerinde bir sorunum olduğunda nereye başvuracağımı biliyorum.", "tags": []}, {"text": "Önerim veya şikâyetim olduğunda dinlendiğimi hissediyorum.", "tags": []}, {"text": "Vardiyalar arasında iş bilgisi aktarımı düzgün yapılıyor.", "tags": []}, {"text": "Genel olarak ekibimle iletişim ve iş birliğinden memnunum.", "tags": []}]}, {"num": "03", "title": "Ustabaşım / İlk Amirim", "sub": "Yönlendirme, adalet, geri bildirim, destek", "count": 13, "questions": [{"text": "Ustabaşım / İlk Amirim adil ve dürüst davranır.", "tags": ["recommended"]}, {"text": "Ustabaşım / İlk Amirimden ne istediğimi bilirim.", "tags": ["recommended"]}, {"text": "Ustabaşım / İlk Amirim gerekli kararları zamanında alır.", "tags": ["recommended"]}, {"text": "Ustabaşım / İlk Amirim benim için vakit ayırır ve destek olur.", "tags": ["recommended"]}, {"text": "Ustabaşım / İlk Amirim yanlışlıklara karşı ölçülü tepki gösterir, öğreticidir.", "tags": ["recommended"]}, {"text": "Ustabaşım / İlk Amirim mesleki açıdan bilgili ve yetkindir.", "tags": ["recommended"]}, {"text": "Ustabaşım / İlk Amirim davranışlarıyla bize örnek olur.", "tags": ["recommended"]}, {"text": "Ustabaşım / İlk Amirim başarılarımda beni takdir eder.", "tags": ["recommended"]}, {"text": "Ustabaşım / İlk Amirim eğitimimi destekler ve yönlendirir.", "tags": ["recommended"]}, {"text": "Ustabaşıma / İlk Amirime kolaylıkla ulaşabiliyorum.", "tags": ["recommended"]}, {"text": "Ustabaşım / İlk Amirim işleri ekibe dengeli ve adil dağıtır.", "tags": []}, {"text": "Ustabaşıma / İlk Amirime sorun veya endişelerimi rahatlıkla iletebiliyorum.", "tags": []}, {"text": "Genel olarak ustabaşımdan / ilk amirinden memnunum.", "tags": []}]}, {"num": "04", "title": "İşim & Sorumluluklarım", "sub": "İşin anlamlılığı, yetki, bilgi erişimi", "count": 13, "questions": [{"text": "İşim sıkıcı değildir.", "tags": ["recommended"]}, {"text": "İşim değerlidir.", "tags": ["recommended"]}, {"text": "İşimde yeteneklerimi kullanırım.", "tags": ["recommended"]}, {"text": "Fikirlerimi etkin kullanabilirim.", "tags": ["recommended"]}, {"text": "Bölümümün hedeflerini bilirim.", "tags": ["recommended"]}, {"text": "Yeterli yetkiye sahibim.", "tags": ["recommended"]}, {"text": "İşimle ilgili gerekli bilgilere ulaşabilirim.", "tags": ["recommended"]}, {"text": "İş yüküm normaldir.", "tags": ["recommended"]}, {"text": "İşimle ilgili güncel bilgilere sahibim.", "tags": ["recommended"]}, {"text": "İşimle ilgili sorunlarımı kendim çözerim.", "tags": ["recommended"]}, {"text": "Ne yapmam gerektiğini ve sınırlarımı açıkça biliyorum.", "tags": []}, {"text": "Gerektiğinde inisiyatif kullanmama izin veriliyor.", "tags": []}, {"text": "Yaptığım işi anlamlı buluyorum.", "tags": []}]}, {"num": "05", "title": "Başarma Duygusu & Takdir", "sub": "Katkının fark edilmesi, ödüllendirme", "count": 5, "questions": [{"text": "Yaptığım işte kendimi başarılı hissediyorum.", "tags": []}, {"text": "Şirkette yaptığım işe önem ve değer verilir.", "tags": []}, {"text": "İyi bir iş çıkardığımda fark ediliyorum ve takdir görüyorum.", "tags": []}, {"text": "Üstün başarılarım ödüllendirilir.", "tags": []}, {"text": "Genel olarak şirketimdeki takdir uygulamalarından memnunum.", "tags": []}]}, {"num": "06", "title": "Eğitim & Gelişim", "sub": "İş başı eğitim, yetkinlik kaydı, içeriden yetişme — IATF 16949", "count": 6, "questions": [{"text": "İşe başladığımda ihtiyacım olan eğitimi aldım.", "tags": []}, {"text": "İşimi doğru ve güvenli yapmam için gerekli eğitimler veriliyor.", "tags": []}, {"text": "Aldığım eğitimler işime yarıyor.", "tags": []}, {"text": "Yetkinliklerimin kayıt altına alındığını biliyorum.", "tags": []}, {"text": "İçeriden yükselme (terfi) fırsatı olduğunu biliyorum.", "tags": []}, {"text": "Genel olarak şirketimdeki gelişim imkânlarından memnunum.", "tags": []}]}, {"num": "07", "title": "Şirket Yönetimi & Politikalar", "sub": "Üst yönetim güveni, şeffaflık, kuralların adil uygulanması — IATF 16949", "count": 5, "questions": [{"text": "Şirketin hedeflerini ve nereye gittiğini biliyorum.", "tags": []}, {"text": "Üst yönetimin karar ve uygulamalarına güvenirim.", "tags": []}, {"text": "Şirket kuralları herkese eşit ve adil biçimde uygulanıyor.", "tags": []}, {"text": "Kalite standartlarına uyum konusunda yönetimin samimi olduğunu hissediyorum.", "tags": []}, {"text": "Genel olarak şirket yönetiminden memnunum.", "tags": []}]}, {"num": "08", "title": "İş Yeri & İSG", "sub": "Fiziksel koşullar, güvenlik, ekipman", "count": 18, "questions": [{"text": "Çalışma ortamım temizdir.", "tags": ["recommended", "iatf"]}, {"text": "Çalışma ortamım gürültüsüzdür.", "tags": ["recommended", "iatf"]}, {"text": "Kullanım alanı yeterlidir.", "tags": ["recommended", "iatf"]}, {"text": "Çalışma ortamım sağlığa zararlı değildir.", "tags": ["recommended", "iatf"]}, {"text": "İşimle ilgili araç ve gereçlerim yeterlidir.", "tags": ["recommended", "iatf"]}, {"text": "Aydınlatma yeterlidir.", "tags": ["recommended", "iatf"]}, {"text": "Rahatsız edici koku yoktur.", "tags": ["recommended", "iatf"]}, {"text": "Isıtma yeterlidir.", "tags": ["recommended", "iatf"]}, {"text": "Soğutma yeterlidir.", "tags": ["recommended", "iatf"]}, {"text": "İş kazalarını önleyici tedbirler alınır.", "tags": ["recommended", "iatf"]}, {"text": "Şirketim iyi günde kötü günde yanımdadır.", "tags": ["recommended", "iatf"]}, {"text": "Koruyucu malzeme ve araç-gereçleri vardır.", "tags": ["recommended", "iatf"]}, {"text": "Acil durumlarda herkes ne yapacağını bilir.", "tags": ["recommended", "iatf"]}, {"text": "İş güvenliği konularında eğitimler verilir.", "tags": ["recommended", "iatf"]}, {"text": "İşimi güvenli yapabiliyorum; risk altında çalışmak zorunda kalmıyorum.", "tags": ["iatf"]}, {"text": "KKD (Kişisel Koruyucu Donanım) ihtiyacım karşılanıyor.", "tags": ["iatf"]}, {"text": "İSG konusundaki endişelerimi kolaylıkla iletebiliyorum.", "tags": ["iatf"]}, {"text": "Genel olarak çalışma ortamı ve İSG uygulamalarından memnunum.", "tags": ["iatf"]}]}, {"num": "09", "title": "Sağlık, Sosyal & Kültürel Olanaklar", "sub": "Sağlık hizmetleri, yemekhane, sosyal alanlar, servis", "count": 9, "questions": [{"text": "Sağlanan sağlık hizmetleri yeterlidir.", "tags": ["recommended"]}, {"text": "İşyeri hekimi ilgilidir.", "tags": ["recommended"]}, {"text": "Anlaşmalı sağlık kurumu hizmeti yeterlidir.", "tags": ["recommended"]}, {"text": "Yemekler lezzetli, doyurucu ve sağlığa uygundur.", "tags": ["recommended"]}, {"text": "Yemekhane düzenli ve temizdir.", "tags": ["recommended"]}, {"text": "Sosyal alanlar (bahçe, dinlenme alanları, tuvalet) yeterli ve temizdir.", "tags": ["recommended"]}, {"text": "Servisler düzenli, temiz ve rahattır.", "tags": ["recommended"]}, {"text": "Servis şoförleri kurallara uyar.", "tags": ["recommended"]}, {"text": "Genel olarak sağlık ve sosyal hizmetlerden memnunum.", "tags": []}]}, {"num": "10", "title": "İş Güvencesi & Yasal Haklar", "sub": "İş sürekliliği, hakların korunması — mavi yaka için kritik", "count": 3, "questions": [{"text": "Kurallara uyduğum ve işimi iyi yaptığım sürece işim güvende.", "tags": []}, {"text": "Şirketteki haklarım kural ve politikalarla güvence altına alınmıştır.", "tags": []}, {"text": "Genel olarak iş güvencesi ve yasal haklardan memnunum.", "tags": []}]}]};
+
+const state = {
+  collar: "beyaz",
+  selectedCat: "__ALL__",
+  search: "",
+};
+
+const $ = (id) => document.getElementById(id);
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+}
+
+function getCurrentData() {
+  return QBANK[state.collar];
+}
+
+function totalQuestions(cats) {
+  return cats.reduce((a, c) => a + c.count, 0);
+}
+
+function filterQuestions(cats) {
+  const q = state.search.trim().toLowerCase();
+  let visible = cats;
+  if (state.selectedCat !== "__ALL__") {
+    visible = cats.filter(c => c.num === state.selectedCat);
+  }
+  if (q) {
+    visible = visible.map(c => ({
+      ...c,
+      questions: c.questions.filter(qq => qq.text.toLowerCase().includes(q)),
+    })).filter(c => c.questions.length > 0);
+  }
+  return visible;
+}
+
+function renderTabs() {
+  $("count-beyaz").textContent = totalQuestions(QBANK.beyaz);
+  $("count-mavi").textContent  = totalQuestions(QBANK.mavi);
+  document.querySelectorAll(".tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.collar === state.collar);
+    t.addEventListener("click", () => {
+      state.collar = t.dataset.collar;
+      state.selectedCat = "__ALL__";
+      state.search = "";
+      $("search").value = "";
+      render();
+    }, { once: true });
+  });
+}
+
+function renderSidebar() {
+  const cats = getCurrentData();
+  const totalQ = totalQuestions(cats);
+  const list = $("cat-list");
+
+  let html = `
+    <li class="cat-item ${state.selectedCat === "__ALL__" ? "active" : ""}" data-cat="__ALL__">
+      <span class="num">·</span>
+      <span class="lbl">Tüm sorular</span>
+      <span class="badge">${totalQ}</span>
+    </li>
+  `;
+  cats.forEach(c => {
+    html += `
+      <li class="cat-item ${state.selectedCat === c.num ? "active" : ""}" data-cat="${c.num}">
+        <span class="num">${c.num}</span>
+        <span class="lbl">${escapeHtml(c.title)}</span>
+        <span class="badge">${c.count}</span>
+      </li>
+    `;
+  });
+  list.innerHTML = html;
+
+  list.querySelectorAll(".cat-item").forEach(el => {
+    el.addEventListener("click", () => {
+      state.selectedCat = el.dataset.cat;
+      render();
+    });
+  });
+}
+
+function renderMain() {
+  const cats = getCurrentData();
+  const visible = filterQuestions(cats);
+  const main = $("main");
+
+  if (visible.length === 0) {
+    main.innerHTML = `
+      <div class="empty">
+        <h3>Sonuç bulunamadı</h3>
+        <p>"${escapeHtml(state.search)}" için bu kategoride eşleşen soru yok.</p>
+      </div>`;
+    return;
+  }
+
+  // Meta bilgi
+  const totalShown = visible.reduce((a, c) => a + c.questions.length, 0);
+  const totalAll = totalQuestions(cats);
+  const collarLabel = state.collar === "beyaz" ? "Beyaz yaka" : "Mavi yaka";
+
+  let html = `
+    <div class="results-meta">
+      <div class="count">
+        <strong>${totalShown}</strong> soru gösteriliyor
+        ${state.search || state.selectedCat !== "__ALL__" ? ` (toplam ${totalAll})` : ""}
+      </div>
+      <div>${collarLabel} kütüphanesi</div>
+    </div>
+  `;
+
+  visible.forEach(cat => {
+    const stars = cat.questions.filter(q => q.tags.includes("recommended")).length;
+    html += `
+      <div class="cat-block">
+        <div class="cat-header">
+          <div class="top">
+            <h2><span class="num">${cat.num}</span> ${escapeHtml(cat.title)}</h2>
+            <div class="meta">${cat.questions.length} soru${stars > 0 ? ` · ${stars} ★` : ""}</div>
+          </div>
+          ${cat.sub ? `<p class="desc">${escapeHtml(cat.sub)}</p>` : ""}
+        </div>
+        <div class="q-list">
+          ${cat.questions.map((q, i) => {
+            const allQ = (cats.find(c => c.num === cat.num) || {}).questions || [];
+            const realIdx = allQ.findIndex(x => x.text === q.text);
+            return `
+              <div class="q-card">
+                <span class="qnum">${(realIdx + 1) || (i + 1)}</span>
+                <span class="qtext">${highlightSearch(escapeHtml(q.text), state.search)}</span>
+                <span class="qtags">
+                  <span class="tag likert">5'li Likert</span>
+                  ${q.tags.includes("recommended") ? '<span class="tag recommended">Önerilen</span>' : ""}
+                  ${q.tags.includes("iatf") ? '<span class="tag iatf">IATF 16949</span>' : ""}
+                </span>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+  });
+
+  main.innerHTML = html;
+}
+
+function highlightSearch(text, q) {
+  if (!q) return text;
+  const lower = text.toLowerCase();
+  const ql = q.toLowerCase();
+  const idx = lower.indexOf(ql);
+  if (idx < 0) return text;
+  return text.slice(0, idx) +
+    '<mark style="background: #fff5b8; padding: 1px 2px; border-radius: 2px;">' +
+    text.slice(idx, idx + q.length) + '</mark>' +
+    text.slice(idx + q.length);
+}
+
+function render() {
+  renderTabs();
+  renderSidebar();
+  renderMain();
+}
+
+$("search").addEventListener("input", (e) => {
+  state.search = e.target.value;
+  renderMain();  // sidebar değişmiyor
+});
+
+render();
+</script>
+</body>
+</html>
