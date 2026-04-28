@@ -435,6 +435,25 @@
     font-family: 'Fraunces', serif; font-weight: 500; font-size: 16px;
     color: var(--ink); text-align: right; font-variant-numeric: tabular-nums;
   }
+  /* Compare modu — 2025 alt barı + delta */
+  .demo-cmp-row.with-prev {
+    grid-template-columns: 70px 1fr 56px 70px;
+    gap: 12px; align-items: center;
+  }
+  .demo-cmp-row .bars {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .demo-cmp-row .bars .gbar.prev > div {
+    background: #b8a7a0;  /* gri-bordo */
+  }
+  .demo-cmp-row .bars .meta-line {
+    display: flex; justify-content: space-between;
+    font-size: 10.5px; color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
+  .demo-cmp-row .delta-cell {
+    display: flex; justify-content: flex-end; align-items: center;
+  }
 
   /* ---------- DISCLAIMER + UPSELL ---------- */
   .upsell {
@@ -866,6 +885,34 @@ const SEED_DATA = {
       {w: "geri bildirim",    size: 2},
       {w: "performans",       size: 3},
     ],
+    // Cinsiyete göre 2025 ortalamaları (her ikisi de hafif daha düşüktü)
+    gender_averages: { "Kadın": 3.45, "Erkek": 3.71 },
+    gender_distribution: { "Kadın": 51, "Erkek": 81 },
+    // Tenure'a göre 2025 ortalamaları (kıdem-memnuniyet eğrisi 2025'te de vardı)
+    tenure_averages: {
+      "1 yıldan az": 3.92,   // 2026: 4.02 → +0.10
+      "1–3 yıl":     3.74,   // 2026: 3.85 → +0.11
+      "3–5 yıl":     3.65,   // 2026: 3.71 → +0.06
+      "5–10 yıl":    3.48,   // 2026: 3.54 → +0.06
+      "10 yıl üzeri": 3.30,  // 2026: 3.41 → +0.11
+    },
+    tenure_distribution: {
+      "1 yıldan az": 14,
+      "1–3 yıl":     38,
+      "3–5 yıl":     35,
+      "5–10 yıl":    28,
+      "10 yıl üzeri": 17,
+    },
+    // 2025 yanıt eğrisi (genelde benzer trend, biraz daha düşük seviye)
+    timeline: [
+      {date:"08 Nis", n: 3}, {date:"09 Nis", n: 7}, {date:"10 Nis", n: 10},
+      {date:"11 Nis", n: 6}, {date:"12 Nis", n: 4}, {date:"13 Nis", n: 5},
+      {date:"14 Nis", n: 9}, {date:"15 Nis", n: 12}, {date:"16 Nis", n: 11},
+      {date:"17 Nis", n: 8}, {date:"18 Nis", n: 3}, {date:"19 Nis", n: 2},
+      {date:"20 Nis", n: 7}, {date:"21 Nis", n: 9}, {date:"22 Nis", n: 8},
+      {date:"23 Nis", n: 6}, {date:"24 Nis", n: 4}, {date:"25 Nis", n: 3},
+      {date:"26 Nis", n: 4},
+    ],
   },
 };
 
@@ -1243,7 +1290,7 @@ function render() {
     <!-- HEATMAP -->
     <div class="panel">
       <div class="panel-head">
-        <h2>Departman × Bölüm ısı haritası</h2>
+        <h2>Departman × Bölüm ısı haritası <span style="font-size: 13px; color: var(--ink-mute); font-weight: 400;">· 2026</span></h2>
         <div class="panel-meta">
           <span class="badge-pro">Pro</span>
           ortalama puan
@@ -1336,7 +1383,7 @@ function render() {
       </div>
       <div class="panel">
         <div class="panel-head">
-          <h2>Yanıt eğrisi</h2>
+          <h2>Yanıt eğrisi${cmp ? ` <span style="font-size: 13px; color: var(--ink-mute); font-weight: 400;">· 2026 vs 2025</span>` : ""}</h2>
           <div class="panel-meta">son 19 gün</div>
         </div>
         <div class="chart-host-md"><canvas id="chart-timeline"></canvas></div>
@@ -1347,39 +1394,73 @@ function render() {
     <div class="grid-2">
       <div class="panel">
         <div class="panel-head">
-          <h2>Cinsiyet bazında ortalama</h2>
-          <div class="panel-meta">Genel memnuniyet kıyaslaması</div>
+          <h2>Cinsiyet bazında ortalama${cmp ? ` <span style="font-size: 13px; color: var(--ink-mute); font-weight: 400;">· 2026 vs 2025</span>` : ""}</h2>
+          <div class="panel-meta">${cmp ? "yıllık değişim" : "Genel memnuniyet kıyaslaması"}</div>
         </div>
         <div class="demo-cmp">
           ${["Kadın", "Erkek"].map(g => {
             const v = d.gender_averages?.[g];
             const n = d.gender_distribution?.[g] || 0;
-            return v ? `
+            if (v == null) return "";
+            if (cmp) {
+              const pv = prev.gender_averages?.[g];
+              const pn = prev.gender_distribution?.[g] || 0;
+              return `
+                <div class="demo-cmp-row with-prev">
+                  <div class="lbl">${escapeHtml(g)} <span style="color: var(--ink-mute); font-size: 11px;">(n=${n})</span></div>
+                  <div class="bars">
+                    <div class="gbar"><div style="width: ${(v/5*100).toFixed(0)}%"></div></div>
+                    <div class="gbar prev"><div style="width: ${pv ? (pv/5*100).toFixed(0) : 0}%"></div></div>
+                    <div class="meta-line"><span>2026 · ${fmt(v)}</span><span>2025 · ${fmt(pv)}</span></div>
+                  </div>
+                  <div class="val">${fmt(v)}</div>
+                  <div class="delta-cell">${deltaPill(v, pv)}</div>
+                </div>
+              `;
+            }
+            return `
               <div class="demo-cmp-row">
                 <div class="lbl">${escapeHtml(g)} <span style="color: var(--ink-mute); font-size: 11px;">(n=${n})</span></div>
                 <div class="gbar"><div style="width: ${(v/5*100).toFixed(0)}%"></div></div>
                 <div class="val">${fmt(v)}</div>
               </div>
-            ` : "";
+            `;
           }).join("")}
         </div>
       </div>
       <div class="panel">
         <div class="panel-head">
-          <h2>Çalışma süresi bazında ortalama</h2>
-          <div class="panel-meta">Tenure × memnuniyet ilişkisi</div>
+          <h2>Çalışma süresi bazında ortalama${cmp ? ` <span style="font-size: 13px; color: var(--ink-mute); font-weight: 400;">· 2026 vs 2025</span>` : ""}</h2>
+          <div class="panel-meta">${cmp ? "yıllık değişim" : "Tenure × memnuniyet ilişkisi"}</div>
         </div>
         <div class="demo-cmp">
           ${["1 yıldan az", "1–3 yıl", "3–5 yıl", "5–10 yıl", "10 yıl üzeri"].map(t => {
             const v = d.tenure_averages?.[t];
             const n = d.tenure_distribution?.[t] || 0;
-            return v ? `
+            if (v == null) return "";
+            if (cmp) {
+              const pv = prev.tenure_averages?.[t];
+              const pn = prev.tenure_distribution?.[t] || 0;
+              return `
+                <div class="demo-cmp-row with-prev">
+                  <div class="lbl">${escapeHtml(t)} <span style="color: var(--ink-mute); font-size: 11px;">(n=${n})</span></div>
+                  <div class="bars">
+                    <div class="gbar"><div style="width: ${(v/5*100).toFixed(0)}%"></div></div>
+                    <div class="gbar prev"><div style="width: ${pv ? (pv/5*100).toFixed(0) : 0}%"></div></div>
+                    <div class="meta-line"><span>2026 · ${fmt(v)}</span><span>2025 · ${fmt(pv)}</span></div>
+                  </div>
+                  <div class="val">${fmt(v)}</div>
+                  <div class="delta-cell">${deltaPill(v, pv)}</div>
+                </div>
+              `;
+            }
+            return `
               <div class="demo-cmp-row">
                 <div class="lbl">${escapeHtml(t)} <span style="color: var(--ink-mute); font-size: 11px;">(n=${n})</span></div>
                 <div class="gbar"><div style="width: ${(v/5*100).toFixed(0)}%"></div></div>
                 <div class="val">${fmt(v)}</div>
               </div>
-            ` : "";
+            `;
           }).join("")}
         </div>
       </div>
@@ -1452,7 +1533,7 @@ function render() {
   if (!cmp) {
     drawSectionChart(sectionAverages);
   }
-  drawTimelineChart(d.timeline);
+  drawTimelineChart(d.timeline, cmp ? prev.timeline : null);
 }
 
 function renderHeatmap(heatmap) {
@@ -1567,7 +1648,7 @@ function drawSectionChart(sections) {
   });
 }
 
-function drawTimelineChart(timeline) {
+function drawTimelineChart(timeline, prevTimeline) {
   const ctx = document.getElementById("chart-timeline");
   if (!ctx || typeof Chart === "undefined") {
     if (ctx) ctx.parentElement.innerHTML = '<p style="color: var(--ink-mute); text-align: center; padding: 40px;">Grafik yükleniyor…</p>';
@@ -1575,23 +1656,41 @@ function drawTimelineChart(timeline) {
   }
   if (state.charts.timeline) state.charts.timeline.destroy();
 
+  const datasets = [{
+    label: "2026", data: timeline.map(t => t.n),
+    borderColor: "#7B1F2C",
+    backgroundColor: "rgba(123, 31, 44, 0.10)",
+    borderWidth: 2, fill: true, tension: 0.35,
+    pointRadius: 3, pointBackgroundColor: "#7B1F2C",
+    pointHoverRadius: 5,
+  }];
+  if (prevTimeline) {
+    datasets.push({
+      label: "2025", data: prevTimeline.map(t => t.n),
+      borderColor: "#b8a7a0",
+      backgroundColor: "rgba(184, 167, 160, 0.08)",
+      borderWidth: 2, borderDash: [4, 4],
+      fill: false, tension: 0.35,
+      pointRadius: 2, pointBackgroundColor: "#b8a7a0",
+      pointHoverRadius: 4,
+    });
+  }
+
   state.charts.timeline = new Chart(ctx, {
     type: "line",
-    data: {
-      labels: timeline.map(t => t.date),
-      datasets: [{
-        label: "Yanıt", data: timeline.map(t => t.n),
-        borderColor: "#7B1F2C",
-        backgroundColor: "rgba(123, 31, 44, 0.1)",
-        borderWidth: 2, fill: true, tension: 0.35,
-        pointRadius: 3, pointBackgroundColor: "#7B1F2C",
-        pointHoverRadius: 5,
-      }]
-    },
+    data: { labels: timeline.map(t => t.date), datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { display: false },
+        legend: prevTimeline ? {
+          display: true, position: "top", align: "end",
+          labels: {
+            font: { family: "Inter", size: 11 },
+            color: "#4a423d",
+            usePointStyle: true, pointStyle: "rect",
+            boxWidth: 10, boxHeight: 10, padding: 12,
+          },
+        } : { display: false },
         tooltip: {
           backgroundColor: "#1a1614", cornerRadius: 6, padding: 10,
           titleFont: { family: "Inter", size: 12 },
