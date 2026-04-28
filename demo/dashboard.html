@@ -115,6 +115,90 @@
     cursor: pointer; font-family: inherit;
   }
   .btn-icon:hover { background: var(--bg); border-color: var(--ink-mute); color: var(--ink); }
+  .btn-compare.active {
+    background: var(--burgundy); color: white; border-color: var(--burgundy);
+    font-weight: 500;
+  }
+  .btn-compare.active:hover {
+    background: var(--burgundy-dark); border-color: var(--burgundy-dark); color: white;
+  }
+
+  /* ---------- DELTA & COMPARE GÖSTERGELERİ ---------- */
+  .delta {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11.5px; font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    padding: 2px 7px; border-radius: 999px;
+    white-space: nowrap;
+  }
+  .delta.up   { background: var(--teal-soft);     color: var(--teal); }
+  .delta.down { background: #fbe5e5;              color: #b04444; }
+  .delta.flat { background: var(--bg);            color: var(--ink-mute); }
+  .delta.lg {
+    font-size: 12.5px; padding: 3px 10px;
+  }
+  .vs-prev {
+    font-size: 11px; color: var(--ink-mute);
+    margin-top: 4px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .vs-prev .lbl { color: var(--ink-mute); }
+
+  /* Compare modunda KPI kartlarının altına delta yerleşimi */
+  .kpi .compare-row {
+    margin-top: 8px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--ink-mute);
+  }
+
+  /* Bölüm bar listesi (compare modunda kullanılır) */
+  .section-compare-list {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-top: 6px;
+  }
+  .section-compare-row {
+    display: grid; grid-template-columns: 1fr 90px; gap: 16px;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    background: var(--bg);
+  }
+  .section-compare-row .info { min-width: 0; }
+  .section-compare-row .title {
+    font-size: 13px; color: var(--ink); margin-bottom: 6px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .section-compare-row .title .num {
+    color: var(--burgundy); font-family: 'Fraunces', serif;
+    font-weight: 500; margin-right: 6px;
+  }
+  .section-compare-row .bars {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .section-compare-row .bar-line {
+    display: grid; grid-template-columns: 38px 1fr 38px; gap: 8px;
+    align-items: center;
+    font-size: 11px; color: var(--ink-mute);
+  }
+  .section-compare-row .bar-line .yr-lbl {
+    text-align: left; font-variant-numeric: tabular-nums;
+  }
+  .section-compare-row .bar-line .yr-val {
+    text-align: right; font-variant-numeric: tabular-nums;
+    font-weight: 500; color: var(--ink);
+  }
+  .section-compare-row .bar-track {
+    height: 8px; background: var(--line); border-radius: 4px;
+    overflow: hidden;
+  }
+  .section-compare-row .bar-track > div {
+    height: 100%; border-radius: 4px;
+  }
+  .section-compare-row .bar-now > div  { background: var(--burgundy); }
+  .section-compare-row .bar-prev > div { background: #b8a7a0; }  /* gri-bordo */
+  .section-compare-row .delta-cell {
+    text-align: center;
+  }
 
   /* ---------- LAYOUT ---------- */
   .container {
@@ -461,6 +545,9 @@
       <select id="tenure-filter" class="tenure-filter">
         <option value="__ALL__">Tüm çalışma süreleri</option>
       </select>
+      <button id="btn-compare" class="btn-icon btn-compare" title="2025 ile karşılaştır">
+        ⇄ <span>2025 ile karşılaştır</span>
+      </button>
       <button id="btn-refresh" class="btn-icon">↻ Yenile</button>
     </div>
   </div>
@@ -530,6 +617,9 @@ const SECTIONS = [
 /* =====================================================================
    SAHTE VERİ — DEMO İÇİN HARDCODED
    Gerçekçi varyans: Bazı departmanlar yüksek, bazıları düşük; cinsiyet/yaş etkileri var
+
+   PREV_YEAR (2025): "Önceki yılla karşılaştır" özelliği için.
+   Bazı bölümler iyileşmiş, bazıları gerilemiş - gerçekçi yıllık değişim.
    ===================================================================== */
 const SEED_DATA = {
   meta: {
@@ -715,6 +805,68 @@ const SEED_DATA = {
     "Lojistik / Depo", "Üretim Planlama", "Bakım", "Pazarlama",
     "Bilgi Teknolojileri", "İdari İşler", "Genel Müdürlük",
   ],
+
+  // Önceki yılın (2025) verisi — "Yıl karşılaştır" özelliği için
+  prev_year: {
+    label: "2025",
+    total_responses: 132,
+    overall_avg: 3.59,
+    section_averages: [
+      {num: "01", title: "Genel Bağlılık & Motivasyon",        avg: 4.02, n: 126},
+      {num: "02", title: "İş Arkadaşlarım",                    avg: 4.06, n: 137},
+      {num: "03", title: "Diğer Bölümlerdeki Çalışanlar",      avg: 3.26, n: 110},
+      {num: "04", title: "Yöneticim (İlk Amir)",               avg: 3.22, n: 117},
+      {num: "05", title: "İşimin Kendisi & Sorumluluk",        avg: 3.97, n: 132},
+      {num: "06", title: "Başarma Duygusu & Takdir",           avg: 3.34, n: 102},
+      {num: "07", title: "Gelişme Olanakları & Kariyer",       avg: 3.18, n:  94},
+      {num: "08", title: "Üst Yönetim & Şirket Politikaları",  avg: 3.35, n: 105},
+      {num: "09", title: "İş Yeri & Çalışma Koşulları",        avg: 3.73, n: 130},
+      {num: "10", title: "İş Güvenliği & İSG",                 avg: 4.23, n: 145},
+      {num: "11", title: "Sağlık, Sosyal & Kültürel Olanaklar",avg: 3.20, n: 119},
+      {num: "12", title: "İş Güvencesi & Yasal Haklar",        avg: 3.68, n: 123},
+      {num: "13", title: "İş – Özel Yaşam Dengesi",            avg: 3.46, n: 111},
+    ],
+    enps: { score: 16, promoters: 58, passives: 45, detractors: 29, total: 132 },
+    // Geçen yılın en güçlü/zayıf 5 sorusu (bu yıl ile kıyaslama için)
+    bottom_questions: [
+      {key:"s07_q5",  text:"Başarılarımda ödüllendiriliyorum.",                                            avg: 2.85},
+      {key:"s06_q6",  text:"Üstün başarılarım ödüllendirilir.",                                            avg: 2.92},
+      {key:"s07_q6",  text:"Yeterli terfi fırsatları vardır.",                                              avg: 3.05},
+      {key:"s08_q11", text:"Görüş ve beklentilerimi şirket üst yönetimine rahatlıkla iletebiliyorum.",     avg: 3.12},
+      {key:"s07_q11", text:"İçeriden yükselme ve yetişme fırsatlarının varlığını biliyorum.",               avg: 3.18},
+    ],
+    top_questions: [
+      {key:"s10_q5", text:"İş emniyeti konularında eğitimler verilir.",                                     avg: 4.45},
+      {key:"s02_q1", text:"İş arkadaşlarım ihtiyaç duyduğumda yardımcı olur.",                              avg: 4.32},
+      {key:"s10_q3", text:"Koruyucu malzeme ve araç-gereçleri vardır.",                                     avg: 4.15},
+      {key:"s05_q3", text:"Yeteneklerimi kullanırım.",                                                       avg: 4.28},
+      {key:"s02_q5", text:"Bölümümüz içinde güçlü bir takım anlayışı ve dayanışma var.",                    avg: 4.18},
+    ],
+    // Geçen yılın kelime bulutu — bu yıldan biraz farklı temalar
+    word_freq: [
+      {w: "ücret",            size: 5},
+      {w: "kariyer",          size: 5},
+      {w: "iş güvenliği",     size: 4},
+      {w: "ekip ruhu",        size: 4},
+      {w: "yönetim",          size: 4},
+      {w: "iletişim",         size: 3},
+      {w: "değer",            size: 3},
+      {w: "iş yükü",          size: 4},
+      {w: "esneklik",         size: 2},
+      {w: "süreçler",         size: 3},
+      {w: "öğrenme",          size: 3},
+      {w: "takdir",           size: 3},
+      {w: "yan haklar",       size: 4},
+      {w: "yemekhane",        size: 3},
+      {w: "servis",           size: 3},
+      {w: "eğitim",           size: 3},
+      {w: "şeffaflık",        size: 2},
+      {w: "iş arkadaşları",   size: 4},
+      {w: "tanınma",          size: 2},
+      {w: "geri bildirim",    size: 2},
+      {w: "performans",       size: 3},
+    ],
+  },
 };
 
 /* =====================================================================
@@ -724,6 +876,7 @@ let state = {
   data: null,
   selectedDept: "__ALL__",
   selectedTenure: "__ALL__",
+  compareYear: false,  // "Yıl karşılaştır" toggle
   charts: {},
 };
 const $ = (id) => document.getElementById(id);
@@ -852,6 +1005,17 @@ function populateFilters() {
 
 $("btn-refresh").addEventListener("click", loadAndRender);
 
+// "2025 ile karşılaştır" toggle
+$("btn-compare").addEventListener("click", () => {
+  state.compareYear = !state.compareYear;
+  const btn = $("btn-compare");
+  btn.classList.toggle("active", state.compareYear);
+  btn.querySelector("span").textContent = state.compareYear
+    ? "Karşılaştırmayı kapat"
+    : "2025 ile karşılaştır";
+  render();
+});
+
 /* =====================================================================
    HELPERS
    ===================================================================== */
@@ -867,6 +1031,31 @@ function fmtDate(iso) {
   if (!iso) return "—";
   const d = new Date(iso);
   return d.toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
+}
+
+// Yıl-yıl karşılaştırma için delta etiketi üretir
+function deltaPill(now, prev, opts={}) {
+  if (now == null || prev == null) return "";
+  const d = now - prev;
+  const sign = d > 0 ? "+" : (d < 0 ? "" : "±");
+  const cls = Math.abs(d) < 0.05 ? "flat" : (d > 0 ? "up" : "down");
+  const arrow = Math.abs(d) < 0.05 ? "—" : (d > 0 ? "▲" : "▼");
+  const sizeCls = opts.lg ? " lg" : "";
+  return `<span class="delta ${cls}${sizeCls}">${arrow} ${sign}${Math.abs(d).toFixed(2)}</span>`;
+}
+// Yüzde değişim — eNPS gibi tam sayılar için
+function deltaPillPct(now, prev) {
+  if (now == null || prev == null) return "";
+  const d = now - prev;
+  const sign = d > 0 ? "+" : (d < 0 ? "" : "±");
+  const cls = d === 0 ? "flat" : (d > 0 ? "up" : "down");
+  const arrow = d === 0 ? "—" : (d > 0 ? "▲" : "▼");
+  return `<span class="delta ${cls}">${arrow} ${sign}${d}</span>`;
+}
+
+// Filtre uygulanmış mı?
+function isFilteredHelper() {
+  return state.selectedDept !== "__ALL__" || state.selectedTenure !== "__ALL__";
 }
 
 // Heatmap renk: 1-5 ölçeğine göre kırmızı-bordo (düşük) → krem → yeşil (yüksek)
@@ -902,6 +1091,16 @@ function heatTextColor(v) {
 function render() {
   const d = state.data;
   if (!d) return;
+
+  // Compare modu: önceki yıl verileri (sadece filtre yokken anlamlı)
+  const prev = (state.compareYear && d.prev_year && !isFilteredHelper())
+    ? d.prev_year
+    : null;
+  const cmp = !!prev;  // compare aktif mi
+  // prev'i kolay erişim için mevcut bölümlere eşleştir
+  const prevByNum = prev
+    ? Object.fromEntries(prev.section_averages.map(s => [s.num, s]))
+    : {};
 
   // Departman filtresi uygulanırsa, bölüm ortalamaları o departmandan gelmeli
   // Demo'da bunu sadeleştirip heatmap'tan çekiyoruz
@@ -965,17 +1164,26 @@ function render() {
       <div class="kpi">
         <div class="label">Toplam Yanıt</div>
         <div class="value">${displayN}</div>
-        <div class="trend up">↑ ${Math.round(displayN * 0.18)} bu hafta</div>
+        ${cmp
+          ? `<div class="compare-row">${deltaPillPct(displayN, prev.total_responses)} vs ${prev.label}</div>`
+          : `<div class="trend up">↑ ${Math.round(displayN * 0.18)} bu hafta</div>`
+        }
       </div>
       <div class="kpi accent">
         <div class="label">Genel Ortalama</div>
         <div class="value">${fmt(overallAvg)}</div>
-        <div class="sub">5 üzerinden Likert</div>
+        ${cmp
+          ? `<div class="compare-row">${deltaPill(overallAvg, prev.overall_avg)} vs ${prev.label} (${fmt(prev.overall_avg)})</div>`
+          : `<div class="sub">5 üzerinden Likert</div>`
+        }
       </div>
       <div class="kpi ok">
         <div class="label">eNPS Skoru</div>
         <div class="value">${d.enps.score > 0 ? '+' : ''}${d.enps.score}</div>
-        <div class="sub">Çalışan tavsiye eğilimi</div>
+        ${cmp
+          ? `<div class="compare-row">${deltaPillPct(d.enps.score, prev.enps.score)} vs ${prev.label} (${prev.enps.score > 0 ? '+' : ''}${prev.enps.score})</div>`
+          : `<div class="sub">Çalışan tavsiye eğilimi</div>`
+        }
       </div>
       <div class="kpi ok">
         <div class="label">En Yüksek Bölüm</div>
@@ -996,10 +1204,40 @@ function render() {
     <!-- BÖLÜM ORTALAMALARI -->
     <div class="panel">
       <div class="panel-head">
-        <h2>Bölüm bazında ortalamalar</h2>
-        <div class="panel-meta">5 üzerinden · ${isFiltered ? 'filtreli' : 'tümü'}</div>
+        <h2>Bölüm bazında ortalamalar${cmp ? ` <span style="font-size: 13px; color: var(--ink-mute); font-weight: 400;">· 2026 vs 2025</span>` : ""}</h2>
+        <div class="panel-meta">5 üzerinden · ${isFiltered ? 'filtreli' : 'tümü'}${cmp ? " · değişim" : ""}</div>
       </div>
-      <div class="chart-host"><canvas id="chart-sections"></canvas></div>
+      ${cmp
+        ? `<div class="section-compare-list">
+            ${sectionAverages.map(s => {
+              const p = prevByNum[s.num];
+              const pAvg = p ? p.avg : null;
+              const nowPct = s.avg ? Math.round((s.avg / 5) * 100) : 0;
+              const prevPct = pAvg ? Math.round((pAvg / 5) * 100) : 0;
+              return `
+                <div class="section-compare-row">
+                  <div class="info">
+                    <div class="title"><span class="num">${s.num}</span>${escapeHtml(s.title)}</div>
+                    <div class="bars">
+                      <div class="bar-line">
+                        <div class="yr-lbl">2026</div>
+                        <div class="bar-track bar-now"><div style="width: ${nowPct}%"></div></div>
+                        <div class="yr-val">${fmt(s.avg)}</div>
+                      </div>
+                      <div class="bar-line">
+                        <div class="yr-lbl">2025</div>
+                        <div class="bar-track bar-prev"><div style="width: ${prevPct}%"></div></div>
+                        <div class="yr-val">${fmt(pAvg)}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="delta-cell">${deltaPill(s.avg, pAvg, {lg: true})}</div>
+                </div>
+              `;
+            }).join("")}
+          </div>`
+        : `<div class="chart-host"><canvas id="chart-sections"></canvas></div>`
+      }
     </div>
 
     <!-- HEATMAP -->
@@ -1021,37 +1259,45 @@ function render() {
       <div class="panel">
         <div class="panel-head">
           <h2>En güçlü 5 soru</h2>
-          <div class="panel-meta">en yüksek ortalama</div>
+          <div class="panel-meta">${cmp ? `2026 · vs ${prev.label}` : "en yüksek ortalama"}</div>
         </div>
         <div class="qbox">
-          ${d.top_questions.map((q, i) => `
-            <div class="qrow high">
-              <div class="qrank">${i+1}</div>
-              <div class="qbody">
-                <div class="qsec">${escapeHtml(q.section)}</div>
-                <div class="qtxt">${escapeHtml(q.text)}</div>
+          ${d.top_questions.map((q, i) => {
+            const pq = cmp ? prev.top_questions.find(x => x.key === q.key) : null;
+            return `
+              <div class="qrow high">
+                <div class="qrank">${i+1}</div>
+                <div class="qbody">
+                  <div class="qsec">${escapeHtml(q.section)}</div>
+                  <div class="qtxt">${escapeHtml(q.text)}</div>
+                  ${cmp && pq ? `<div class="vs-prev"><span class="lbl">${prev.label}:</span> <strong>${fmt(pq.avg)}</strong> ${deltaPill(q.avg, pq.avg)}</div>` : ""}
+                </div>
+                <div class="qval">${fmt(q.avg)}</div>
               </div>
-              <div class="qval">${fmt(q.avg)}</div>
-            </div>
-          `).join("")}
+            `;
+          }).join("")}
         </div>
       </div>
       <div class="panel">
         <div class="panel-head">
           <h2>En zayıf 5 soru</h2>
-          <div class="panel-meta">öncelikli iyileştirme alanları</div>
+          <div class="panel-meta">${cmp ? `2026 · vs ${prev.label}` : "öncelikli iyileştirme alanları"}</div>
         </div>
         <div class="qbox">
-          ${d.bottom_questions.map((q, i) => `
-            <div class="qrow low">
-              <div class="qrank">${i+1}</div>
-              <div class="qbody">
-                <div class="qsec">${escapeHtml(q.section)}</div>
-                <div class="qtxt">${escapeHtml(q.text)}</div>
+          ${d.bottom_questions.map((q, i) => {
+            const pq = cmp ? prev.bottom_questions.find(x => x.key === q.key) : null;
+            return `
+              <div class="qrow low">
+                <div class="qrank">${i+1}</div>
+                <div class="qbody">
+                  <div class="qsec">${escapeHtml(q.section)}</div>
+                  <div class="qtxt">${escapeHtml(q.text)}</div>
+                  ${cmp && pq ? `<div class="vs-prev"><span class="lbl">${prev.label}:</span> <strong>${fmt(pq.avg)}</strong> ${deltaPill(q.avg, pq.avg)}</div>` : ""}
+                </div>
+                <div class="qval">${fmt(q.avg)}</div>
               </div>
-              <div class="qval">${fmt(q.avg)}</div>
-            </div>
-          `).join("")}
+            `;
+          }).join("")}
         </div>
       </div>
     </div>
@@ -1167,21 +1413,45 @@ function render() {
     <!-- ACIK UCLU - KELIME BULUTU -->
     <div class="panel">
       <div class="panel-head">
-        <h2>Açık uçlu yanıtlar — sıkça geçen temalar</h2>
+        <h2>Açık uçlu yanıtlar — sıkça geçen temalar${cmp ? " · 2026 vs 2025" : ""}</h2>
         <div class="panel-meta">
           <span class="badge-pro">Pro</span>
           ${d.word_freq.length} tema
         </div>
       </div>
-      <div class="wcloud">
-        ${d.word_freq.map(({w, size}) =>
-          `<span class="w${size}">${escapeHtml(w)}</span>`
-        ).join("")}
-      </div>
+      ${cmp ? `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); font-weight: 500; margin-bottom: 8px; padding-left: 8px;">2026 — Bu yıl</div>
+            <div class="wcloud" style="min-height: 180px;">
+              ${d.word_freq.map(({w, size}) =>
+                `<span class="w${size}">${escapeHtml(w)}</span>`
+              ).join("")}
+            </div>
+          </div>
+          <div style="border-left: 1px solid var(--line); padding-left: 24px;">
+            <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); font-weight: 500; margin-bottom: 8px; padding-left: 8px;">${prev.label} — Geçen yıl</div>
+            <div class="wcloud" style="min-height: 180px;">
+              ${prev.word_freq.map(({w, size}) =>
+                `<span class="w${size}">${escapeHtml(w)}</span>`
+              ).join("")}
+            </div>
+          </div>
+        </div>
+      ` : `
+        <div class="wcloud">
+          ${d.word_freq.map(({w, size}) =>
+            `<span class="w${size}">${escapeHtml(w)}</span>`
+          ).join("")}
+        </div>
+      `}
     </div>
   `;
 
-  drawSectionChart(sectionAverages);
+  // Compare modundayken canvas yok, chart çizme
+  if (!cmp) {
+    drawSectionChart(sectionAverages);
+  }
   drawTimelineChart(d.timeline);
 }
 
