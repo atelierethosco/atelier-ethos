@@ -225,6 +225,9 @@
   }
   .demo-form-block .row { margin-bottom: 18px; }
   .demo-form-block .row:last-child { margin-bottom: 0; }
+  .demo-form-block .row.demo-grid-2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
   .demo-form-block .help {
     font-size: 12px; color: var(--ink-mute); margin-top: 6px;
   }
@@ -466,6 +469,7 @@
     .login-card .head h1 { font-size: 24px; }
     .login-card .body { padding: 22px 22px 26px; }
     .demo-form-block { padding: 20px 18px; }
+    .demo-form-block .row.demo-grid-2 { grid-template-columns: 1fr; gap: 18px; }
     .scale-card { padding: 16px 14px; }
     .scale-list { gap: 4px; }
     .scale-list .pip { font-size: 10px; }
@@ -568,23 +572,40 @@ const CONFIG = {
   // Demografi: çalışma süresi
   TENURE: ["1 yıldan az", "1–3 yıl", "3–5 yıl", "5–10 yıl", "10 yıl üzeri"],
 
-  // Departman listesi — TEMSİLİ. Müşteri review sonrası güncellenecek.
+  // Demografi: yaş aralığı
+  AGE_RANGES: ["18-25", "26-35", "36-45", "46-55", "56+"],
+
+  // Demografi: cinsiyet
+  GENDER: ["Kadın", "Erkek"],
+
+  // Departman listesi — BAGEN tarafından sağlandı (28 Nisan 2026)
   DEPARTMANLAR: [
+    "Direktör / Müdür",
+    "Dış Ticaret",
+    "Muhasebe",
+    "Bilgi İşlem",
     "İnsan Kaynakları",
-    "Mali İşler / Muhasebe",
-    "Üretim Yönetimi",
-    "Üretim Planlama",
-    "Kalite Güvence",
-    "Kalite Kontrol",
-    "Ar-Ge / Mühendislik",
-    "Satın Alma",
-    "Lojistik / Sevkiyat",
-    "Bakım Onarım",
-    "Bilgi Teknolojileri",
-    "Satış",
-    "Pazarlama",
-    "İSG (İş Sağlığı ve Güvenliği)",
-    "Yönetim / Üst Yönetim",
+    "Satınalma",
+    "Mühendislik",
+    "Kalite",
+    "Planlama",
+    "Lojistik",
+    "Sevkiyat",
+    "Depo",
+    "İdari İşler",
+    "Talaşlı İmalat",
+    "Kalıphane",
+    "Boru Hattı",
+    "Montaj",
+    "Rot Kolu Paketleme",
+    "Boyahane",
+    "Dövme",
+    "Kauçuk",
+    "Hidrolik Silindir",
+    "Hava Tüpü (Uydu)",
+    "Kaynakhane",
+    "Galvaniz Hattı",
+    "Genel Hizmetli",
     "Diğer"
   ],
 };
@@ -789,7 +810,7 @@ const state = {
   step: 0,
   answers: {},      // { "s01_q1": 4, ... }
   open: {},         // { open_1: "..." }
-  demo: { departman: "", tenure: "" },
+  demo: { departman: "", tenure: "", age: "", gender: "" },
   startedAt: null,
 };
 
@@ -950,6 +971,26 @@ function renderDemographics() {
           `).join("")}
         </select>
       </div>
+      <div class="row demo-grid-2">
+        <div>
+          <label class="field" for="age">Yaş aralığınız *</label>
+          <select id="age">
+            <option value="">— Seçiniz —</option>
+            ${CONFIG.AGE_RANGES.map(a => `
+              <option value="${escapeHtml(a)}" ${state.demo.age === a ? 'selected' : ''}>${escapeHtml(a)}</option>
+            `).join("")}
+          </select>
+        </div>
+        <div>
+          <label class="field" for="gender">Cinsiyetiniz *</label>
+          <select id="gender">
+            <option value="">— Seçiniz —</option>
+            ${CONFIG.GENDER.map(g => `
+              <option value="${escapeHtml(g)}" ${state.demo.gender === g ? 'selected' : ''}>${escapeHtml(g)}</option>
+            `).join("")}
+          </select>
+        </div>
+      </div>
     </div>
 
     <div class="review-grid">
@@ -1049,8 +1090,12 @@ function attachStepHandlers() {
   // Demographics
   const $dept = $content.querySelector("#departman");
   const $ten = $content.querySelector("#tenure");
+  const $age = $content.querySelector("#age");
+  const $gender = $content.querySelector("#gender");
   if ($dept) $dept.addEventListener("change", () => { state.demo.departman = $dept.value; saveDraft(); });
   if ($ten) $ten.addEventListener("change", () => { state.demo.tenure = $ten.value; saveDraft(); });
+  if ($age) $age.addEventListener("change", () => { state.demo.age = $age.value; saveDraft(); });
+  if ($gender) $gender.addEventListener("change", () => { state.demo.gender = $gender.value; saveDraft(); });
 
   // "Bölüme git" butonları (demografi adımındaki eksik listesi)
   $content.querySelectorAll(".goto-section").forEach(btn => {
@@ -1181,8 +1226,8 @@ async function submitSurvey() {
   }
 
   // Hard validation 2: Demografi
-  if (!state.demo.departman || !state.demo.tenure) {
-    $err.textContent = "Lütfen bölüm ve çalışma sürenizi seçin.";
+  if (!state.demo.departman || !state.demo.tenure || !state.demo.age || !state.demo.gender) {
+    $err.textContent = "Lütfen bölüm, çalışma süreniz, yaş aralığı ve cinsiyet bilgilerinin tümünü seçin.";
     $err.classList.add("show");
     return;
   }
@@ -1196,6 +1241,8 @@ async function submitSurvey() {
     started_at: state.startedAt,
     departman: state.demo.departman,
     tenure: state.demo.tenure,
+    age: state.demo.age,
+    gender: state.demo.gender,
     answers: state.answers,
     open_responses: state.open,
     meta: {
