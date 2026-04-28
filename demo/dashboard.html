@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Acme Manufacturing · Çalışan Bağlılığı Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --ink: #1a1614;
+    --ink-soft: #4a423d;
+    --ink-mute: #857c75;
+    --line: #e8e2d8;
+    --line-strong: #d4cdc1;
+    --burgundy: #7B1F2C;
+    --burgundy-dark: #5a1620;
+    --burgundy-soft: #f4e8ea;
+    --teal: #2f6b5c;
+    --teal-soft: #d9e8e3;
+    --amber: #b8902e;
+    --amber-soft: #f3ebd4;
+    --err: #8a2a2a;
+    --shadow: 0 1px 2px rgba(26, 22, 20, 0.04), 0 8px 24px -8px rgba(26, 22, 20, 0.08);
+    --radius: 6px;
+    --radius-lg: 12px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .serif { font-family: 'Fraunces', Georgia, serif; letter-spacing: -0.01em; }
+
+  /* ---------- LOGIN ---------- */
+  .login-wrap {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .login-card {
+    width: 100%; max-width: 420px;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .login-card .head {
+    padding: 32px 32px 22px; border-bottom: 1px solid var(--line); text-align: center;
+  }
+  .login-card .head .eyebrow {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--burgundy); font-weight: 500; margin-bottom: 12px;
+  }
+  .login-card .head h1 { margin: 0; font-size: 24px; font-weight: 500; line-height: 1.2; }
+  .login-card .head .sub { margin: 8px 0 0; font-size: 13px; color: var(--ink-mute); }
+  .login-card .body { padding: 24px 32px 30px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: inherit; font-size: 14px; font-weight: 500;
+    border-radius: var(--radius); padding: 11px 22px;
+    cursor: pointer; border: 1px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.05s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--burgundy); color: white; }
+  .btn-primary:hover { background: var(--burgundy-dark); }
+  .btn-block { width: 100%; }
+
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  .spinner-dark { border-color: rgba(0,0,0,0.15); border-top-color: var(--burgundy); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- TOP BAR ---------- */
+  .top-bar {
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; position: sticky; top: 0; z-index: 10;
+  }
+  .top-bar .brand { display: flex; align-items: center; gap: 12px; }
+  .top-bar .brand .dot {
+    width: 8px; height: 8px; background: var(--burgundy); border-radius: 50%;
+  }
+  .top-bar .brand .title { font-size: 15px; font-weight: 500; color: var(--ink); }
+  .top-bar .brand .subtitle { font-size: 11.5px; color: var(--ink-mute); }
+  .top-bar .actions-bar { display: flex; align-items: center; gap: 10px; }
+  .top-bar select.dept-filter, .top-bar select.tenure-filter {
+    width: auto; min-width: 180px; padding: 8px 14px; font-size: 13px;
+    font-family: inherit; color: var(--ink);
+    background: var(--bg); border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+  }
+  .btn-icon {
+    background: transparent; border: 1px solid var(--line-strong); color: var(--ink-soft);
+    padding: 8px 14px; font-size: 12px; border-radius: var(--radius);
+    cursor: pointer; font-family: inherit;
+  }
+  .btn-icon:hover { background: var(--bg); border-color: var(--ink-mute); color: var(--ink); }
+
+  /* ---------- LAYOUT ---------- */
+  .container {
+    max-width: 1280px; margin: 0 auto;
+    padding: 28px 32px 80px;
+  }
+
+  .page-head {
+    margin-bottom: 24px;
+    display: flex; justify-content: space-between; align-items: end; gap: 24px;
+    flex-wrap: wrap;
+  }
+  .page-head .left h1 { margin: 0 0 4px; font-size: 30px; font-weight: 500; }
+  .page-head .left .meta {
+    color: var(--ink-mute); font-size: 13px;
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .page-head .left .meta .dot-sep { color: var(--line-strong); }
+  .page-head .right .live-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--teal-soft); color: var(--teal);
+    padding: 6px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 500;
+  }
+  .page-head .right .live-pill .ping {
+    width: 8px; height: 8px; background: var(--teal); border-radius: 50%;
+    animation: ping 1.6s ease-in-out infinite;
+  }
+  @keyframes ping {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.85); }
+  }
+
+  /* ---------- KPI CARDS ---------- */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+    margin-bottom: 22px;
+  }
+  .kpi {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); padding: 18px 20px;
+    position: relative; overflow: hidden;
+  }
+  .kpi .label {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-mute); font-weight: 500; margin-bottom: 8px;
+  }
+  .kpi .value {
+    font-family: 'Fraunces', serif; font-size: 30px; font-weight: 500;
+    color: var(--ink); line-height: 1; letter-spacing: -0.02em;
+  }
+  .kpi .sub { font-size: 11.5px; color: var(--ink-mute); margin-top: 6px; }
+  .kpi.accent .value { color: var(--burgundy); }
+  .kpi.warn .value { color: var(--amber); }
+  .kpi.ok .value { color: var(--teal); }
+  .kpi .trend {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 500; margin-top: 6px;
+  }
+  .kpi .trend.up { color: var(--teal); }
+  .kpi .trend.down { color: var(--err); }
+
+  /* ---------- PANEL ---------- */
+  .panel {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); padding: 22px 24px;
+    margin-bottom: 16px;
+  }
+  .panel.compact { padding: 18px 20px; }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 16px; gap: 16px;
+  }
+  .panel-head h2 { margin: 0; font-size: 17px; font-weight: 500; }
+  .panel-head .panel-meta {
+    font-size: 11.5px; color: var(--ink-mute);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-head .badge-pro {
+    background: var(--burgundy-soft); color: var(--burgundy);
+    padding: 3px 10px; border-radius: 999px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .chart-host { position: relative; height: 440px; }
+  .chart-host-md { position: relative; height: 280px; }
+  .chart-host-sm { position: relative; height: 220px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  /* ---------- LIST ---------- */
+  .row-list { display: flex; flex-direction: column; gap: 8px; }
+  .data-row {
+    display: grid; grid-template-columns: 1fr auto auto;
+    gap: 12px; align-items: center;
+    padding: 9px 12px; border-radius: var(--radius);
+    background: var(--bg); font-size: 13px;
+  }
+  .data-row .name { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .data-row .bar {
+    width: 90px; height: 6px; background: var(--line); border-radius: 3px;
+    overflow: hidden;
+  }
+  .data-row .bar > div { height: 100%; background: var(--burgundy); border-radius: 3px; }
+  .data-row .num {
+    font-variant-numeric: tabular-nums; color: var(--ink-soft); font-weight: 500;
+    min-width: 32px; text-align: right;
+  }
+
+  /* ---------- TOP/BOTTOM Q ---------- */
+  .qbox {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .qrow {
+    display: grid; grid-template-columns: 36px 1fr auto;
+    gap: 10px; align-items: center;
+    padding: 12px 14px; border-radius: var(--radius);
+    background: var(--bg); font-size: 13px;
+  }
+  .qrow .qrank {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--line); color: var(--ink-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 14px;
+  }
+  .qrow.high .qrank { background: var(--teal-soft); color: var(--teal); }
+  .qrow.low .qrank { background: var(--burgundy-soft); color: var(--burgundy); }
+  .qrow .qbody { line-height: 1.4; }
+  .qrow .qbody .qsec { font-size: 11px; color: var(--ink-mute); margin-bottom: 2px; }
+  .qrow .qbody .qtxt { color: var(--ink); }
+  .qrow .qval {
+    font-family: 'Fraunces', serif; font-size: 19px; font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .qrow.high .qval { color: var(--teal); }
+  .qrow.low .qval { color: var(--burgundy); }
+
+  /* ---------- HEATMAP ---------- */
+  .heat-wrap { overflow-x: auto; }
+  .heat {
+    border-collapse: separate; border-spacing: 2px;
+    font-size: 11.5px; min-width: 100%;
+  }
+  .heat th {
+    font-weight: 500; color: var(--ink-mute);
+    padding: 6px 4px; text-align: center;
+    font-size: 10.5px; letter-spacing: 0.04em;
+  }
+  .heat td.label {
+    color: var(--ink); padding: 6px 12px 6px 0;
+    text-align: left; white-space: nowrap; font-size: 12px;
+  }
+  .heat td.cell {
+    width: 52px; height: 32px;
+    text-align: center; font-weight: 500;
+    border-radius: 4px;
+    color: var(--ink); font-variant-numeric: tabular-nums;
+  }
+  .heat .cell-na { background: #f0ece4; color: var(--ink-mute); font-size: 10px; }
+
+  /* ---------- WORD CLOUD ---------- */
+  .wcloud {
+    display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
+    padding: 16px 8px; min-height: 240px;
+  }
+  .wcloud span {
+    color: var(--ink-soft);
+    line-height: 1.1; padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .wcloud span.w1 { font-size: 12px; opacity: 0.55; }
+  .wcloud span.w2 { font-size: 14px; opacity: 0.7; color: var(--ink); }
+  .wcloud span.w3 { font-size: 18px; font-weight: 500; color: var(--ink); }
+  .wcloud span.w4 { font-size: 24px; font-weight: 500; color: var(--burgundy); }
+  .wcloud span.w5 {
+    font-family: 'Fraunces', serif;
+    font-size: 30px; font-weight: 500; color: var(--burgundy);
+  }
+
+  /* ---------- ENPS ---------- */
+  .enps {
+    display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center;
+    padding: 8px 4px;
+  }
+  .enps-score {
+    text-align: center;
+  }
+  .enps-score .num {
+    font-family: 'Fraunces', serif; font-size: 64px; font-weight: 500;
+    line-height: 1; letter-spacing: -0.03em; color: var(--teal);
+  }
+  .enps-score .label {
+    font-size: 12px; color: var(--ink-mute); margin-top: 4px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .enps-bar {
+    height: 32px; border-radius: 6px; overflow: hidden;
+    display: flex; box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .enps-bar > div {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11.5px; color: white; font-weight: 500;
+  }
+  .enps-bar .det { background: #b04444; }
+  .enps-bar .pas { background: #b8902e; }
+  .enps-bar .pro { background: var(--teal); }
+  .enps-legend {
+    display: flex; justify-content: space-between; margin-top: 8px;
+    font-size: 11px; color: var(--ink-mute);
+  }
+
+  /* ---------- DEMOGRAFI MINI ---------- */
+  .demo-cmp {
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .demo-cmp-row {
+    display: grid; grid-template-columns: 70px 1fr 56px;
+    gap: 12px; align-items: center;
+  }
+  .demo-cmp-row .lbl { color: var(--ink-soft); font-size: 13px; }
+  .demo-cmp-row .gbar {
+    height: 8px; background: var(--line); border-radius: 4px; overflow: hidden;
+    position: relative;
+  }
+  .demo-cmp-row .gbar > div {
+    height: 100%; background: linear-gradient(90deg, var(--burgundy), var(--burgundy-dark));
+    border-radius: 4px; transition: width 0.6s ease;
+  }
+  .demo-cmp-row .val {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 16px;
+    color: var(--ink); text-align: right; font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- DISCLAIMER + UPSELL ---------- */
+  .upsell {
+    margin-top: 20px;
+    background: linear-gradient(135deg, var(--burgundy-soft) 0%, #fbf1f2 100%);
+    border: 1px solid #ecd6da;
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    display: flex; gap: 22px; align-items: center;
+  }
+  .upsell .icon {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--burgundy); color: white;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .upsell .icon svg { width: 22px; height: 22px; stroke: white; }
+  .upsell .body {
+    flex: 1;
+  }
+  .upsell .body h4 {
+    margin: 0 0 4px; font-size: 15px; font-weight: 500; color: var(--burgundy-dark);
+  }
+  .upsell .body p {
+    margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5;
+  }
+  .upsell .body a {
+    color: var(--burgundy); font-weight: 500; text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .foot {
+    border-top: 1px solid var(--line); background: var(--surface);
+    padding: 16px 32px; text-align: center;
+    font-size: 11.5px; color: var(--ink-mute); letter-spacing: 0.04em;
+  }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 1100px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-2-1 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .container { padding: 22px 16px 60px; }
+    .top-bar { padding: 12px 16px; flex-direction: column; align-items: stretch; gap: 10px; }
+    .top-bar .actions-bar { justify-content: space-between; flex-wrap: wrap; }
+    .top-bar select { flex: 1; min-width: 0; }
+    .page-head { flex-direction: column; align-items: flex-start; }
+    .page-head .left h1 { font-size: 24px; }
+    .panel { padding: 16px 16px; }
+    .chart-host { height: 360px; }
+    .upsell { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== LOGIN ============== -->
+<div id="screen-login" class="login-wrap">
+  <div class="login-card">
+    <div class="head">
+      <div class="eyebrow">ACME MANUFACTURING · DEMO</div>
+      <h1 class="serif">Çalışan Bağlılığı Dashboard</h1>
+      <p class="sub">Atelier Ethos · İK Analitik Demo</p>
+    </div>
+    <div class="body">
+      <p style="margin: 0 0 20px; font-size: 13.5px; color: var(--ink-soft); line-height: 1.6;">
+        Bu, <strong>Acme Manufacturing</strong> adlı kurgu firmasının çalışan bağlılığı
+        anketi sonuçlarını gösteren <strong>demo dashboard</strong>'dur. Tüm metrikler temsili
+        veridir; gerçek müşteri kurulumlarında çevrim-içi anket sonuçlarına bağlı olarak
+        güncellenir.
+      </p>
+      <button id="btn-enter" class="btn btn-primary btn-block">
+        Demo Dashboard'u Aç →
+      </button>
+      <p style="margin: 18px 0 0; font-size: 12px; color: var(--ink-mute); text-align: center;">
+        <strong>Atelier Ethos İK Danışmanlık A.Ş.</strong>
+      </p>
+      <p style="margin: 14px 0 0; text-align: center;">
+        <a href="index.html" style="font-size: 12px; color: var(--ink-mute); text-decoration: none;">
+          ← Tüm modüllere dön
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ============== DASHBOARD ============== -->
+<div id="screen-dashboard" class="hidden">
+  <div class="top-bar">
+    <div class="brand">
+      <span class="dot"></span>
+      <div>
+        <div class="title">Acme Manufacturing · Çalışan Bağlılığı Dashboard</div>
+        <div class="subtitle">Beyaz Yaka · 2026 Q1 Anketi · Atelier Ethos</div>
+      </div>
+    </div>
+    <div class="actions-bar">
+      <a href="index.html" class="btn-icon" style="text-decoration: none;">← Modüller</a>
+      <select id="dept-filter" class="dept-filter">
+        <option value="__ALL__">Tüm departmanlar</option>
+      </select>
+      <select id="tenure-filter" class="tenure-filter">
+        <option value="__ALL__">Tüm çalışma süreleri</option>
+      </select>
+      <button id="btn-refresh" class="btn-icon">↻ Yenile</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-head">
+      <div class="left">
+        <h1 class="serif" id="page-title">Genel sonuçlar</h1>
+        <div class="meta" id="page-meta"><span>—</span></div>
+      </div>
+      <div class="right">
+        <span class="live-pill"><span class="ping"></span> Canlı veri</span>
+      </div>
+    </div>
+
+    <div id="dash-content"></div>
+
+    <div class="upsell">
+      <div class="icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+      </div>
+      <div class="body">
+        <h4>Daha derinlemesine analiz mi istiyorsunuz?</h4>
+        <p>
+          Atelier Ethos <strong>danışmanlık paketi</strong> ile aksiyon planı, departman bazında
+          birebir görüşme, açık uçlu yanıt analizi ve sektör kıyaslaması hizmetlerimizden
+          yararlanabilirsiniz. <a href="https://atelier-ethos.vercel.app/" target="_blank">Detaylar →</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Atelier Ethos İK Danışmanlık A.Ş. · atelier-ethos.vercel.app · Demo Dashboard
+  </div>
+</div>
+
+<!-- ============== Chart.js ============== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+/* =====================================================================
+   KONFİGÜRASYON
+   ===================================================================== */
+const CONFIG = {
+  EDGE_FUNCTION_URL: "https://semukowxbnsxtncuhvqq.supabase.co/functions/v1/acme-demo-stats",
+  SUPABASE_ANON: "sb_publishable_Wg01HpvgzrBSiPWWXDagng_M4Kp8ACg",
+};
+
+const SECTIONS = [
+  { num: "01", title: "Genel Bağlılık & Motivasyon",        count: 7  },
+  { num: "02", title: "İş Arkadaşlarım",                    count: 8  },
+  { num: "03", title: "Diğer Bölümlerdeki Çalışanlar",      count: 7  },
+  { num: "04", title: "Yöneticim (İlk Amir)",               count: 14 },
+  { num: "05", title: "İşimin Kendisi & Sorumluluk",        count: 14 },
+  { num: "06", title: "Başarma Duygusu & Takdir",           count: 7  },
+  { num: "07", title: "Gelişme Olanakları & Kariyer",       count: 12 },
+  { num: "08", title: "Üst Yönetim & Şirket Politikaları",  count: 12 },
+  { num: "09", title: "İş Yeri & Çalışma Koşulları",        count: 11 },
+  { num: "10", title: "İş Güvenliği & İSG",                 count: 9  },
+  { num: "11", title: "Sağlık, Sosyal & Kültürel Olanaklar",count: 11 },
+  { num: "12", title: "İş Güvencesi & Yasal Haklar",        count: 3  },
+  { num: "13", title: "İş – Özel Yaşam Dengesi",            count: 6  },
+];
+
+/* =====================================================================
+   SAHTE VERİ — DEMO İÇİN HARDCODED
+   Gerçekçi varyans: Bazı departmanlar yüksek, bazıları düşük; cinsiyet/yaş etkileri var
+   ===================================================================== */
+const SEED_DATA = {
+  meta: {
+    total_responses: 147,
+    filtered_responses: 147,
+    filter_dept: "__ALL__",
+    filter_tenure: "__ALL__",
+    first_response: "2026-04-08T09:14:00Z",
+    last_response: "2026-04-26T17:42:00Z",
+    generated_at: "2026-04-28T11:00:00Z",
+  },
+  overall_avg: 3.71,
+  // Bölüm ortalamaları - gerçekçi varyans
+  section_averages: [
+    {num: "01", title: "Genel Bağlılık & Motivasyon",        avg: 3.84, n: 1029},
+    {num: "02", title: "İş Arkadaşlarım",                    avg: 4.18, n: 1176},
+    {num: "03", title: "Diğer Bölümlerdeki Çalışanlar",      avg: 3.34, n: 1029},
+    {num: "04", title: "Yöneticim (İlk Amir)",               avg: 3.56, n: 2058},
+    {num: "05", title: "İşimin Kendisi & Sorumluluk",        avg: 4.02, n: 2058},
+    {num: "06", title: "Başarma Duygusu & Takdir",           avg: 3.12, n: 1029},
+    {num: "07", title: "Gelişme Olanakları & Kariyer",       avg: 2.87, n: 1764},
+    {num: "08", title: "Üst Yönetim & Şirket Politikaları",  avg: 3.21, n: 1764},
+    {num: "09", title: "İş Yeri & Çalışma Koşulları",        avg: 3.94, n: 1617},
+    {num: "10", title: "İş Güvenliği & İSG",                 avg: 4.41, n: 1323},
+    {num: "11", title: "Sağlık, Sosyal & Kültürel Olanaklar",avg: 3.62, n: 1617},
+    {num: "12", title: "İş Güvencesi & Yasal Haklar",        avg: 3.74, n: 441},
+    {num: "13", title: "İş – Özel Yaşam Dengesi",            avg: 3.38, n: 882},
+  ],
+  department_distribution: [
+    {dept: "Üretim",                    n: 28},
+    {dept: "Kalite Güvence",            n: 19},
+    {dept: "Mali İşler / Muhasebe",     n: 14},
+    {dept: "Satış",                     n: 13},
+    {dept: "Ar-Ge / Mühendislik",       n: 12},
+    {dept: "İnsan Kaynakları",          n: 11},
+    {dept: "Satın Alma",                n: 10},
+    {dept: "Lojistik / Depo",           n: 9},
+    {dept: "Üretim Planlama",           n: 8},
+    {dept: "Bakım",                     n: 7},
+    {dept: "Pazarlama",                 n: 6},
+    {dept: "Bilgi Teknolojileri",       n: 5},
+    {dept: "İdari İşler",               n: 3},
+    {dept: "Genel Müdürlük",            n: 2},
+  ],
+  tenure_distribution: {
+    "1 yıldan az": 18,
+    "1–3 yıl":     42,
+    "3–5 yıl":     38,
+    "5–10 yıl":    32,
+    "10 yıl üzeri": 17,
+  },
+  age_distribution: {
+    "18-25": 14, "26-35": 56, "36-45": 47, "46-55": 22, "56+": 8,
+  },
+  gender_distribution: { "Kadın": 58, "Erkek": 89 },
+  gender_averages: { "Kadın": 3.62, "Erkek": 3.78 },
+  tenure_averages: {
+    "1 yıldan az": 4.02,
+    "1–3 yıl":     3.85,
+    "3–5 yıl":     3.71,
+    "5–10 yıl":    3.54,
+    "10 yıl üzeri": 3.41,
+  },
+  // Heatmap: top 8 dept × 13 section
+  heatmap: [
+    {dept: "Üretim", n: 28, cells: [
+      {section:"01",avg:3.92},{section:"02",avg:4.21},{section:"03",avg:3.18},
+      {section:"04",avg:3.74},{section:"05",avg:4.05},{section:"06",avg:3.26},
+      {section:"07",avg:2.94},{section:"08",avg:3.34},{section:"09",avg:3.81},
+      {section:"10",avg:4.52},{section:"11",avg:3.55},{section:"12",avg:3.82},
+      {section:"13",avg:3.45}
+    ]},
+    {dept: "Kalite Güvence", n: 19, cells: [
+      {section:"01",avg:4.05},{section:"02",avg:4.31},{section:"03",avg:3.42},
+      {section:"04",avg:3.85},{section:"05",avg:4.18},{section:"06",avg:3.45},
+      {section:"07",avg:3.12},{section:"08",avg:3.55},{section:"09",avg:4.02},
+      {section:"10",avg:4.62},{section:"11",avg:3.71},{section:"12",avg:3.92},
+      {section:"13",avg:3.62}
+    ]},
+    {dept: "Mali İşler / Muhasebe", n: 14, cells: [
+      {section:"01",avg:3.71},{section:"02",avg:4.05},{section:"03",avg:3.21},
+      {section:"04",avg:3.32},{section:"05",avg:3.85},{section:"06",avg:2.98},
+      {section:"07",avg:2.65},{section:"08",avg:3.05},{section:"09",avg:4.12},
+      {section:"10",avg:4.28},{section:"11",avg:3.55},{section:"12",avg:3.65},
+      {section:"13",avg:3.18}
+    ]},
+    {dept: "Satış", n: 13, cells: [
+      {section:"01",avg:3.55},{section:"02",avg:3.92},{section:"03",avg:3.05},
+      {section:"04",avg:3.18},{section:"05",avg:3.95},{section:"06",avg:2.78},
+      {section:"07",avg:2.55},{section:"08",avg:2.95},{section:"09",avg:3.85},
+      {section:"10",avg:4.21},{section:"11",avg:3.42},{section:"12",avg:3.45},
+      {section:"13",avg:2.92}
+    ]},
+    {dept: "Ar-Ge / Mühendislik", n: 12, cells: [
+      {section:"01",avg:4.12},{section:"02",avg:4.28},{section:"03",avg:3.62},
+      {section:"04",avg:3.85},{section:"05",avg:4.32},{section:"06",avg:3.55},
+      {section:"07",avg:3.25},{section:"08",avg:3.42},{section:"09",avg:4.05},
+      {section:"10",avg:4.41},{section:"11",avg:3.78},{section:"12",avg:3.95},
+      {section:"13",avg:3.55}
+    ]},
+    {dept: "İnsan Kaynakları", n: 11, cells: [
+      {section:"01",avg:4.21},{section:"02",avg:4.42},{section:"03",avg:3.75},
+      {section:"04",avg:4.05},{section:"05",avg:4.18},{section:"06",avg:3.82},
+      {section:"07",avg:3.65},{section:"08",avg:3.92},{section:"09",avg:4.12},
+      {section:"10",avg:4.55},{section:"11",avg:3.95},{section:"12",avg:4.05},
+      {section:"13",avg:3.78}
+    ]},
+    {dept: "Satın Alma", n: 10, cells: [
+      {section:"01",avg:3.62},{section:"02",avg:4.02},{section:"03",avg:3.15},
+      {section:"04",avg:3.45},{section:"05",avg:3.92},{section:"06",avg:2.95},
+      {section:"07",avg:2.72},{section:"08",avg:3.18},{section:"09",avg:3.85},
+      {section:"10",avg:4.32},{section:"11",avg:3.52},{section:"12",avg:3.58},
+      {section:"13",avg:3.22}
+    ]},
+    {dept: "Lojistik / Depo", n: 9, cells: [
+      {section:"01",avg:3.45},{section:"02",avg:3.85},{section:"03",avg:2.95},
+      {section:"04",avg:3.05},{section:"05",avg:3.78},{section:"06",avg:2.62},
+      {section:"07",avg:2.42},{section:"08",avg:2.85},{section:"09",avg:3.65},
+      {section:"10",avg:4.05},{section:"11",avg:3.32},{section:"12",avg:3.32},
+      {section:"13",avg:2.85}
+    ]},
+  ],
+  enps: { score: 24, promoters: 71, passives: 47, detractors: 29, total: 147 },
+  bottom_questions: [
+    {key:"s07_q5", section:"07. Gelişme Olanakları & Kariyer", text:"Başarılarımda ödüllendiriliyorum.", avg: 2.42, n: 147},
+    {key:"s06_q6", section:"06. Başarma Duygusu & Takdir", text:"Üstün başarılarım ödüllendirilir.", avg: 2.58, n: 147},
+    {key:"s07_q6", section:"07. Gelişme Olanakları & Kariyer", text:"Yeterli terfi fırsatları vardır.", avg: 2.71, n: 147},
+    {key:"s08_q11", section:"08. Üst Yönetim & Şirket Politikaları", text:"Görüş ve beklentilerimi şirket üst yönetimine rahatlıkla iletebiliyorum.", avg: 2.85, n: 147},
+    {key:"s07_q11", section:"07. Gelişme Olanakları & Kariyer", text:"İçeriden yükselme ve yetişme fırsatlarının varlığını biliyorum.", avg: 2.92, n: 147},
+  ],
+  top_questions: [
+    {key:"s10_q5", section:"10. İş Güvenliği & İSG", text:"İş emniyeti konularında eğitimler verilir.", avg: 4.62, n: 147},
+    {key:"s02_q1", section:"02. İş Arkadaşlarım", text:"İş arkadaşlarım ihtiyaç duyduğumda yardımcı olur.", avg: 4.41, n: 147},
+    {key:"s10_q3", section:"10. İş Güvenliği & İSG", text:"Koruyucu malzeme ve araç-gereçleri vardır.", avg: 4.38, n: 147},
+    {key:"s05_q3", section:"05. İşimin Kendisi & Sorumluluk", text:"Yeteneklerimi kullanırım.", avg: 4.32, n: 147},
+    {key:"s02_q5", section:"02. İş Arkadaşlarım", text:"Bölümümüz içinde güçlü bir takım anlayışı ve dayanışma var.", avg: 4.28, n: 147},
+  ],
+  // Kelime bulutu için sahte sıklıklar
+  word_freq: [
+    {w: "ekip ruhu",        size: 5},
+    {w: "iş güvenliği",     size: 5},
+    {w: "kariyer",          size: 4},
+    {w: "ücret",            size: 4},
+    {w: "yöneticim",        size: 4},
+    {w: "esneklik",         size: 3},
+    {w: "öğrenme",          size: 3},
+    {w: "iletişim",         size: 3},
+    {w: "iş yükü",          size: 3},
+    {w: "değer",            size: 3},
+    {w: "takdir",           size: 4},
+    {w: "şeffaflık",        size: 3},
+    {w: "tanınma",          size: 3},
+    {w: "süreçler",         size: 2},
+    {w: "uzaktan çalışma",  size: 2},
+    {w: "yemekhane",        size: 2},
+    {w: "servis",           size: 2},
+    {w: "eğitim",           size: 4},
+    {w: "kararlara katılım",size: 3},
+    {w: "iş arkadaşları",   size: 4},
+    {w: "şirket vizyonu",   size: 2},
+    {w: "fırsat eşitliği",  size: 3},
+    {w: "geri bildirim",    size: 3},
+    {w: "ofis ortamı",      size: 2},
+    {w: "yıllık izin",      size: 2},
+    {w: "performans",       size: 3},
+    {w: "primler",          size: 2},
+    {w: "esnek mesai",      size: 2},
+    {w: "açık iletişim",    size: 3},
+  ],
+  // Zaman serisi: 21 günlük yanıt eğrisi
+  timeline: [
+    {date:"08 Nis", n: 4}, {date:"09 Nis", n: 9}, {date:"10 Nis", n: 12},
+    {date:"11 Nis", n: 8}, {date:"12 Nis", n: 5}, {date:"13 Nis", n: 6},
+    {date:"14 Nis", n: 11}, {date:"15 Nis", n: 14}, {date:"16 Nis", n: 13},
+    {date:"17 Nis", n: 9}, {date:"18 Nis", n: 4}, {date:"19 Nis", n: 3},
+    {date:"20 Nis", n: 8}, {date:"21 Nis", n: 11}, {date:"22 Nis", n: 9},
+    {date:"23 Nis", n: 7}, {date:"24 Nis", n: 5}, {date:"25 Nis", n: 4},
+    {date:"26 Nis", n: 5},
+  ],
+  departments: [
+    "Üretim", "Kalite Güvence", "Mali İşler / Muhasebe", "Satış",
+    "Ar-Ge / Mühendislik", "İnsan Kaynakları", "Satın Alma",
+    "Lojistik / Depo", "Üretim Planlama", "Bakım", "Pazarlama",
+    "Bilgi Teknolojileri", "İdari İşler", "Genel Müdürlük",
+  ],
+};
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+let state = {
+  data: null,
+  selectedDept: "__ALL__",
+  selectedTenure: "__ALL__",
+  charts: {},
+};
+const $ = (id) => document.getElementById(id);
+
+/* =====================================================================
+   LOGIN -> DASHBOARD
+   ===================================================================== */
+$("btn-enter").addEventListener("click", async () => {
+  $("screen-login").classList.add("hidden");
+  $("screen-dashboard").classList.remove("hidden");
+  await loadAndRender();
+});
+
+/* =====================================================================
+   FETCH (canlı + sahte birleşimi)
+   ===================================================================== */
+async function fetchLiveStats() {
+  try {
+    const headers = { "Content-Type": "application/json" };
+    if (CONFIG.SUPABASE_ANON) {
+      headers["Authorization"] = `Bearer ${CONFIG.SUPABASE_ANON}`;
+      headers["apikey"] = CONFIG.SUPABASE_ANON;
+    }
+    const resp = await fetch(CONFIG.EDGE_FUNCTION_URL, {
+      method: "POST", headers,
+      body: JSON.stringify({ department: state.selectedDept }),
+    });
+    if (!resp.ok) return null;
+    return await resp.json();
+  } catch (e) {
+    console.warn("Live veri alınamadı, sadece seed kullanılacak:", e);
+    return null;
+  }
+}
+
+async function loadAndRender() {
+  // Önce seed göster, sonra canlı veriyle MERGE et
+  state.data = JSON.parse(JSON.stringify(SEED_DATA));
+  populateFilters();
+  render();
+
+  // Canlı veriyi çek
+  const live = await fetchLiveStats();
+  if (live && live.meta && live.meta.total_responses > 0) {
+    // Canlı verileri seed'in üzerine ekle (basit toplama mantığı)
+    state.data = mergeData(SEED_DATA, live);
+    populateFilters();
+    render();
+  }
+}
+
+function mergeData(seed, live) {
+  // Seed sayılarına live'i ekle. Ortalama: ağırlıklı.
+  const merged = JSON.parse(JSON.stringify(seed));
+  const ws = seed.meta.total_responses;
+  const wl = live.meta.total_responses;
+  const wt = ws + wl;
+
+  merged.meta.total_responses = wt;
+  merged.meta.filtered_responses = wt;
+  merged.meta.last_response = live.meta.last_response || seed.meta.last_response;
+
+  // Genel ortalama: ağırlıklı
+  if (live.overall_avg != null) {
+    merged.overall_avg = (seed.overall_avg * ws + live.overall_avg * wl) / wt;
+  }
+
+  // Section averages: ağırlıklı
+  merged.section_averages = seed.section_averages.map((s, i) => {
+    const ls = live.section_averages?.[i];
+    if (!ls || ls.avg == null) return s;
+    return {
+      ...s,
+      avg: (s.avg * ws + ls.avg * wl) / wt,
+      n: s.n + (ls.n_responses || 0),
+    };
+  });
+
+  // Departman dağılımı: birleştir
+  const deptMap = {};
+  seed.department_distribution.forEach(d => deptMap[d.dept] = d.n);
+  (live.department_distribution || []).forEach(d => {
+    deptMap[d.dept] = (deptMap[d.dept] || 0) + d.n;
+  });
+  merged.department_distribution = Object.entries(deptMap)
+    .map(([dept, n]) => ({dept, n}))
+    .sort((a,b) => b.n - a.n);
+
+  // Tenure / age / gender — basit toplam
+  ["tenure_distribution", "age_distribution", "gender_distribution"].forEach(k => {
+    const m = {...seed[k]};
+    Object.entries(live[k] || {}).forEach(([key, v]) => {
+      m[key] = (m[key] || 0) + v;
+    });
+    merged[k] = m;
+  });
+
+  // departments listesi güncelle
+  merged.departments = merged.department_distribution.map(d => d.dept);
+
+  return merged;
+}
+
+/* =====================================================================
+   FILTER & EVENTS
+   ===================================================================== */
+function populateFilters() {
+  const $sel = $("dept-filter");
+  $sel.innerHTML = '<option value="__ALL__">Tüm departmanlar</option>' +
+    state.data.departments.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join("");
+  $sel.value = state.selectedDept;
+  $sel.onchange = () => {
+    state.selectedDept = $sel.value;
+    render();
+  };
+
+  const $ten = $("tenure-filter");
+  $ten.innerHTML = '<option value="__ALL__">Tüm çalışma süreleri</option>' +
+    Object.keys(state.data.tenure_distribution).map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
+  $ten.value = state.selectedTenure;
+  $ten.onchange = () => {
+    state.selectedTenure = $ten.value;
+    render();
+  };
+}
+
+$("btn-refresh").addEventListener("click", loadAndRender);
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+}
+function fmt(n, d=2) {
+  if (n == null || isNaN(n)) return "—";
+  return Number(n).toFixed(d);
+}
+function fmtDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
+}
+
+// Heatmap renk: 1-5 ölçeğine göre kırmızı-bordo (düşük) → krem → yeşil (yüksek)
+function heatColor(v) {
+  if (v == null) return "#f0ece4";
+  // 1-5 ölçeği. 3 = nötr.
+  const t = (v - 1) / 4; // 0-1
+  // Bordo → krem → yeşil rampası
+  if (t < 0.5) {
+    // 0 (kırmızı/bordo) → 0.5 (krem)
+    const r = Math.round(123 + (245 - 123) * (t * 2));
+    const g = Math.round(31 + (232 - 31) * (t * 2));
+    const b = Math.round(44 + (218 - 44) * (t * 2));
+    return `rgb(${r},${g},${b})`;
+  } else {
+    // 0.5 (krem) → 1 (yeşil/teal)
+    const tt = (t - 0.5) * 2;
+    const r = Math.round(245 + (47 - 245) * tt);
+    const g = Math.round(232 + (107 - 232) * tt);
+    const b = Math.round(218 + (92 - 218) * tt);
+    return `rgb(${r},${g},${b})`;
+  }
+}
+function heatTextColor(v) {
+  if (v == null) return "#857c75";
+  if (v < 2.5 || v > 4.0) return "white";
+  return "#1a1614";
+}
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+function render() {
+  const d = state.data;
+  if (!d) return;
+
+  // Departman filtresi uygulanırsa, bölüm ortalamaları o departmandan gelmeli
+  // Demo'da bunu sadeleştirip heatmap'tan çekiyoruz
+  let sectionAverages = d.section_averages;
+  let displayN = d.meta.total_responses;
+  let isFiltered = state.selectedDept !== "__ALL__" || state.selectedTenure !== "__ALL__";
+
+  if (state.selectedDept !== "__ALL__") {
+    const heatRow = d.heatmap.find(h => h.dept === state.selectedDept);
+    if (heatRow) {
+      sectionAverages = heatRow.cells.map(c => {
+        const sec = SECTIONS.find(s => s.num === c.section);
+        return {num: c.section, title: sec.title, avg: c.avg, n: heatRow.n * sec.count};
+      });
+      displayN = heatRow.n;
+    }
+  }
+
+  // Tenure filtresi (basit yaklaşım: bütün ortalamaya küçük bir adjustment)
+  if (state.selectedTenure !== "__ALL__") {
+    const tAvg = d.tenure_averages?.[state.selectedTenure];
+    const baseAvg = d.overall_avg;
+    if (tAvg && baseAvg) {
+      const delta = tAvg - baseAvg;
+      sectionAverages = sectionAverages.map(s => ({
+        ...s, avg: s.avg + delta * 0.7
+      }));
+    }
+    displayN = d.tenure_distribution?.[state.selectedTenure] || displayN;
+  }
+
+  const validSections = sectionAverages.filter(s => s.avg != null);
+  const overallAvg = validSections.length
+    ? validSections.reduce((a, s) => a + s.avg, 0) / validSections.length
+    : d.overall_avg;
+
+  let highest = null, lowest = null;
+  if (validSections.length > 0) {
+    highest = validSections.reduce((a, b) => a.avg > b.avg ? a : b);
+    lowest  = validSections.reduce((a, b) => a.avg < b.avg ? a : b);
+  }
+
+  // Title & meta
+  $("page-title").textContent = isFiltered
+    ? `Filtreli sonuçlar`
+    : "Genel sonuçlar";
+
+  let metaParts = [`${displayN} yanıt`];
+  if (state.selectedDept !== "__ALL__") metaParts.push(`Departman: ${state.selectedDept}`);
+  if (state.selectedTenure !== "__ALL__") metaParts.push(`Süre: ${state.selectedTenure}`);
+  metaParts.push(`İlk: ${fmtDate(d.meta.first_response)}`);
+  metaParts.push(`Son: ${fmtDate(d.meta.last_response)}`);
+  $("page-meta").innerHTML = metaParts.map((p, i) =>
+    `<span>${escapeHtml(p)}</span>` + (i < metaParts.length - 1 ? '<span class="dot-sep">•</span>' : "")
+  ).join("");
+
+  // Build content
+  $("dash-content").innerHTML = `
+    <!-- KPI ROW -->
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="label">Toplam Yanıt</div>
+        <div class="value">${displayN}</div>
+        <div class="trend up">↑ ${Math.round(displayN * 0.18)} bu hafta</div>
+      </div>
+      <div class="kpi accent">
+        <div class="label">Genel Ortalama</div>
+        <div class="value">${fmt(overallAvg)}</div>
+        <div class="sub">5 üzerinden Likert</div>
+      </div>
+      <div class="kpi ok">
+        <div class="label">eNPS Skoru</div>
+        <div class="value">${d.enps.score > 0 ? '+' : ''}${d.enps.score}</div>
+        <div class="sub">Çalışan tavsiye eğilimi</div>
+      </div>
+      <div class="kpi ok">
+        <div class="label">En Yüksek Bölüm</div>
+        <div class="value">${highest ? fmt(highest.avg) : "—"}</div>
+        <div class="sub" title="${highest ? escapeHtml(highest.title) : ''}">
+          ${highest ? truncate(highest.title, 26) : "—"}
+        </div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">En Düşük Bölüm</div>
+        <div class="value">${lowest ? fmt(lowest.avg) : "—"}</div>
+        <div class="sub" title="${lowest ? escapeHtml(lowest.title) : ''}">
+          ${lowest ? truncate(lowest.title, 26) : "—"}
+        </div>
+      </div>
+    </div>
+
+    <!-- BÖLÜM ORTALAMALARI -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Bölüm bazında ortalamalar</h2>
+        <div class="panel-meta">5 üzerinden · ${isFiltered ? 'filtreli' : 'tümü'}</div>
+      </div>
+      <div class="chart-host"><canvas id="chart-sections"></canvas></div>
+    </div>
+
+    <!-- HEATMAP -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Departman × Bölüm ısı haritası</h2>
+        <div class="panel-meta">
+          <span class="badge-pro">Pro</span>
+          ortalama puan
+        </div>
+      </div>
+      <div class="heat-wrap">
+        ${renderHeatmap(d.heatmap)}
+      </div>
+    </div>
+
+    <!-- TOP/BOTTOM QUESTIONS -->
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>En güçlü 5 soru</h2>
+          <div class="panel-meta">en yüksek ortalama</div>
+        </div>
+        <div class="qbox">
+          ${d.top_questions.map((q, i) => `
+            <div class="qrow high">
+              <div class="qrank">${i+1}</div>
+              <div class="qbody">
+                <div class="qsec">${escapeHtml(q.section)}</div>
+                <div class="qtxt">${escapeHtml(q.text)}</div>
+              </div>
+              <div class="qval">${fmt(q.avg)}</div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>En zayıf 5 soru</h2>
+          <div class="panel-meta">öncelikli iyileştirme alanları</div>
+        </div>
+        <div class="qbox">
+          ${d.bottom_questions.map((q, i) => `
+            <div class="qrow low">
+              <div class="qrank">${i+1}</div>
+              <div class="qbody">
+                <div class="qsec">${escapeHtml(q.section)}</div>
+                <div class="qtxt">${escapeHtml(q.text)}</div>
+              </div>
+              <div class="qval">${fmt(q.avg)}</div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+
+    <!-- eNPS + TIMELINE -->
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>eNPS — Çalışan Tavsiye Skoru</h2>
+          <div class="panel-meta">"Şirketimi tavsiye ederim" → ${d.enps.total} yanıt</div>
+        </div>
+        <div class="enps">
+          <div class="enps-score">
+            <div class="num">${d.enps.score > 0 ? '+' : ''}${d.enps.score}</div>
+            <div class="label">eNPS</div>
+          </div>
+          <div>
+            <div class="enps-bar">
+              <div class="det" style="width: ${(d.enps.detractors/d.enps.total*100).toFixed(1)}%">
+                ${d.enps.detractors}
+              </div>
+              <div class="pas" style="width: ${(d.enps.passives/d.enps.total*100).toFixed(1)}%">
+                ${d.enps.passives}
+              </div>
+              <div class="pro" style="width: ${(d.enps.promoters/d.enps.total*100).toFixed(1)}%">
+                ${d.enps.promoters}
+              </div>
+            </div>
+            <div class="enps-legend">
+              <span>← Kötüleyici (1-2)</span>
+              <span>Pasif (3)</span>
+              <span>Tavsiye eden (4-5) →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Yanıt eğrisi</h2>
+          <div class="panel-meta">son 19 gün</div>
+        </div>
+        <div class="chart-host-md"><canvas id="chart-timeline"></canvas></div>
+      </div>
+    </div>
+
+    <!-- DEMOGRAFİ KARŞILAŞTIRMA -->
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Cinsiyet bazında ortalama</h2>
+          <div class="panel-meta">Genel memnuniyet kıyaslaması</div>
+        </div>
+        <div class="demo-cmp">
+          ${["Kadın", "Erkek"].map(g => {
+            const v = d.gender_averages?.[g];
+            const n = d.gender_distribution?.[g] || 0;
+            return v ? `
+              <div class="demo-cmp-row">
+                <div class="lbl">${escapeHtml(g)} <span style="color: var(--ink-mute); font-size: 11px;">(n=${n})</span></div>
+                <div class="gbar"><div style="width: ${(v/5*100).toFixed(0)}%"></div></div>
+                <div class="val">${fmt(v)}</div>
+              </div>
+            ` : "";
+          }).join("")}
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Çalışma süresi bazında ortalama</h2>
+          <div class="panel-meta">Tenure × memnuniyet ilişkisi</div>
+        </div>
+        <div class="demo-cmp">
+          ${["1 yıldan az", "1–3 yıl", "3–5 yıl", "5–10 yıl", "10 yıl üzeri"].map(t => {
+            const v = d.tenure_averages?.[t];
+            const n = d.tenure_distribution?.[t] || 0;
+            return v ? `
+              <div class="demo-cmp-row">
+                <div class="lbl">${escapeHtml(t)} <span style="color: var(--ink-mute); font-size: 11px;">(n=${n})</span></div>
+                <div class="gbar"><div style="width: ${(v/5*100).toFixed(0)}%"></div></div>
+                <div class="val">${fmt(v)}</div>
+              </div>
+            ` : "";
+          }).join("")}
+        </div>
+      </div>
+    </div>
+
+    <!-- DAĞILIMLAR -->
+    <div class="grid-3">
+      <div class="panel compact">
+        <div class="panel-head">
+          <h2>Departman dağılımı</h2>
+          <div class="panel-meta">${d.department_distribution.length} departman</div>
+        </div>
+        <div class="row-list">${renderDeptList(d.department_distribution.slice(0, 10))}</div>
+      </div>
+      <div class="panel compact">
+        <div class="panel-head">
+          <h2>Yaş dağılımı</h2>
+          <div class="panel-meta">tüm yanıtlar</div>
+        </div>
+        <div class="row-list">${renderOrderedList(d.age_distribution, ["18-25","26-35","36-45","46-55","56+"])}</div>
+      </div>
+      <div class="panel compact">
+        <div class="panel-head">
+          <h2>Cinsiyet dağılımı</h2>
+          <div class="panel-meta">tüm yanıtlar</div>
+        </div>
+        <div class="row-list">${renderOrderedList(d.gender_distribution, ["Kadın","Erkek"])}</div>
+      </div>
+    </div>
+
+    <!-- ACIK UCLU - KELIME BULUTU -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Açık uçlu yanıtlar — sıkça geçen temalar</h2>
+        <div class="panel-meta">
+          <span class="badge-pro">Pro</span>
+          ${d.word_freq.length} tema
+        </div>
+      </div>
+      <div class="wcloud">
+        ${d.word_freq.map(({w, size}) =>
+          `<span class="w${size}">${escapeHtml(w)}</span>`
+        ).join("")}
+      </div>
+    </div>
+  `;
+
+  drawSectionChart(sectionAverages);
+  drawTimelineChart(d.timeline);
+}
+
+function renderHeatmap(heatmap) {
+  if (!heatmap.length) return "<p>Veri yok.</p>";
+  const sectionNums = SECTIONS.map(s => s.num);
+  return `
+    <table class="heat">
+      <thead>
+        <tr>
+          <th></th>
+          ${sectionNums.map(n => `<th>${n}</th>`).join("")}
+        </tr>
+      </thead>
+      <tbody>
+        ${heatmap.map(row => `
+          <tr>
+            <td class="label">${escapeHtml(row.dept)} <span style="color: var(--ink-mute); font-size: 10px;">(${row.n})</span></td>
+            ${sectionNums.map(n => {
+              const c = row.cells.find(x => x.section === n);
+              if (!c || c.avg == null) return `<td class="cell cell-na">—</td>`;
+              return `<td class="cell" style="background: ${heatColor(c.avg)}; color: ${heatTextColor(c.avg)};">${fmt(c.avg, 1)}</td>`;
+            }).join("")}
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderDeptList(dist) {
+  if (!dist.length) return "<p>Veri yok.</p>";
+  const max = Math.max(...dist.map(d => d.n));
+  return dist.map(({dept, n}) => `
+    <div class="data-row">
+      <span class="name" title="${escapeHtml(dept)}">${escapeHtml(dept)}</span>
+      <span class="bar"><div style="width: ${Math.round((n/max)*100)}%"></div></span>
+      <span class="num">${n}</span>
+    </div>
+  `).join("");
+}
+
+function renderOrderedList(t, order) {
+  const known = order.filter(k => t[k] !== undefined);
+  if (!known.length) return "<p>Veri yok.</p>";
+  const max = Math.max(...known.map(k => t[k]));
+  return known.map(k => `
+    <div class="data-row">
+      <span class="name">${escapeHtml(k)}</span>
+      <span class="bar"><div style="width: ${Math.round((t[k]/max)*100)}%"></div></span>
+      <span class="num">${t[k]}</span>
+    </div>
+  `).join("");
+}
+
+function truncate(s, n) {
+  if (s.length <= n) return s;
+  return s.slice(0, n - 1) + "…";
+}
+
+/* ---------- CHARTS ---------- */
+function drawSectionChart(sections) {
+  const ctx = document.getElementById("chart-sections");
+  if (!ctx || typeof Chart === "undefined") {
+    if (ctx) ctx.parentElement.innerHTML = '<p style="color: var(--ink-mute); text-align: center; padding: 40px;">Grafik yükleniyor…</p>';
+    return;
+  }
+  if (state.charts.sections) state.charts.sections.destroy();
+
+  const labels = sections.map(s => `${s.num}. ${truncate(s.title, 32)}`);
+  const values = sections.map(s => s.avg);
+
+  const colors = values.map(v => {
+    if (v == null) return "#e8e2d8";
+    if (v >= 4) return "#2f6b5c";
+    if (v >= 3) return "#b8902e";
+    return "#7B1F2C";
+  });
+
+  state.charts.sections = new Chart(ctx, {
+    type: "bar",
+    data: { labels, datasets: [{
+      label: "Ortalama (1-5)", data: values,
+      backgroundColor: colors, borderRadius: 4, borderSkipped: false,
+    }]},
+    options: {
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => {
+            const s = sections[ctx.dataIndex];
+            return s.avg == null ? "Veri yok" : `Ort: ${s.avg.toFixed(2)}`;
+          }},
+          backgroundColor: "#1a1614", padding: 10,
+          titleFont: { family: "Inter", size: 12 },
+          bodyFont: { family: "Inter", size: 12 },
+          cornerRadius: 6,
+        },
+      },
+      scales: {
+        x: {
+          min: 1, max: 5,
+          ticks: { stepSize: 1, font: { family: "Inter", size: 11 }, color: "#857c75" },
+          grid: { color: "#e8e2d8" }, border: { display: false },
+        },
+        y: {
+          ticks: { font: { family: "Inter", size: 12 }, color: "#1a1614", crossAlign: "far" },
+          grid: { display: false }, border: { display: false },
+        },
+      },
+    },
+  });
+}
+
+function drawTimelineChart(timeline) {
+  const ctx = document.getElementById("chart-timeline");
+  if (!ctx || typeof Chart === "undefined") {
+    if (ctx) ctx.parentElement.innerHTML = '<p style="color: var(--ink-mute); text-align: center; padding: 40px;">Grafik yükleniyor…</p>';
+    return;
+  }
+  if (state.charts.timeline) state.charts.timeline.destroy();
+
+  state.charts.timeline = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: timeline.map(t => t.date),
+      datasets: [{
+        label: "Yanıt", data: timeline.map(t => t.n),
+        borderColor: "#7B1F2C",
+        backgroundColor: "rgba(123, 31, 44, 0.1)",
+        borderWidth: 2, fill: true, tension: 0.35,
+        pointRadius: 3, pointBackgroundColor: "#7B1F2C",
+        pointHoverRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#1a1614", cornerRadius: 6, padding: 10,
+          titleFont: { family: "Inter", size: 12 },
+          bodyFont: { family: "Inter", size: 12 },
+        },
+      },
+      scales: {
+        x: {
+          ticks: { font: { family: "Inter", size: 10 }, color: "#857c75",
+                   maxRotation: 0, autoSkipPadding: 12 },
+          grid: { display: false }, border: { display: false },
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { font: { family: "Inter", size: 10 }, color: "#857c75", precision: 0 },
+          grid: { color: "#e8e2d8" }, border: { display: false },
+        },
+      },
+    },
+  });
+}
+</script>
+</body>
+</html>
