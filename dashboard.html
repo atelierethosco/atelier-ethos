@@ -368,7 +368,8 @@
       'kaynak_kutuphanesi': 'Kaynak Kütüphanesi',
       'ik_pusulasi': 'İK Pusulası',
       // Webinar IDs
-      'W001_yetkinlik_performans': 'W001 — Yetkinlik Performans'
+      'W001_yetkinlik_performans': 'W001 — Yetkinlik Performans',
+      'W002_performans_geribildirim': 'W002 — Performans Geri Bildirim'
     };
     if (map[s]) return map[s];
     // Fallback: snake_case → Title Case
@@ -385,6 +386,9 @@
       return;
     }
 
+    // Webinar ID'sine göre sırala (en yeni en üstte: W002, W001 ...)
+    entries.sort(function(a, b) { return b[0].localeCompare(a[0]); });
+
     var html = entries.map(function(e) {
       var id = e[0];
       var info = e[1];
@@ -393,12 +397,13 @@
         .map(function(c) {
           var cls = c[0] === 'linkedin' ? 'ae-badge-blue' :
                     c[0] === 'whatsapp' ? 'ae-badge-green' :
-                    c[0] === 'email' ? 'ae-badge-red' : 'ae-badge-gray';
+                    c[0] === 'mail' || c[0] === 'email' ? 'ae-badge-red' :
+                    c[0] === 'instagram' ? 'ae-badge-red' : 'ae-badge-gray';
           return '<span class="ae-badge ' + cls + '">' + c[0] + ' · ' + c[1] + '</span>';
         }).join('');
 
       return '<div class="ae-webinar-card">' +
-               '<div class="ae-webinar-id">' + id + '</div>' +
+               '<div class="ae-webinar-id">' + prettyLabel(id) + '</div>' +
                '<div class="ae-webinar-count">' + info.total + '<small>kayıt</small></div>' +
                '<div class="ae-webinar-channels">' + chBadges + '</div>' +
              '</div>';
