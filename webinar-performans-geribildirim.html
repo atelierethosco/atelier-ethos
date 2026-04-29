@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performans Geri Bildirim Görüşmeleri Nasıl Yapılır? — Atelier Ethos</title>
+<meta name="description" content="Performans geri bildirim görüşmeleri nasıl yapılır? 1 Mayıs Cuma 12:30, ücretsiz online atölye. 150 senaryo örneği + hazır şablonlar hediye.">
+
+<!-- Open Graph (WhatsApp, LinkedIn, Facebook) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://atelier-ethos.vercel.app/webinar-performans-geribildirim.html">
+<meta property="og:title" content="Performans Geri Bildirim Görüşmeleri Nasıl Yapılır?">
+<meta property="og:description" content="Performans geri bildirim görüşmeleri nasıl yapılır? 1 Mayıs Cuma 12:30, ücretsiz online atölye. 150 senaryo örneği + hazır şablonlar hediye.">
+<meta property="og:image" content="https://atelier-ethos.vercel.app/webinar-performans-geribildirim-banner.png">
+<meta property="og:image:width" content="1736">
+<meta property="og:image:height" content="906">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="Atelier Ethos">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Performans Geri Bildirim Görüşmeleri Nasıl Yapılır?">
+<meta name="twitter:description" content="1 Mayıs Cuma 12:30, ücretsiz online atölye. 150 senaryo örneği + hazır şablonlar hediye.">
+<meta name="twitter:image" content="https://atelier-ethos.vercel.app/webinar-performans-geribildirim-banner.png">
+ <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #414042; background: #fff; overflow-x: hidden; }
+
+  .ae-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: #fff; border-bottom: 0.5px solid #e8e8e8;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 60px; height: 90px;
+  }
+  .ae-nav img { height: 66px; width: auto; }
+  .ae-nav-cta { background: #c12033; color: #fff !important; font-size: 14px; padding: 10px 24px; border-radius: 4px; text-decoration: none; }
+
+  /* --- HERO BANNER --- */
+  .ae-hero-banner {
+    padding-top: 90px;
+    background: #0a0a1a;
+  }
+  .ae-hero-banner-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 40px 40px 0;
+  }
+  .ae-hero-img-wrap {
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    aspect-ratio: 1736 / 906;
+    background: #1a1a2e;
+  }
+  .ae-hero-img-wrap img {
+    width: 100%; height: 100%;
+    display: block; object-fit: cover;
+  }
+
+  /* --- PAGE CONTENT --- */
+  .ae-page {
+    padding: 50px 40px 60px;
+    background: linear-gradient(180deg, #faf9f9 0%, #fff 100%);
+  }
+
+  .ae-layout {
+    max-width: 1080px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
+  }
+
+  /* --- LEFT: DETAILS --- */
+  .ae-details { position: sticky; top: 110px; }
+
+  .ae-label-small { font-size: 11px; letter-spacing: 2.5px; color: #c12033; text-transform: uppercase; margin-bottom: 14px; display: block; }
+  .ae-page-title { font-size: 30px; font-weight: 500; line-height: 1.2; color: #414042; margin-bottom: 16px; }
+  .ae-page-title em { font-style: normal; color: #c12033; }
+  .ae-page-lead { font-size: 15px; color: #6b6b6b; line-height: 1.75; margin-bottom: 24px; }
+
+  .ae-info-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px; background: #fff; border: 0.5px solid #e8e8e8; border-radius: 8px;
+    margin-bottom: 10px; font-size: 14px; color: #414042;
+  }
+  .ae-info-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: #faf9f9; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .ae-info-row strong { font-weight: 500; display: block; margin-bottom: 2px; }
+  .ae-info-row small { color: #a7a9ab; font-size: 12px; }
+
+  .ae-host-card {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px; background: #faf9f9; border-radius: 10px;
+    margin-top: 18px;
+  }
+  .ae-host-dot {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, #c12033, #e84a5f);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 500; font-size: 17px;
+  }
+  .ae-host-name { font-weight: 500; color: #414042; font-size: 14px; }
+  .ae-host-role { color: #a7a9ab; font-size: 12px; margin-top: 2px; }
+
+  /* --- RIGHT: FORM --- */
+  .ae-form-card {
+    background: #fff; border: 0.5px solid #e8e8e8;
+    border-radius: 12px; padding: 32px 30px;
+    box-shadow: 0 4px 20px rgba(65, 64, 66, 0.04);
+  }
+  .ae-form-card h3 { font-size: 18px; font-weight: 500; color: #414042; margin-bottom: 6px; }
+  .ae-form-card .sub { font-size: 13px; color: #a7a9ab; margin-bottom: 22px; }
+
+  .ae-fg { margin-bottom: 14px; }
+  .ae-fg-label { display: block; font-size: 13px; color: #414042; margin-bottom: 6px; font-weight: 500; }
+  .ae-fg-label .req { color: #c12033; margin-left: 2px; }
+  .ae-fg input {
+    width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px;
+    padding: 14px 16px; font-size: 15px; color: #414042;
+    font-family: inherit; outline: none; background: #fff;
+    transition: border-color 0.15s;
+  }
+  .ae-fg input:focus { border-color: #c12033; }
+  .ae-fg input.invalid { border-color: #c12033; background: #fef7f8; }
+
+  .ae-submit {
+    background: #c12033; color: #fff; border: none;
+    padding: 16px 24px; border-radius: 6px; font-size: 15px;
+    cursor: pointer; width: 100%; font-family: inherit; font-weight: 500;
+    transition: background 0.15s; margin-top: 6px;
+  }
+  .ae-submit:hover:not(:disabled) { background: #a81c2b; }
+  .ae-submit:disabled { background: #a7a9ab; cursor: not-allowed; }
+
+  .ae-error {
+    display: none; background: #fef2f2; border: 1px solid #fecaca;
+    border-radius: 6px; padding: 12px 16px; font-size: 13px;
+    color: #c12033; margin-bottom: 16px;
+  }
+
+  .ae-privacy {
+    font-size: 12px; color: #a7a9ab;
+    text-align: center; line-height: 1.6; margin-top: 14px;
+  }
+
+  /* --- SUCCESS STATE --- */
+  .ae-success { display: none; }
+  .ae-success.visible { display: block; }
+  .ae-success-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #c12033; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin-bottom: 20px;
+  }
+  .ae-success h2 { font-size: 22px; font-weight: 500; color: #414042; margin-bottom: 12px; }
+  .ae-success p { font-size: 14px; color: #6b6b6b; line-height: 1.7; margin-bottom: 18px; }
+  .ae-success-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .ae-btn-primary, .ae-btn-outline {
+    padding: 13px 20px; border-radius: 6px; font-size: 14px;
+    font-family: inherit; text-decoration: none; text-align: center;
+    font-weight: 500; cursor: pointer; border: none;
+    transition: all 0.15s;
+  }
+  .ae-btn-primary { background: #c12033; color: #fff; }
+  .ae-btn-primary:hover { background: #a81c2b; }
+  .ae-btn-outline { background: #fff; color: #414042; border: 0.5px solid #d4d4d4; }
+  .ae-btn-outline:hover { border-color: #c12033; color: #c12033; }
+
+  .ae-footer {
+    padding: 28px 60px; border-top: 0.5px solid #e8e8e8;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 40px; background: #fff;
+  }
+  .ae-footer-copy { font-size: 13px; color: #a7a9ab; }
+  .ae-footer-links { display: flex; gap: 24px; }
+  .ae-footer-links a { font-size: 13px; color: #a7a9ab; text-decoration: none; }
+  .ae-footer-links a:hover { color: #c12033; }
+
+  @media (max-width: 880px) {
+    .ae-nav { padding: 14px 20px; height: auto; }
+    .ae-nav img { height: 48px; }
+    .ae-hero-banner-inner { padding: 20px 20px 0; }
+    .ae-hero-img-wrap { border-radius: 12px; }
+    .ae-page { padding: 30px 20px 40px; }
+    .ae-layout { grid-template-columns: 1fr; gap: 30px; }
+    .ae-details { position: static; order: 2; }
+    .ae-right-col { order: 1; }
+    .ae-page-title { font-size: 24px; }
+    .ae-form-card { padding: 24px 20px; }
+    .ae-footer { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="ae-nav">
+  <a href="/"><img src="/LogoSS.png" alt="Atelier Ethos" /></a>
+  <a href="/" class="ae-nav-cta">Ana Sayfa</a>
+</nav>
+
+<!-- HERO BANNER -->
+<section class="ae-hero-banner">
+  <div class="ae-hero-banner-inner">
+    <div class="ae-hero-img-wrap">
+      <img src="/webinar-performans-geribildirim-banner.png" alt="Performans Geri Bildirim Görüşmeleri Nasıl Yapılır?" />
+    </div>
+  </div>
+</section>
+
+<main class="ae-page">
+  <div class="ae-layout">
+
+    <!-- LEFT: DETAILS -->
+    <div class="ae-details">
+      <span class="ae-label-small">Webinar · Atölye Formatı</span>
+      <h1 class="ae-page-title">Performans Geri Bildirim Görüşmeleri <em>Nasıl Yapılır?</em></h1>
+      <p class="ae-page-lead">Performans geri bildirim görüşmelerini nasıl yapılandıracağınızı, zor konuşmaları nasıl yöneteceğinizi ve hem yönetici hem çalışan için bu süreci nasıl anlamlı kılacağınızı atölye formatında birlikte ele alacağız.</p>
+      <p class="ae-page-lead" style="margin-bottom: 22px;"><strong style="color: #c12033;">🎁 Katılımcılara özel: Zor konuşmalar için 150 senaryo örneği + hazır kullanabileceğiniz şablonlar!</strong></p>
+
+      <div class="ae-info-row">
+        <div class="ae-info-icon">📅</div>
+        <div>
+          <strong>1 Mayıs 2026, Cuma</strong>
+          <small>12:30 – 13:30 (GMT+3 / Istanbul)</small>
+        </div>
+      </div>
+      <div class="ae-info-row">
+        <div class="ae-info-icon">🎥</div>
+        <div>
+          <strong>Zoom üzerinden canlı yayın</strong>
+          <small>Kayıt sonrası link mailinize gönderilecek</small>
+        </div>
+      </div>
+      <div class="ae-info-row">
+        <div class="ae-info-icon">⏱</div>
+        <div>
+          <strong>60 dakika</strong>
+          <small>Sunum + soru-cevap</small>
+        </div>
+      </div>
+
+      <div class="ae-host-card">
+        <div class="ae-host-dot">E</div>
+        <div>
+          <div class="ae-host-name">Ece Demir</div>
+          <div class="ae-host-role">Kurucu · Atelier Ethos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: REGISTRATION -->
+    <div class="ae-right-col">
+
+      <!-- FORM STATE -->
+      <div id="ae-form-wrap">
+        <div class="ae-form-card">
+          <h3>Ücretsiz kayıt</h3>
+          <div class="sub">Bilgileriniz yalnızca webinar iletişimi için kullanılır.</div>
+
+          <div id="ae-error" class="ae-error"></div>
+
+          <form id="ae-form" autocomplete="off" novalidate>
+            <div class="ae-fg">
+              <label class="ae-fg-label" for="ad-soyad">Ad Soyad <span class="req">*</span></label>
+              <input type="text" id="ad-soyad" placeholder="Adınız ve soyadınız" required />
+            </div>
+            <div class="ae-fg">
+              <label class="ae-fg-label" for="email">E-posta <span class="req">*</span></label>
+              <input type="email" id="email" placeholder="ornek@mail.com" required />
+            </div>
+            <button type="submit" class="ae-submit" id="ae-submit-btn">Kayıt Ol</button>
+          </form>
+          <p class="ae-privacy">Kaydınız sonrasında webinar detayları ve takvim daveti mail adresinize gönderilecektir.</p>
+        </div>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div id="ae-success" class="ae-success">
+        <div class="ae-form-card">
+          <div class="ae-success-icon">✓</div>
+          <h2>Kaydınız alındı</h2>
+          <p>
+            Webinar detayları ve takvim daveti e-posta adresinize gönderildi. Birkaç dakika içinde ulaşmazsa spam klasörünüzü kontrol edin.
+          </p>
+          <p style="background: #faf9f9; padding: 14px 18px; border-radius: 6px; border-left: 3px solid #c12033;">
+            <strong style="color: #414042;">1 Mayıs 2026 Cuma, 12:30</strong><br>
+            Performans Geri Bildirim Görüşmeleri Nasıl Yapılır?
+          </p>
+
+          <!-- OPSİYONEL SORU BÖLÜMÜ -->
+          <div id="ae-soru-section" style="margin-top: 28px; padding-top: 24px; border-top: 0.5px solid #e8e8e8;">
+            <h3 style="font-size: 15px; font-weight: 500; color: #414042; margin-bottom: 6px;">Webinardan beklentiniz nedir? <span style="color: #a7a9ab; font-weight: 400; font-size: 13px;">(opsiyonel)</span></h3>
+            <p style="font-size: 13px; color: #a7a9ab; line-height: 1.6; margin-bottom: 14px;">Aklınızdaki soruları veya odaklanmamızı istediğiniz bir konuyu paylaşabilirsiniz. Sunuma dahil etmeye çalışırız.</p>
+            <textarea id="ae-beklenti" placeholder="Örn: Düşük performans gösteren bir çalışana geri bildirim vermem gerekiyor, nasıl bir yol izlemeliyim?" style="width: 100%; border: 0.5px solid #d4d4d4; border-radius: 6px; padding: 12px 14px; font-size: 14px; color: #414042; font-family: inherit; outline: none; resize: vertical; min-height: 100px; line-height: 1.6;"></textarea>
+            <button type="button" class="ae-btn-primary" id="ae-soru-gonder-btn" style="margin-top: 12px;">Gönder</button>
+            <div id="ae-soru-gonderildi" style="display: none; margin-top: 12px; padding: 12px 14px; background: #faf9f9; border-radius: 6px; font-size: 13px; color: #414042; text-align: center;">✓ Beklentiniz bize ulaştı. Teşekkürler!</div>
+          </div>
+
+          <div class="ae-success-actions" style="margin-top: 24px; padding-top: 20px; border-top: 0.5px solid #e8e8e8;">
+            <button type="button" class="ae-btn-primary" id="ae-ics-btn">Takvime Ekle (.ics)</button>
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Performans+Geri+Bildirim+G%C3%B6r%C3%BC%C5%9Fmeleri+Nas%C4%B1l+Yap%C4%B1l%C4%B1r%3F&dates=20260501T093000Z/20260501T103000Z&details=Zoom+Link%3A+https%3A%2F%2Fus06web.zoom.us%2Fj%2F89681742891%3Fpwd%3DoRITj26sBLBBIofNbLpu2y09raZOHJ.1%0APasscode%3A+413744&location=https%3A%2F%2Fus06web.zoom.us%2Fj%2F89681742891%3Fpwd%3DoRITj26sBLBBIofNbLpu2y09raZOHJ.1" target="_blank" class="ae-btn-outline">Google Takvim'e Ekle</a>
+            <a href="/" class="ae-btn-outline">Atelier Ethos'a Dön</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="ae-footer">
+  <span class="ae-footer-copy">© 2022 Atelier Ethos</span>
+  <div class="ae-footer-links">
+    <a href="/">Ana Sayfa</a>
+    <a href="mailto:ece.demir@atelierethos.com">Mail</a>
+    <a href="https://instagram.com/atelier_ethos" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+<script>
+  // =====================================================================
+  // CONFIG — YENİ WEBINAR İÇİN SADECE BU BLOĞU GÜNCELLE
+  // =====================================================================
+  var WEBINAR_ID = "W002_performans_geribildirim";
+  var WEBINAR_BASLIK = "Performans Geri Bildirim Görüşmeleri Nasıl Yapılır?";
+  var SHEETS_URL = "https://script.google.com/macros/s/AKfycbzKYUsVdVd7VojPuqKEvMoftjJcH-Z8BzBZbUmeLEA-NqTMVY14vXklAanjDQuj3T8I/exec";
+  var ICS_START = "20260501T093000Z";  // 12:30 Istanbul = 09:30 UTC
+  var ICS_END   = "20260501T103000Z";  // 13:30 Istanbul = 10:30 UTC
+  var ZOOM_LINK = "https://us06web.zoom.us/j/89681742891?pwd=oRITj26sBLBBIofNbLpu2y09raZOHJ.1";
+  var PASSCODE  = "413744";
+  // =====================================================================
+
+  function getUTM() {
+    var params = new URLSearchParams(window.location.search);
+    return {
+      utm_source:   params.get("utm_source")   || "direct",
+      utm_medium:   params.get("utm_medium")   || "",
+      utm_campaign: params.get("utm_campaign") || "",
+      utm_content:  params.get("utm_content")  || "",
+      referrer: document.referrer || ""
+    };
+  }
+
+  var form = document.getElementById("ae-form");
+  var errorBox = document.getElementById("ae-error");
+  var submitBtn = document.getElementById("ae-submit-btn");
+  var formWrap = document.getElementById("ae-form-wrap");
+  var successWrap = document.getElementById("ae-success");
+  var adInput = document.getElementById("ad-soyad");
+  var emailInput = document.getElementById("email");
+
+  // Kayıt sonrası hatırlamak için
+  var submittedAd = "";
+  var submittedEmail = "";
+
+  adInput.addEventListener("input", function() { adInput.classList.remove("invalid"); });
+  emailInput.addEventListener("input", function() { emailInput.classList.remove("invalid"); });
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    errorBox.style.display = "none";
+
+    var adSoyad = adInput.value.trim();
+    var email = emailInput.value.trim();
+    var emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    var hasError = false;
+    if (!adSoyad) { adInput.classList.add("invalid"); hasError = true; }
+    if (!email || !emailValid) { emailInput.classList.add("invalid"); hasError = true; }
+
+    if (hasError) {
+      errorBox.textContent = "Lütfen zorunlu alanları eksiksiz doldurun.";
+      errorBox.style.display = "block";
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Kaydediliyor...";
+
+    var utm = getUTM();
+    var payload = {
+      tip: "webinar_kayit",
+      webinarId: WEBINAR_ID,
+      adSoyad: adSoyad,
+      email: email,
+      utmSource: utm.utm_source,
+      utmMedium: utm.utm_medium,
+      utmCampaign: utm.utm_campaign,
+      utmContent: utm.utm_content,
+      referrer: utm.referrer
+    };
+
+    // Kayıt bilgilerini sakla (soru formu için)
+    submittedAd = adSoyad;
+    submittedEmail = email;
+
+    fetch(SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(function() {
+      formWrap.style.display = "none";
+      successWrap.classList.add("visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }).catch(function() {
+      formWrap.style.display = "none";
+      successWrap.classList.add("visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
+  // Opsiyonel soru gönderimi
+  document.getElementById("ae-soru-gonder-btn").addEventListener("click", function() {
+    var beklentiEl = document.getElementById("ae-beklenti");
+    var beklenti = beklentiEl.value.trim();
+    if (!beklenti) {
+      beklentiEl.focus();
+      return;
+    }
+
+    var btn = document.getElementById("ae-soru-gonder-btn");
+    btn.disabled = true;
+    btn.textContent = "Gönderiliyor...";
+
+    var payload = {
+      tip: "webinar_on_soru",
+      webinarId: WEBINAR_ID,
+      adSoyad: submittedAd,
+      email: submittedEmail,
+      beklenti: beklenti,
+      soru: ""
+    };
+
+    fetch(SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(function() {
+      document.getElementById("ae-soru-section").innerHTML =
+        '<div style="padding: 20px; background: #faf9f9; border-left: 3px solid #c12033; border-radius: 0 6px 6px 0; text-align: center;">' +
+        '<div style="font-size: 15px; color: #414042; font-weight: 500;">✓ Beklentiniz bize ulaştı</div>' +
+        '<div style="font-size: 13px; color: #6b6b6b; margin-top: 4px;">Webinar sırasında sunuma dahil etmeye çalışacağız.</div>' +
+        '</div>';
+    }).catch(function() {
+      document.getElementById("ae-soru-section").innerHTML =
+        '<div style="padding: 20px; background: #faf9f9; border-left: 3px solid #c12033; border-radius: 0 6px 6px 0; text-align: center;">' +
+        '<div style="font-size: 15px; color: #414042; font-weight: 500;">✓ Beklentiniz bize ulaştı</div>' +
+        '</div>';
+    });
+  });
+
+  document.getElementById("ae-ics-btn").addEventListener("click", function() {
+    var ics = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Atelier Ethos//Webinar//TR",
+      "CALSCALE:GREGORIAN",
+      "METHOD:PUBLISH",
+      "BEGIN:VEVENT",
+      "UID:" + WEBINAR_ID + "-" + Date.now() + "@atelierethos.com",
+      "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z",
+      "DTSTART:" + ICS_START,
+      "DTEND:" + ICS_END,
+      "SUMMARY:" + WEBINAR_BASLIK,
+      "DESCRIPTION:Zoom Link: " + ZOOM_LINK + "\\nPasscode: " + PASSCODE,
+      "LOCATION:" + ZOOM_LINK,
+      "URL:" + ZOOM_LINK,
+      "STATUS:CONFIRMED",
+      "BEGIN:VALARM",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Webinar basliyor",
+      "TRIGGER:-PT15M",
+      "END:VALARM",
+      "END:VEVENT",
+      "END:VCALENDAR"
+    ].join("\r\n");
+
+    var blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "webinar-performans-geribildirim.ics";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
