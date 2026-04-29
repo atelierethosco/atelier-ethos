@@ -39,23 +39,23 @@
   /* --- HERO BANNER --- */
   .ae-hero-banner {
     padding-top: 90px;
-    background: #0a1628;
+    background: #fff;
   }
   .ae-hero-banner-inner {
-    max-width: 1200px; margin: 0 auto;
-    padding: 40px 40px 0;
-    display: flex; justify-content: center;
+    max-width: 1080px; margin: 0 auto;
+    padding: 32px 40px 0;
   }
   .ae-hero-img-wrap {
     border-radius: 16px; overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-    width: 100%; max-width: 560px;
-    aspect-ratio: 1 / 1;
+    box-shadow: 0 12px 40px rgba(10, 22, 40, 0.18);
+    width: 100%;
+    aspect-ratio: 1080 / 480;
     background: #0a1628;
+    display: flex; align-items: center; justify-content: center;
   }
   .ae-hero-img-wrap img {
-    width: 100%; height: 100%;
-    display: block; object-fit: cover;
+    height: 100%; width: auto;
+    display: block; object-fit: contain;
   }
 
   /* --- PAGE CONTENT --- */
@@ -182,7 +182,14 @@
     .ae-nav { padding: 14px 20px; height: auto; }
     .ae-nav img { height: 48px; }
     .ae-hero-banner-inner { padding: 20px 20px 0; }
-    .ae-hero-img-wrap { border-radius: 12px; }
+    .ae-hero-img-wrap {
+      border-radius: 12px;
+      aspect-ratio: 1 / 1;
+    }
+    .ae-hero-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
     .ae-page { padding: 30px 20px 40px; }
     .ae-layout { grid-template-columns: 1fr; gap: 30px; }
     .ae-details { position: static; order: 2; }
