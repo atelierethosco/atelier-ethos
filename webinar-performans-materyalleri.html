@@ -416,29 +416,36 @@
         </div>
         <div class="kategori-grid">
           <div class="kategori-item">
-            <input type="checkbox" id="m1" value="hazirlik_sablonu" />
+            <input type="checkbox" id="m1" value="webinar_sunumu" />
             <label for="m1">
+              <span>Webinar Sunumu</span>
+              <span class="kategori-meta">PDF</span>
+            </label>
+          </div>
+          <div class="kategori-item">
+            <input type="checkbox" id="m2" value="hazirlik_sablonu" />
+            <label for="m2">
               <span>Performans Geri Bildirim Görüşmesi — Hazırlık Şablonu</span>
               <span class="kategori-meta">EXCEL</span>
             </label>
           </div>
           <div class="kategori-item">
-            <input type="checkbox" id="m2" value="akis_rehberi_60dk" />
-            <label for="m2">
+            <input type="checkbox" id="m3" value="akis_rehberi_60dk" />
+            <label for="m3">
               <span>Performans Geri Bildirim Görüşmeleri — Detaylı Akış Rehberi (60 dk)</span>
               <span class="kategori-meta">PDF</span>
             </label>
           </div>
           <div class="kategori-item">
-            <input type="checkbox" id="m3" value="acilis_cumleleri_75" />
-            <label for="m3">
+            <input type="checkbox" id="m4" value="acilis_cumleleri_75" />
+            <label for="m4">
               <span>Senaryo Bazlı 75 Açılış Cümlesi</span>
               <span class="kategori-meta">PDF</span>
             </label>
           </div>
           <div class="kategori-item">
-            <input type="checkbox" id="m4" value="guclu_yon_sorulari_75" />
-            <label for="m4">
+            <input type="checkbox" id="m5" value="guclu_yon_sorulari_75" />
+            <label for="m5">
               <span>Güçlü Yönleri Keşfetmek için 75 Soru</span>
               <span class="kategori-meta">PDF</span>
             </label>
@@ -488,6 +495,11 @@
 
   // W002 webinar materyalleri — her biri tek dosya linki
   const MATERYALLER = {
+    "webinar_sunumu": {
+      baslik: "Webinar Sunumu",
+      tip: "PDF",
+      url: "https://drive.google.com/uc?export=download&confirm=t&id=1YWjy5Vkp7xplN6cGou1L_ITnqgdxgJHR"
+    },
     "hazirlik_sablonu": {
       baslik: "Performans Geri Bildirim Görüşmesi — Hazırlık Şablonu",
       tip: "EXCEL",
