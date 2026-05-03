@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bağlanma Stilleri Envanteri — Atelier Ethos</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red: #C0272D;
+      --red-dark: #9B1F24;
+      --dark: #1A1A1A;
+      --gray: #5A5A5A;
+      --light: #F5F3F0;
+      --white: #FFFFFF;
+      --border: #E0DDD8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--dark); min-height: 100vh; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 12px 60px; height: 90px; background: var(--white); border-bottom: 1px solid var(--border); }
+    .nav-logo img { height: 66px; width: auto; }
+    .nav-back { font-size: 13px; font-weight: 500; color: var(--gray); text-decoration: none; letter-spacing: 0.02em; transition: color 0.2s; }
+    .nav-back:hover { color: var(--red); }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 120px 40px 80px; }
+    .hero-mini { padding: 30px 0 24px; }
+    .hero-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
+    .hero-mini h1 { font-family: 'DM Serif Display', serif; font-size: clamp(30px, 4vw, 44px); line-height: 1.1; color: var(--dark); margin-bottom: 12px; }
+    .hero-mini h1 em { font-style: italic; color: var(--red); }
+    .hero-mini p { font-size: 15px; line-height: 1.7; color: var(--gray); }
+    .progress-wrap { margin-bottom: 28px; }
+    .progress-ust { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .progress-adim { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--red); }
+    .progress-yuzde { font-size: 12px; color: var(--gray); }
+    .progress-bg { background: var(--border); border-radius: 2px; height: 3px; }
+    .progress-bar { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.4s ease; }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 40px 48px; animation: fadeUp 0.35s ease forwards; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .field { margin-bottom: 24px; }
+    .field:last-of-type { margin-bottom: 0; }
+    .field-label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dark); margin-bottom: 10px; }
+    .field-label span.req { color: var(--red); margin-left: 2px; }
+    input[type="text"], input[type="email"] { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--dark); background: var(--white); transition: border-color 0.2s; outline: none; }
+    input[type="text"]:focus, input[type="email"]:focus { border-color: var(--red); }
+    .error-msg { font-size: 12px; color: var(--red); margin-top: 6px; display: none; }
+    .error-msg.show { display: block; }
+    .bolum-baslik { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .bolum-no { width: 36px; height: 36px; background: var(--red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: var(--white); flex-shrink: 0; }
+    .bolum-baslik h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--dark); }
+    .soru-satir { margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .soru-satir:last-of-type { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .soru-metin { font-size: 16px; color: var(--dark); line-height: 1.55; margin-bottom: 16px; font-weight: 500; }
+    .soru-secenekler { display: flex; flex-direction: column; gap: 8px; }
+    .secenek { position: relative; }
+    .secenek input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .secenek label { display: block; padding: 14px 18px; border: 1.5px solid var(--border); border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: 400; line-height: 1.55; transition: all 0.15s; user-select: none; color: var(--dark); }
+    .secenek input[type="radio"]:checked + label { border-color: var(--red); background: #FDF5F5; color: var(--red); font-weight: 500; }
+    .secenek label:hover { border-color: var(--red); }
+    .soru-satir.eksik .soru-secenekler .secenek label { border-color: #e8a0a0; background: #fff8f8; }
+    .btn-row { display: flex; gap: 12px; margin-top: 32px; }
+    .btn-ileri { flex: 1; padding: 16px; background: var(--red); color: var(--white); border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+    .btn-ileri:hover { background: var(--red-dark); }
+    .btn-geri { padding: 16px 24px; background: transparent; color: var(--gray); border: 1.5px solid var(--border); border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-geri:hover { border-color: var(--dark); color: var(--dark); }
+    .loading-wrap { display: none; align-items: center; justify-content: center; gap: 10px; padding: 16px; font-size: 14px; color: var(--gray); }
+    .loading-wrap.show { display: flex; }
+    .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .sonuc-intro { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 32px 48px; margin-bottom: 16px; }
+    .sonuc-intro p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+    .grafik-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 40px 48px; margin-bottom: 16px; }
+    .grafik-card h3 { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--dark); margin-bottom: 28px; }
+    .spektrum-wrap { margin-bottom: 8px; padding-top: 16px; }
+    .spektrum-bar { position: relative; height: 32px; border-radius: 3px; display: flex; }
+    .spektrum-bolum { position: relative; transition: opacity 0.4s; }
+    .spektrum-bolum:first-child { border-radius: 3px 0 0 3px; }
+    .spektrum-bolum:last-child { border-radius: 0 3px 3px 0; }
+    .spektrum-bolum.guvenli { background: #E8D4D5; flex: 6; }
+    .spektrum-bolum.endiseli { background: #D89599; flex: 5; }
+    .spektrum-bolum.kacinan { background: #C0272D; flex: 10; }
+    .spektrum-bolum.dim { opacity: 0.3; }
+    .spektrum-isaret { position: absolute; top: -10px; width: 4px; height: 52px; background: var(--dark); border-radius: 2px; transition: left 1s ease; box-shadow: 0 0 0 3px var(--white); transform: translateX(-2px); }
+    .spektrum-isaret::after { content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--dark); }
+    .spektrum-etiketler { display: flex; margin-top: 18px; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gray); font-weight: 500; }
+    .spektrum-etiketler > div { text-align: center; }
+    .spektrum-etiketler .et-guvenli { flex: 6; }
+    .spektrum-etiketler .et-endiseli { flex: 5; }
+    .spektrum-etiketler .et-kacinan { flex: 10; }
+    .spektrum-skala { display: flex; margin-top: 6px; font-size: 10px; color: var(--gray); font-variant-numeric: tabular-nums; }
+    .spektrum-skala span { text-align: center; }
+    .spektrum-skala .sk-guvenli { flex: 6; }
+    .spektrum-skala .sk-endiseli { flex: 5; }
+    .spektrum-skala .sk-kacinan { flex: 10; }
+    .puan-vurgu { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; font-size: 16px; color: var(--dark); }
+    .puan-vurgu strong { color: var(--red); font-size: 22px; font-family: 'DM Serif Display', serif; display: block; margin-top: 4px; }
+    .puan-vurgu .puan-rakam { color: var(--gray); font-size: 13px; display: block; margin-top: 8px; letter-spacing: 0.04em; }
+    .tip-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 40px 48px; margin-bottom: 16px; }
+    .tip-baslik { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--dark); margin-bottom: 8px; }
+    .tip-aralik { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 20px; }
+    .tip-paragraf { font-size: 15px; color: var(--dark); line-height: 1.75; }
+    .not-card { background: var(--light); border: 1px solid var(--border); border-radius: 4px; padding: 24px 32px; margin-bottom: 16px; font-size: 13px; line-height: 1.7; color: var(--gray); font-style: italic; }
+    .teaser-card { background: var(--dark); color: var(--white); border-radius: 4px; padding: 32px 48px; margin-bottom: 16px; text-align: center; }
+    .teaser-card h4 { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 12px; }
+    .teaser-card p { font-size: 14px; line-height: 1.7; opacity: 0.85; }
+    .download-btn { width: 100%; padding: 16px; background: var(--dark); color: var(--white); border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; margin-bottom: 16px; display: block; }
+    .download-btn:hover { background: #333; }
+    .iletisim-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 28px 48px; text-align: center; margin-bottom: 16px; }
+    .iletisim-card p { font-size: 13px; color: var(--gray); }
+    .iletisim-card a { color: var(--red); text-decoration: none; }
+    .attribution { text-align: center; font-size: 11px; color: var(--gray); opacity: 0.7; padding: 12px; line-height: 1.6; }
+    @media print {
+      nav, .btn-row, .download-btn, .progress-wrap, .hero-mini { display: none !important; }
+      .wrap { padding: 20px; }
+      .card { display: none !important; }
+      #sonuc-bolumu { display: block !important; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 12px 20px; height: auto; }
+      .nav-logo img { height: 48px; }
+      .wrap { padding: 100px 20px 60px; }
+      .card, .grafik-card, .tip-card, .iletisim-card, .sonuc-intro, .teaser-card, .not-card { padding: 24px 20px; }
+      .secenek label { padding: 12px 14px; font-size: 13px; }
+      .spektrum-etiketler { font-size: 9px; }
+      .tip-baslik { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo"><img src="/LogoSS.png" alt="Atelier Ethos" /></a>
+  <a href="/" class="nav-back">← Ana Sayfa</a>
+</nav>
+
+<div class="wrap">
+  <div id="adim-0">
+    <div class="hero-mini">
+      <p class="hero-tag">EST. 2022 · İlişki Profili</p>
+      <h1>Bağlanma <em>Stilleri</em></h1>
+      <p>10 soruda yetişkin romantik bağlanma tarzınızı keşfedin. Yaklaşık 3 dakika sürer, sonuçlarınızı anında görürsünüz.</p>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label class="field-label">Ad Soyad <span class="req">*</span></label>
+        <input type="text" id="adSoyad" placeholder="Adınız ve soyadınız" />
+        <div class="error-msg" id="err-ad">Lütfen adınızı girin.</div>
+      </div>
+      <div class="field">
+        <label class="field-label">E-posta <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="ornek@email.com" />
+        <div class="error-msg" id="err-email">Geçerli bir e-posta adresi girin.</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Firma <span class="req">*</span></label>
+        <input type="text" id="firma" placeholder="Çalıştığınız firma" />
+        <div class="error-msg" id="err-firma">Lütfen firma adını girin.</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ileri" onclick="adimIleri()">Envantere Başla →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="adim-bolum" style="display:none;">
+    <div class="progress-wrap">
+      <div class="progress-ust">
+        <span class="progress-adim" id="adim-metin"></span>
+        <span class="progress-yuzde" id="adim-yuzde"></span>
+      </div>
+      <div class="progress-bg"><div class="progress-bar" id="progress-bar"></div></div>
+    </div>
+    <div class="card" id="bolum-kart"></div>
+    <div class="loading-wrap" id="loading"><div class="spinner"></div><span>Sonuçlarınız hesaplanıyor...</span></div>
+  </div>
+
+  <div id="sonuc-bolumu" style="display:none;">
+    <div class="sonuc-intro">
+      <p>Bu sonuçlar Atelier Ethos Bağlanma Stilleri Envanteri'nden alınmıştır. Aşağıda spektrumdaki konumunuzu ve bağlanma profilinizi görebilirsiniz.</p>
+    </div>
+    <div class="grafik-card">
+      <h3>Bağlanma Spektrumunuz</h3>
+      <div class="spektrum-wrap">
+        <div class="spektrum-bar" id="spektrum-bar">
+          <div class="spektrum-bolum guvenli" data-tip="guvenli"></div>
+          <div class="spektrum-bolum endiseli" data-tip="endiseli"></div>
+          <div class="spektrum-bolum kacinan" data-tip="kacinan"></div>
+          <div class="spektrum-isaret" id="spektrum-isaret" style="left: 0%;"></div>
+        </div>
+        <div class="spektrum-etiketler">
+          <div class="et-guvenli">Güvenli</div>
+          <div class="et-endiseli">Endişeli</div>
+          <div class="et-kacinan">Kaçınan</div>
+        </div>
+        <div class="spektrum-skala">
+          <span class="sk-guvenli">10 – 15</span>
+          <span class="sk-endiseli">16 – 20</span>
+          <span class="sk-kacinan">21 – 30</span>
+        </div>
+      </div>
+      <div class="puan-vurgu" id="puan-vurgu"></div>
+    </div>
+    <div class="tip-card" id="tip-card"></div>
+    <div class="not-card">
+      Bağlanma tarzları sabit değildir. Farkındalık ve çalışmayla dönüşebilirler. Bu test bir teşhis aracı değil, kendinizi tanımak için bir başlangıç noktasıdır.
+    </div>
+    <div class="teaser-card">
+      <h4>Peki bu profil iş hayatına nasıl yansır?</h4>
+      <p>Webinarda her bağlanma stilinin iş ilişkilerine, geri bildirim alma biçimine ve ekip dinamiğine yansımalarını birlikte ele alacağız.</p>
+    </div>
+    <button class="download-btn" onclick="window.print()">↓ PDF Olarak İndir</button>
+    <div class="iletisim-card">
+      <p>Sorularınız için: <a href="mailto:destek@atelierethos.com">destek@atelierethos.com</a></p>
+    </div>
+    <div class="attribution">
+      Sorular: Dr. John Sharp — İçgörü Terapisi · Bağlanma Değerlendirme Testi
+    </div>
+  </div>
+</div>
+
+<script>
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0Qn2vKkFp1mfmYatjK9IzJ6FX8A4jIg6Hymnbg89s-ZNg8VUKthIxa--Z1vr_lWkfaA/exec";
+
+  const SORULAR = [
+    { metin: 'Partneriniz "Nasıl hissediyorsun?" diye sorduğunda bu sizi:', siklar: [
+      { metin: "Utandırır. Duygularım hakkında konuşmayı sevmiyorum.", puan: 3 },
+      { metin: "Boş boş konuşturur. Konuşmayı seviyorum ama partnerimin gerçekten dinlediğini düşünmüyorum.", puan: 2 },
+      { metin: "Odaklanmamı sağlar. Kendime dürüstçe sorar ve cevap veririm.", puan: 1 }
+    ]},
+    { metin: "Partnerinizin morali bozuk olduğunda ve yardım istemek için size geldiğinde şunu hissedersiniz:", siklar: [
+      { metin: "Rahatsızlık. Ben onun psikiyatristi değilim.", puan: 3 },
+      { metin: "Mutluluk. Bana açılacak kadar güvendiği için memnun olurum.", puan: 1 },
+      { metin: "Endişe. Yeterince yardımcı olamazsam beni terk edeceğinden korkarım.", puan: 2 }
+    ]},
+    { metin: "Partneriniz sevgi dolu bir ruh hâlindeyken ve yakınlaşmak istediğinde:", siklar: [
+      { metin: "Rahatsız hissederim. Fazla yakınlık beni bunaltır.", puan: 1 },
+      { metin: "Memnun olurum. Şefkatli olmayı severim.", puan: 3 },
+      { metin: "Ferahlarım. Yakın olmak istiyorsa beni terk etmeyecektir.", puan: 2 }
+    ]},
+    { metin: "Partnerinizin sadakatsizliği veya başka birine açılması konusunda endişelenirsiniz:", siklar: [
+      { metin: "Her zaman.", puan: 2 },
+      { metin: "Bazen.", puan: 1 },
+      { metin: "Asla.", puan: 3 }
+    ]},
+    { metin: "İlişkinizdeki aşk dengesini nasıl tanımlarsınız?", siklar: [
+      { metin: "Eşit. Birbirimizi aynı oranda seviyoruz.", puan: 1 },
+      { metin: "Ben partnerimi daha çok seviyorum.", puan: 2 },
+      { metin: "Partnerim beni daha çok seviyor.", puan: 3 }
+    ]},
+    { metin: "Bir sıkıntınız olduğunda genellikle:", siklar: [
+      { metin: "En güvendiğim arkadaşım olduğu için önce partnerime açılırım.", puan: 1 },
+      { metin: "Eninde sonunda partnerime açılırım. Beni sert bir şekilde yargılamasını istemem. Ayrıca genellikle bana yük olan şey onun yaptığı bir şey olur!", puan: 2 },
+      { metin: "Bunu kendime saklarım. Sorunlarım beni ilgilendiriyor ve paylaşmak yalnızca daha rahatsız edici, sorgulayıcı konuşmalara yol açar.", puan: 3 }
+    ]},
+    { metin: "Partnerinizden sır saklıyor musunuz?", siklar: [
+      { metin: "Bazen. Dürüst olmaya çalışıyorum ama her şeyi paylaşırsam korkabilir ve kaçabilir.", puan: 2 },
+      { metin: "Elbette!", puan: 3 },
+      { metin: "Önemsiz şeyler dışında neredeyse hiç saklamam.", puan: 1 }
+    ]},
+    { metin: "Partneriniz tüm duygusal ihtiyaçlarınızı karşılayamadığında şunları hissedersiniz:", siklar: [
+      { metin: "İyi. Beni 'düzeltmeye' çalışmamasını tercih ederim. Ben kendi başıma iyiyim.", puan: 3 },
+      { metin: "Sinirli. Eşimin ihtiyaçlarını çok önemsiyorum. En azından benim için çaba sarf edebilir.", puan: 2 },
+      { metin: "Rahatsız. Kendimi ihmal edilmiş hissedersem bu canımı sıkar ama ihtiyacım olan şeyi istemeye ve duygularımı korumaya özen gösteririm.", puan: 1 }
+    ]},
+    { metin: "Kendinizi güvensiz hissetmenize neden olan bir şey hakkında partnerinizle konuştuğunuzda:", siklar: [
+      { metin: "Güven verici olur. Beni daha iyi hissettirmeye çalışır.", puan: 1 },
+      { metin: "Küçümser davranır. Endişelerimi görmezden gelir ve bu beni sinirlendirir.", puan: 2 },
+      { metin: "Donup kalır. Güvensizliklerim hakkında asla çok fazla açıklama yapmam; bu yüzden bir şey söylersem, partnerim muhtemelen ne yapacağını şaşırır.", puan: 3 }
+    ]},
+    { metin: "Önceki ayrılıklarınızın çoğu:", siklar: [
+      { metin: "Benim kararımdı. Devam etmenin bir anlamı yoktu.", puan: 3 },
+      { metin: "Partnerimin kararıydı. İlgi meraklısı ve talepkâr bir hâle geldim ve o bunu kaldıramadı.", puan: 2 },
+      { metin: "Karşılıklı kararlardı. Birbirimizden uzaklaşmıştık.", puan: 1 }
+    ]}
+  ];
+
+  const BOLUMLER = [
+    { ad: "1. Bölüm", no: 1, baslangic: 0, bitis: 5 },
+    { ad: "2. Bölüm", no: 2, baslangic: 5, bitis: 10 }
+  ];
+
+  const PROFILLER = {
+    guvenli: {
+      ad: "Güvenli Bağlanma", kisaAd: "Güvenli", aralik: "10 – 15 PUAN",
+      paragraf: "Sizin için ilişkiler tatmin edici, odaklayıcı ve destekleyici olma eğilimindedir. Bir ilişki yaşıyor olmanıza gerek yok; ancak yaşadığınızda bu sizin için sürekli bir endişe veya oyalanma kaynağı olmaz, hayatınıza olumlu bir katkı sağlar. Partnerinizin ihtiyaçlarını karşılama becerisine ve onun da sizin ihtiyaçlarınızı karşılayacağına güvenirsiniz. Partnerlik sağlamdır, ancak aşırı bağımlı değildir."
+    },
+    endiseli: {
+      ad: "Endişeli Bağlanma", kisaAd: "Endişeli", aralik: "16 – 20 PUAN",
+      paragraf: "Sizin için ilişkiler stres ve endişe kaynağı olma eğilimindedir. Yine de bekâr olduğunuzda yeni bir partner bulmak için yanıp tutuşursunuz. Partnerinizin kusurlarını görmezden gelme veya romantikleştirme eğilimindesinizdir. O, gerçek bir insandan çok hayali bir figür gibidir ve bu, sizin gerçekçi olmayan beklentilerinizi karşılayamadığı zaman sorunlara yol açar. Kendinizi yakın ve samimi hissetmeye can atıyor olsanız da, duygularınızı ifade etmenin partnerinizi korkutup kaçıracağından da korkarsınız."
+    },
+    kacinan: {
+      ad: "Kaçınan Bağlanma", kisaAd: "Kaçınan", aralik: "21 – 30 PUAN",
+      paragraf: 'Sizin için ilişkiler, değerinden daha fazla sorun gibi gelir. İlişkiler arkadaşlık için temel bir insani ihtiyacı karşılar ve içlerinde iyi zamanlar yaşarsınız; ancak partnerinizin duygusal ihtiyaçlarını karşılamak sizin için zordur. Sizi rahatsız eden durumlardan kaçınır, mesafe koyar ya da kendinizi kapatırsınız. Partneriniz bırakıp bırakmayacağını düşündüğünüzde "Umurumda değil" diyebilirsiniz — ama bu his geçicidir.'
+    }
+  };
+
+  const cevaplar = {};
+  let mevcutBolum = 0;
+
+  function bolumGoster(idx) {
+    mevcutBolum = idx;
+    const b = BOLUMLER[idx];
+    const toplam = BOLUMLER.length;
+    document.getElementById('adim-metin').textContent = `Bölüm ${idx + 1} / ${toplam}`;
+    document.getElementById('adim-yuzde').textContent = `%${Math.round((idx / toplam) * 100)}`;
+    document.getElementById('progress-bar').style.width = `${(idx / toplam) * 100}%`;
+    const sonMu = idx === BOLUMLER.length - 1;
+    let html = `<div class="bolum-baslik"><div class="bolum-no">${b.no}</div><h3>${b.ad}</h3></div>`;
+    for (let si = b.baslangic; si < b.bitis; si++) {
+      const soru = SORULAR[si];
+      const key = `s${si}`;
+      const mevcut = cevaplar[key];
+      html += `<div class="soru-satir" id="satir-${key}"><div class="soru-metin">${si + 1}. ${soru.metin}</div><div class="soru-secenekler">`;
+      soru.siklar.forEach((sik, ki) => {
+        const inputId = `${key}_${ki}`;
+        html += `<div class="secenek"><input type="radio" name="${key}" id="${inputId}" value="${sik.puan}" ${mevcut === sik.puan ? 'checked' : ''} onchange="cevapKaydet('${key}', ${sik.puan})" /><label for="${inputId}">${sik.metin}</label></div>`;
+      });
+      html += `</div></div>`;
+    }
+    html += `<div class="error-msg" id="err-bolum" style="margin-top:20px;">Lütfen tüm soruları yanıtlayın.</div><div class="btn-row">${idx > 0 ? `<button class="btn-geri" onclick="bolumGeri()">← Geri</button>` : ''}<button class="btn-ileri" onclick="${sonMu ? 'sonucHesapla()' : `bolumIleri(${idx})`}">${sonMu ? 'Sonuçlarımı Gör →' : 'Devam →'}</button></div>`;
+    document.getElementById('bolum-kart').innerHTML = html;
+    document.getElementById('adim-bolum').style.display = 'block';
+    document.getElementById('adim-0').style.display = 'none';
+    document.getElementById('sonuc-bolumu').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function cevapKaydet(key, deger) {
+    cevaplar[key] = deger;
+    const satir = document.getElementById(`satir-${key}`);
+    if (satir) satir.classList.remove('eksik');
+  }
+
+  function adimIleri() {
+    let ok = true;
+    const adSoyad = document.getElementById('adSoyad').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const firma = document.getElementById('firma').value.trim();
+    const errAd = document.getElementById('err-ad');
+    if (!adSoyad) { errAd.classList.add('show'); ok = false; } else errAd.classList.remove('show');
+    const errEmail = document.getElementById('err-email');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEmail.classList.add('show'); ok = false; } else errEmail.classList.remove('show');
+    const errFirma = document.getElementById('err-firma');
+    if (!firma) { errFirma.classList.add('show'); ok = false; } else errFirma.classList.remove('show');
+    if (!ok) return;
+    bolumGoster(0);
+  }
+
+  function bolumIleri(idx) {
+    const b = BOLUMLER[idx];
+    let eksikVar = false;
+    for (let si = b.baslangic; si < b.bitis; si++) {
+      const key = `s${si}`;
+      if (cevaplar[key] === undefined) {
+        eksikVar = true;
+        const satir = document.getElementById(`satir-${key}`);
+        if (satir) satir.classList.add('eksik');
+      }
+    }
+    if (eksikVar) {
+      document.getElementById('err-bolum').classList.add('show');
+      const ilkEksik = document.querySelector('.soru-satir.eksik');
+      if (ilkEksik) ilkEksik.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    bolumGoster(idx + 1);
+  }
+
+  function bolumGeri() {
+    if (mevcutBolum === 0) {
+      document.getElementById('adim-bolum').style.display = 'none';
+      document.getElementById('adim-0').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      bolumGoster(mevcutBolum - 1);
+    }
+  }
+
+  function profilBelirle(toplam) {
+    if (toplam <= 15) return 'guvenli';
+    if (toplam <= 20) return 'endiseli';
+    return 'kacinan';
+  }
+
+  function sonucHesapla() {
+    const son = BOLUMLER.length - 1;
+    const b = BOLUMLER[son];
+    let eksikVar = false;
+    for (let si = b.baslangic; si < b.bitis; si++) {
+      const key = `s${si}`;
+      if (cevaplar[key] === undefined) {
+        eksikVar = true;
+        const satir = document.getElementById(`satir-${key}`);
+        if (satir) satir.classList.add('eksik');
+      }
+    }
+    if (eksikVar) {
+      document.getElementById('err-bolum').classList.add('show');
+      const ilkEksik = document.querySelector('.soru-satir.eksik');
+      if (ilkEksik) ilkEksik.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    document.getElementById('adim-bolum').style.display = 'none';
+    document.getElementById('loading').classList.add('show');
+    let toplam = 0;
+    SORULAR.forEach((soru, si) => { toplam += cevaplar[`s${si}`] || 0; });
+    const profilKey = profilBelirle(toplam);
+    const profil = PROFILLER[profilKey];
+    const adSoyad = document.getElementById('adSoyad').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const firma = document.getElementById('firma').value.trim();
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        adSoyad, email, firma,
+        secimler: `Bağlanma Stilleri | Profil: ${profil.kisaAd} | Puan: ${toplam}/30`
+      })
+    }).catch(e => console.warn(e));
+    setTimeout(() => {
+      document.getElementById('loading').classList.remove('show');
+      document.querySelectorAll('.spektrum-bolum').forEach(el => {
+        if (el.dataset.tip !== profilKey) el.classList.add('dim');
+        else el.classList.remove('dim');
+      });
+      const yuzde = ((toplam - 10) / 20) * 100;
+      const isaret = document.getElementById('spektrum-isaret');
+      document.getElementById('puan-vurgu').innerHTML = `Profiliniz:<strong>${profil.ad}</strong><span class="puan-rakam">Toplam puan: ${toplam} / 30</span>`;
+      let tipHtml = `<div class="tip-baslik">${profil.ad}</div><div class="tip-aralik">${profil.aralik}</div><div class="tip-paragraf">${profil.paragraf}</div>`;
+      document.getElementById('tip-card').innerHTML = tipHtml;
+      document.getElementById('sonuc-bolumu').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => { isaret.style.left = `${yuzde}%`; }, 200);
+    }, 800);
+  }
+</script>
+
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
