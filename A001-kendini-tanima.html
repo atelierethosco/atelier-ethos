@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atölye Materyali — Atelier Ethos</title>
+<meta name="description" content="Kendini Yakından Tanıma Atölyesi sunumuna erişim.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #4A2F1C;
+    background: #F1EADD;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+
+  :root {
+    --bg: #F1EADD;
+    --bg-deep: #E8DFCD;
+    --bg-card: #FAF5EB;
+    --ink: #2D1F10;
+    --ink-soft: #4A2F1C;
+    --ink-mute: #7A6650;
+    --toprak: #8B5A3C;
+    --toprak-deep: #6B4328;
+    --toprak-light: #B88666;
+    --hairline: rgba(45, 31, 16, 0.12);
+    --hairline-strong: rgba(45, 31, 16, 0.22);
+  }
+
+  /* Nav */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(241, 234, 221, 0.92);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--hairline);
+    height: 90px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 60px;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 16px; text-decoration: none; }
+  .nav-brand img { height: 66px; width: auto; display: block; }
+  .nav-brand-name {
+    font-family: 'Fraunces', serif;
+    font-size: 16px; font-style: italic; font-weight: 300;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+  .nav-back {
+    font-family: 'Inter', sans-serif; font-size: 14px;
+    color: var(--ink-soft); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--toprak); }
+  .nav-back::before { content: "← "; }
+
+  /* Hero */
+  .hero {
+    padding: 150px 40px 50px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .hero-tag {
+    font-family: 'Inter', sans-serif; font-size: 11px;
+    letter-spacing: 0.28em; color: var(--toprak);
+    text-transform: uppercase; font-weight: 500;
+    margin-bottom: 24px; display: block;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(40px, 5.5vw, 64px); line-height: 1.05;
+    letter-spacing: -0.025em; color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; font-weight: 400; color: var(--toprak); }
+  .hero-lede {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: clamp(17px, 2vw, 20px); line-height: 1.55;
+    color: var(--ink-soft); max-width: 580px;
+  }
+
+  /* Form */
+  .form-wrap {
+    max-width: 580px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+  .form-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--hairline);
+    border-radius: 18px;
+    padding: 44px 44px 36px;
+  }
+  .field { margin-bottom: 24px; }
+  .field label {
+    display: block;
+    font-family: 'Inter', sans-serif; font-size: 11px;
+    letter-spacing: 0.22em; color: var(--ink-mute);
+    text-transform: uppercase; font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .field label::before { content: "— "; color: var(--toprak); }
+  .field label .req {
+    font-family: 'Fraunces', serif; font-style: italic;
+    color: var(--toprak); margin-left: 4px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .field input {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 0.5px solid var(--hairline-strong);
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif; font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .field input:focus {
+    border-color: var(--toprak);
+    background: var(--bg-card);
+  }
+  .field input::placeholder {
+    color: var(--ink-mute); opacity: 0.55;
+    font-family: 'Fraunces', serif; font-style: italic;
+  }
+
+  .error-msg {
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 13px; color: #c12033;
+    margin-top: 8px; display: none;
+  }
+  .error-msg.show { display: block; }
+
+  .submit-btn {
+    display: inline-block; width: 100%;
+    padding: 15px 32px;
+    background: var(--toprak); color: var(--bg);
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+    border: none; border-radius: 999px;
+    cursor: pointer; letter-spacing: 0.02em;
+    transition: background 0.25s, transform 0.1s;
+    margin-top: 8px;
+  }
+  .submit-btn:hover { background: var(--toprak-deep); transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+  .form-note {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 13px; color: var(--ink-mute);
+    text-align: center; margin-top: 16px; line-height: 1.5;
+  }
+
+  .loading-wrap {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 14px; color: var(--ink-mute);
+  }
+  .loading-wrap.show { display: flex; }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--hairline-strong);
+    border-top-color: var(--toprak);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Teşekkür */
+  .tesekkur { display: none; animation: fadeUp 0.5s ease forwards; }
+  .tesekkur.show { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .tesekkur-flourish {
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 16px; color: var(--toprak);
+    letter-spacing: 0.4em; opacity: 0.6;
+    text-align: center; margin-bottom: 24px;
+  }
+  .tesekkur h2 {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: 32px; line-height: 1.15;
+    letter-spacing: -0.015em; color: var(--ink);
+    text-align: center; margin-bottom: 14px;
+  }
+  .tesekkur h2 em { font-style: italic; font-weight: 400; color: var(--toprak); }
+  .tesekkur-desc {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 16px; color: var(--ink-soft);
+    line-height: 1.6; text-align: center;
+    margin-bottom: 32px; padding: 0 8px;
+  }
+
+  .download-card {
+    background: var(--bg);
+    border: 0.5px solid var(--toprak);
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 28px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .download-card:hover {
+    background: var(--bg-deep);
+    transform: translateY(-1px);
+  }
+  .download-icon {
+    width: 44px; height: 44px;
+    background: var(--toprak); color: var(--bg);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .download-icon svg { width: 20px; height: 20px; }
+  .download-info { flex: 1; min-width: 0; }
+  .download-title {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: 16px; color: var(--ink);
+    line-height: 1.35; margin-bottom: 4px;
+  }
+  .download-meta {
+    font-family: 'Inter', sans-serif; font-size: 11px;
+    letter-spacing: 0.22em; color: var(--ink-mute);
+    text-transform: uppercase; font-weight: 500;
+  }
+  .download-arrow {
+    font-family: 'Fraunces', serif; font-size: 20px;
+    color: var(--toprak); flex-shrink: 0;
+  }
+
+  .footer-note {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 0.5px solid var(--hairline);
+    text-align: center;
+  }
+  .footer-note p {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 14px; color: var(--ink-mute);
+    line-height: 1.7;
+  }
+  .footer-note a {
+    color: var(--toprak); text-decoration: none;
+    border-bottom: 0.5px solid var(--toprak);
+    padding-bottom: 1px;
+  }
+  .footer-note a:hover { color: var(--toprak-deep); }
+
+  /* Footer */
+  .footer {
+    background: var(--ink); color: var(--bg);
+    padding: 28px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-copy {
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    color: var(--bg-deep); opacity: 0.75;
+  }
+  .footer-meta {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 13px; color: var(--bg-deep); opacity: 0.75;
+  }
+
+  @media (max-width: 600px) {
+    .nav { padding: 10px 20px; height: 70px; }
+    .nav-brand img { height: 44px; }
+    .nav-brand-name { display: none; }
+    .hero { padding: 110px 20px 40px; }
+    .form-wrap { padding: 0 20px 60px; }
+    .form-card { padding: 28px 24px; }
+    .footer { flex-direction: column; gap: 12px; padding: 24px 20px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/bireysel.html" class="nav-brand">
+    <img src="/atelier_ethos_terracotta.svg" alt="Atelier Ethos" />
+    <span class="nav-brand-name">— kendinle bir alan</span>
+  </a>
+  <a href="/bireysel.html" class="nav-back">Bireysel</a>
+</nav>
+
+<section class="hero">
+  <span class="hero-tag">EST. 2022 · Atölye A001 · 2 Mayıs 2026</span>
+  <h1>Kendini <em>Yakından</em><br>Tanıma.</h1>
+  <p class="hero-lede">Bu akşam bizimle aynı odada olduğun için teşekkürler. Atölye sunumuna ulaşmak için bilgilerini bırakman yeterli.</p>
+</section>
+
+<div class="form-wrap">
+  <div class="form-card">
+
+    <div id="form-section">
+      <div class="field">
+        <label>Adın <span class="req">*</span></label>
+        <input type="text" id="adSoyad" placeholder="adın soyadın" autocomplete="name" />
+        <div class="error-msg" id="err-ad">Lütfen adını yaz.</div>
+      </div>
+
+      <div class="field">
+        <label>E-postan <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="ornek@email.com" autocomplete="email" />
+        <div class="error-msg" id="err-email">Geçerli bir e-posta adresi yaz.</div>
+      </div>
+
+      <div class="loading-wrap" id="loading">
+        <div class="spinner"></div>
+        <span>Sunum hazırlanıyor...</span>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+        Sunuma eriş
+      </button>
+
+      <p class="form-note">bilgilerin gizli tutulur, sadece atölye iletişimi için kullanılır</p>
+    </div>
+
+    <div class="tesekkur" id="tesekkur-section">
+      <div class="tesekkur-flourish">✿ ❋ ✿</div>
+      <h2>Sunum <em>hazır</em>.</h2>
+      <p class="tesekkur-desc">Aşağıdan indirebilirsin. Atölyede yazmaya fırsat bulamadıklarımız için <a href="mailto:destek@atelierethos.com" style="color:var(--toprak); border-bottom: 0.5px solid var(--toprak);">destek@atelierethos.com</a> her zaman açık.</p>
+
+      <a href="#" id="downloadLink" class="download-card" download>
+        <div class="download-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="download-info">
+          <div class="download-title">Kendini Yakından Tanıma — Atölye Sunumu</div>
+          <div class="download-meta">PPTX · indir</div>
+        </div>
+        <div class="download-arrow">→</div>
+      </a>
+
+      <div class="footer-note">
+        <p>
+          Daha derin çalışmak istersen <a href="/kendine-yolculuk.html">Kendine Yolculuk</a> programımız hazır bekliyor.<br>
+          İki seansta kendi stres haritanı çıkar, sana özel araçlarla donan.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <span class="footer-copy">© 2026 Atelier Ethos · kendinle bir alan</span>
+  <span class="footer-meta">A001 · 2 mayıs 2026</span>
+</footer>
+
+<script>
+  // ==================== KONFİGÜRASYON ====================
+  // Backend.gs (Ethos Contact System) — webinar2 ile aynı endpoint
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzKYUsVdVd7VojPuqKEvMoftjJcH-Z8BzBZbUmeLEA-NqTMVY14vXklAanjDQuj3T8I/exec";
+
+  // Tek sunum dosyası — Drive direkt download
+  const SUNUM = {
+    baslik: "Kendini Yakından Tanıma — Atölye Sunumu",
+    tip: "PPTX",
+    drive_id: "1hxkl9Axxiq4y9uwFdP3DcBVcimRv6nfI",
+    url: "https://drive.google.com/uc?export=download&confirm=t&id=1hxkl9Axxiq4y9uwFdP3DcBVcimRv6nfI"
+  };
+
+  // UTM
+  const urlParams = new URLSearchParams(window.location.search);
+  const UTM = {
+    utm_source: urlParams.get("utm_source") || "atolye",
+    utm_medium: urlParams.get("utm_medium") || "post_event",
+    utm_campaign: urlParams.get("utm_campaign") || "A001_KENDINI_TANIMA",
+    utm_content: urlParams.get("utm_content") || "a001_sunum"
+  };
+
+  // ==================== VALIDATION ====================
+  function validate() {
+    let ok = true;
+
+    const ad = document.getElementById('adSoyad').value.trim();
+    const errAd = document.getElementById('err-ad');
+    if (!ad) { errAd.classList.add('show'); ok = false; }
+    else errAd.classList.remove('show');
+
+    const email = document.getElementById('email').value.trim();
+    const errEmail = document.getElementById('err-email');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailOk) { errEmail.classList.add('show'); ok = false; }
+    else errEmail.classList.remove('show');
+
+    return ok;
+  }
+
+  // ==================== EVENT LOG ====================
+  function logToBackend(payload) {
+    try {
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) {
+      console.warn('Log error:', err);
+    }
+  }
+
+  // ==================== SUBMIT ====================
+  async function submitForm() {
+    if (!validate()) return;
+
+    const btn = document.getElementById('submitBtn');
+    const loading = document.getElementById('loading');
+    btn.style.display = 'none';
+    loading.classList.add('show');
+
+    const adSoyad = document.getElementById('adSoyad').value.trim();
+    const email = document.getElementById('email').value.trim().toLowerCase();
+
+    // Backend'e log gönder
+    logToBackend({
+      tip: "tool_download",
+      tool_id: "A001_SUNUM",
+      tool_name: "a001_sunum",
+      email: email,
+      ad_soyad: adSoyad,
+      utm_source: UTM.utm_source,
+      utm_medium: UTM.utm_medium,
+      utm_campaign: UTM.utm_campaign,
+      utm_content: UTM.utm_content,
+      timestamp: new Date().toISOString(),
+      user_agent: navigator.userAgent.substring(0, 200)
+    });
+
+    // 600ms bekle (Backend'e ulaşsın), sonra teşekkür ekranı
+    await new Promise(r => setTimeout(r, 600));
+
+    loading.classList.remove('show');
+    document.getElementById('form-section').style.display = 'none';
+
+    // Download linkini set et
+    const dlLink = document.getElementById('downloadLink');
+    dlLink.href = SUNUM.url;
+
+    // Teşekkür ekranı
+    const tesekkur = document.getElementById('tesekkur-section');
+    tesekkur.classList.add('show');
+
+    // Otomatik indirme tetikle (1 saniye sonra)
+    setTimeout(() => {
+      const triggerLink = document.createElement('a');
+      triggerLink.href = SUNUM.url;
+      triggerLink.download = '';
+      document.body.appendChild(triggerLink);
+      triggerLink.click();
+      document.body.removeChild(triggerLink);
+    }, 1000);
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Enter ile submit
+  document.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitForm();
+    });
+  });
+</script>
+
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
